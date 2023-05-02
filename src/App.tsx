@@ -1,16 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
-import NavigationBar from  './views/NavigationBar';
 import './App.css';
-import { useLocation } from 'react-router-dom';
+import { Box } from '@mui/material';
 import Footer from './views/Footer';
+import { Route, Routes } from 'react-router-dom';
+import NavigationBar from './views/NavigationBar';
+import OrderLog from './views/OrderLog';
 
 function App() {
   return (
-    <>
-    <NavigationBar/>
-    <Footer />
-    </>
+    <Box sx={{ display:'flex', height: '100vh' }}>
+      <NavigationBar/>
+      <OrderLog/>
+      <Routes>
+        <Route path='/orderLog' element={(<OrderLog/>)}/>
+      </Routes>
+      <Footer />
+    </Box>
   );
 }
 

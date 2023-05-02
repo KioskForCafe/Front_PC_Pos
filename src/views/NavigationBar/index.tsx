@@ -5,7 +5,7 @@ import React from 'react'
 
 export default function index() {
   return (
-    <Box sx={{flexGrow : 1}}>
+    <Box sx={{position:'relative', top:'0', flexGrow : 1}}>
         <AppBar variant='outlined' position='static' sx={{p: '0px 100px', backgroundColor: '#383947'}}>
             <Toolbar>
                 <Typography
