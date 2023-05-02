@@ -13,11 +13,11 @@ export default function index() {
                 component="div"
                 sx={{ flexGrow: 1, display: {xs: 'none', sm : 'block', color: '#ffffff'}}}>Kiosk Project</Typography>
                 <Box sx={{display: 'flex'}}>
-                    <Typography sx={{fontSize: '18px'}}>2023.05.02(화) 03:00</Typography>
+                    <Typography sx={{fontSize: '15px', mt: '10px'}}>2023.05.02(화) 03:00</Typography>
                     <IconButton sx={{fontSize: '10px', ml: '10px', color: '#13ba50'}}>
                             <CircleIcon/>
                         </IconButton>
-                    <Typography sx={{fontSize: '15px', fontWeight: 550}}>
+                    <Typography sx={{fontSize: '15px', mt: '10px'}}>
                         영업중</Typography>
                     <IconButton sx={{ fontSize: 'large', ml: '10px', color: '#ffffff' }}>
                         <MoreHorizIcon/>
