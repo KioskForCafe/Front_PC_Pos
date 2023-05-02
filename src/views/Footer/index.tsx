@@ -6,7 +6,7 @@ import NotificationAddIcon from '@mui/icons-material/NotificationAdd';
 function Footer() {
     const notification = false;
     return (
-            <Box sx={{display: 'flex', backgroundColor : 'black', alignItems: 'center' ,height: '50px' }}>
+            <Box sx={{position:'fixed', bottom:'0',width:'100%' , display: 'flex', backgroundColor : 'black', alignItems: 'center' ,height: '50px' }}>
                 <Box sx={{flex:1, textAlign:'center', fontWeight: 'bold', color:'grey'}}>상품</Box>
                 <Box sx={{flex:1, textAlign:'center', fontWeight: 'bold', color:'grey'}}>테이블</Box>
                 <Box sx={{flex:1, textAlign:'center', fontWeight: 'bold', color:'grey'}}>주문 내역</Box>
