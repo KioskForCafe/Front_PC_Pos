@@ -3,10 +3,10 @@ import CircleIcon from '@mui/icons-material/Circle';
 import { AppBar, Box, Toolbar, Typography, FormControl, OutlinedInput, Button, Icon, IconButton } from '@mui/material'
 import React from 'react'
 
-export default function index() {
+export default function NavigationBar() {
   return (
     <Box sx={{flexGrow : 1}}>
-        <AppBar variant='outlined' position='static' sx={{p: '0px 100px', backgroundColor: '#383947'}}>
+        <AppBar variant='outlined' position='static' sx={{p: '0px 80px', backgroundColor: '#383947'}}>
             <Toolbar>
                 <Typography
                 variant="h6"
