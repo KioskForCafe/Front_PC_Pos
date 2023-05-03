@@ -8,7 +8,7 @@ import OrderLog from './views/OrderLog';
 
 function App() {
   return (
-    <Box sx={{ display:'flex', height: '100vh' }}>
+    <Box sx={{ display:'flex', flexDirection:'column', height: '100vh', overflow:'hidden' }}>
       <NavigationBar/>
       <OrderLog/>
       <Routes>

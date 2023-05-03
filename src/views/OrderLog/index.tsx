@@ -3,7 +3,7 @@ import React from 'react';
 
 function OrderLog() {
     return (
-    <Box sx={{ height: '100vh' }}>
+    <Box sx={{flex:1}}>
         <Box sx={{display:'flex', border:'1px solid #808080', height:'30px'}}>
             <Box sx={{flex:1, textAlign:'center', color: 'grey'}}>대기</Box>
             <Box sx={{flex:1, textAlign:'center', color: 'grey'}}>접수</Box>
