@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { SyntheticEvent, useState } from 'react'
 import { styled, alpha } from '@mui/material/styles';
-import { AppBar, Box, Toolbar, IconButton, MenuItem, MenuList, MenuProps, Menu } from '@mui/material'
+import { AppBar, Box, Toolbar, IconButton, MenuItem, MenuList, MenuProps, Menu, Tab, Tabs, tabsClasses } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
@@ -45,6 +45,8 @@ const StyledMenu = styled((props: MenuProps) => (
   },
 }));
 
+
+
 export default function CategoryBar() {
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -55,59 +57,78 @@ export default function CategoryBar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  
+
+  const [value, setValue] = useState(0);
+
+  const handleChange = (event: SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+
 
   return (
     <Box>
-        <AppBar variant='outlined' position='static' sx={{p: '0px 50px', backgroundColor: '#ffffff'}}>
-            <Toolbar sx={{color: '#8c8c8c'}}>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-                <MenuItem>카테고리1</MenuItem>
-              <IconButton>
-                <AddIcon/>
-              </IconButton>
-              <IconButton sx={{color: '#8c8c8c'}} onClick={handleClick}
-              >
-                <MoreHorizIcon/>
-              </IconButton>
-                <StyledMenu
-                  id="demo-customized-menu"
-                  MenuListProps={{
-                    'aria-labelledby': 'demo-customized-button',
-                  }}
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                >
-                  <MenuItem onClick={handleClose} disableRipple>수정</MenuItem>
-                  <MenuItem onClick={handleClose} disableRipple>삭제</MenuItem>
-                </StyledMenu>
-            </Toolbar>
-        </AppBar>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          variant="scrollable"
+          scrollButtons
+          aria-label="visible arrows tabs example"
+          sx={{
+            [`& .${tabsClasses.scrollButtons}`]: {
+              '&.Mui-disabled': { opacity: 0.3 },
+            },
+          }}
+        >
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" /> 
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <Tab label="메뉴1" />
+            <IconButton>
+            <AddIcon />
+          </IconButton>
+          <IconButton sx={{ color: '#8c8c8c' }} onClick={handleClick}
+          >
+            <MoreHorizIcon />
+          </IconButton>
+          <StyledMenu
+            id="demo-customized-menu"
+            MenuListProps={{
+              'aria-labelledby': 'demo-customized-button',
+            }}
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleClose} disableRipple>수정</MenuItem>
+            <MenuItem onClick={handleClose} disableRipple>삭제</MenuItem>
+          </StyledMenu>
+          </Tabs>
     </Box>
   )
 }
