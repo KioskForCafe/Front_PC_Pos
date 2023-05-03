@@ -5,8 +5,8 @@ import React from 'react'
 
 export default function NavigationBar() {
   return (
-    <Box sx={{flexGrow : 1}}>
-        <AppBar variant='outlined' position='static' sx={{p: '0px 80px', backgroundColor: '#383947'}}>
+    <Box sx={{position:'relative', top:'0'}}>
+        <AppBar variant='outlined' position='static' sx={{p: '0px 100px', backgroundColor: '#383947'}}>
             <Toolbar>
                 <Typography
                 variant="h6"
