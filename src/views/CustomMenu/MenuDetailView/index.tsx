@@ -40,7 +40,7 @@ export default function MenuDetailView() {
         </Box>
         <Box sx={{p: '10px', display: 'flex', width: '100%', flexGrow: 1}}>
             <Button variant='contained' sx={{ flexGrow: 1, height: '100px',backgroundColor: '#5c5c5c', color: '#ffffff', fontSize: '30px'}}>수정</Button>
-            <Button variant='outlined' sx={{ outlineColor: '#5c5c5c', color: '#5c5c5c', flexGrow: 1, height: '100px', fontSize: '30px'}}>삭제</Button>
+            <Button variant='outlined' sx={{ml: '1vh', outlineColor: '#5c5c5c', color: '#5c5c5c', flexGrow: 1, height: '100px', fontSize: '30px'}}>삭제</Button>
         </Box>
     </Box>
     </Box>
