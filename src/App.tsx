@@ -10,7 +10,7 @@ import OrderLog from './views/OrderLog';
 
 function App() {
   return (
-    <Box sx={{ display:'flex', flexDirection:'column', height: '100vh', overflow:'hidden' }}>
+    <Box>
       <NavigationBar/>
       <CustomMenu/>
       {/* <OrderLog/>

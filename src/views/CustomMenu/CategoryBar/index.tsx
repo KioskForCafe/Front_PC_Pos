@@ -66,7 +66,7 @@ export default function CategoryBar() {
 
 
   return (
-    <Box sx={{bgcolor: '#ffffff'}}>
+    <Box sx={{zIndex: 1, position: 'relative', bgcolor: '#ffffff', height: '5vh'}}>
         <Tabs
           value={value}
           onChange={handleChange}
