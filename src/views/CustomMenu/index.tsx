@@ -17,7 +17,7 @@ export default function CustomMenu() {
     <Box sx={{display: 'flex', flexDirection: 'column' }}>
       <CategoryBar />
       <Box sx={{ display: 'flex', flexDirection: 'row', height: '83vh'}}>
-        <MenuInCategoryView/>
+          <MenuInCategoryView/>
         <Box sx={{ width: '35%', backgroundColor: 'white', height: '100%', overflow: 'auto' }}>
           <MenuDetailView />
         </Box>

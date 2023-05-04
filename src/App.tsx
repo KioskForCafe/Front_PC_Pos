@@ -7,16 +7,18 @@ import Footer from './views/Footer';
 import { Route, Routes } from 'react-router-dom';
 import NavigationBar from './views/NavigationBar';
 import OrderLog from './views/OrderLog';
+import AnalysisView from './views/AnalysisView';
 
 function App() {
   return (
     <Box>
       <NavigationBar/>
-      <CustomMenu/>
+      {/* <CustomMenu/> */}
       {/* <OrderLog/>
       <Routes>
         <Route path='/orderLog' element={(<OrderLog/>)}/>
       </Routes> */}
+      <AnalysisView/>
       <Footer />
     </Box>
   );
