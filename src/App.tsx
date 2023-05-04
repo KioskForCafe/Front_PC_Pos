@@ -13,7 +13,7 @@ function App() {
   return (
     <Box>
       <NavigationBar/>
-      {/* <CustomMenu/> */}
+      <CustomMenu/>
       {/* <OrderLog/>
       <Routes>
         <Route path='/orderLog' element={(<OrderLog/>)}/>
