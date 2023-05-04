@@ -2,6 +2,7 @@ import React from 'react'
 import CategoryBar from './CategoryBar'
 import { Box, Card, Container, Grid, Icon, IconButton, Typography } from '@mui/material'
 import styled from '@emotion/styled';
+
 import MenuDetailView from './MenuDetailView';
 import MenuInCategoryView from './MenuInCategoryView';
 
