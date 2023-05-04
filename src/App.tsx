@@ -7,6 +7,7 @@ import Footer from './views/Footer';
 import { Route, Routes } from 'react-router-dom';
 import NavigationBar from './views/NavigationBar';
 import OrderLog from './views/OrderLog';
+import AnalysisView from './views/AnalysisView';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <Routes>
         <Route path='/orderLog' element={(<OrderLog/>)}/>
       </Routes> */}
+      <AnalysisView/>
       <Footer />
     </Box>
   );
