@@ -12,7 +12,7 @@ import AnalysisView from './views/AnalysisView';
 
 function App() {
   return (
-    <Box sx={{ display:'flex', flexDirection:'column', height: '100vh', overflow:'hidden'}}>
+    <Box>
       <NavigationBar/>
       <Box sx={{flex:1}}>
         {/* <Order/> */}
