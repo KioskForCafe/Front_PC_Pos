@@ -5,7 +5,7 @@ import React from 'react'
 
 export default function NavigationBar() {
   return (
-    <Box sx={{ zIndex: 1, position:'relative', top:'0', height: '7vh'}}>
+    <Box sx={{ zIndex: 1, height: '7vh'}}>
         <AppBar variant='outlined' position='relative' sx={{p: '0px 100px', backgroundColor: '#383947'}}>
             <Toolbar>
                 <Typography
