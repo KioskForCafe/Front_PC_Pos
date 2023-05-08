@@ -14,7 +14,7 @@ const Img = styled('img')({
 
 export default function CustomMenu() {
   return (
-    <Box sx={{display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{display: 'flex', flexDirection: 'column', height:'100%' }}>
       <CategoryBar />
       <Box sx={{ display: 'flex', flexDirection: 'row', height: '83vh'}}>
           <MenuInCategoryView/>
