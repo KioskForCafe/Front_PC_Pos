@@ -15,10 +15,10 @@ function App() {
     <Box sx={{ display:'flex', flexDirection:'column', height: '100vh', overflow:'hidden'}}>
       <NavigationBar/>
       <Box sx={{flex:1}}>
-        <Order/>
+        {/* <Order/> */}
         {/* <CustomMenu/> */}
         {/* <OrderLog/> */}
-        {/* <AnalysisView/> */}
+        <AnalysisView/>
 
       </Box>
       <Footer />
