@@ -13,8 +13,8 @@ export default function AnalysisView() {
         </Box>
         <Divider orientation='vertical' flexItem />
         <Box sx={{ flexGrow: 1}}>
-          {/* <SaleAnalysisView /> */}
-          <AnalysisBusinessView />
+          <SaleAnalysisView />
+          {/* <AnalysisBusinessView /> */}
         </Box>
       </Box>
     </Box>
