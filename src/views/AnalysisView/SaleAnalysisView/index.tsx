@@ -9,6 +9,7 @@ import SaleAnalysisDetail from './SaleAnalysisDetail';
 export default function SaleAnalysisView() {
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyItems: 'center', alignItems: 'center'}}>
+
             <Box sx={{ width: '500px'}}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['StaticDateTimePicker']}>
@@ -19,6 +20,7 @@ export default function SaleAnalysisView() {
                 </LocalizationProvider>
             </Box>
             <SaleAnalysisDetail />
+
         </Box>
     )
 }
