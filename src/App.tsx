@@ -12,16 +12,15 @@ import AnalysisView from './views/AnalysisView';
 
 function App() {
   return (
-    <Box>
+    <Box sx={{ display:'flex', flexDirection:'column', height: '100vh', overflow:'hidden'}}>
       <NavigationBar/>
-      <OrderLog/>
-      {/* <Order/> */}
-      {/* <CustomMenu/> */}
-      {/* <OrderLog/>
-      <Routes>
-        <Route path='/orderLog' element={(<OrderLog/>)}/>
-      </Routes> */}
-      {/* <AnalysisView/> */}
+      <Box sx={{flex:1}}>
+        <Order/>
+        {/* <CustomMenu/> */}
+        {/* <OrderLog/> */}
+        {/* <AnalysisView/> */}
+
+      </Box>
       <Footer />
     </Box>
   );
