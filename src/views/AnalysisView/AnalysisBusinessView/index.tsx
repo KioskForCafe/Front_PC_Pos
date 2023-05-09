@@ -6,19 +6,12 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import React from 'react'
 import SaleAnalysisDetail from '../SaleAnalysisView/SaleAnalysisDetail';
 import AnalysisBusinessDetail from './AnalysisBusinessDetail';
+import SelectDatetimeView from '../SelectDatetimeView';
 
 export default function AnalysisBusinessView() {
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyItems: 'center', alignItems: 'center' }}>
-            <Box sx={{ width: '500px' }}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['StaticDatePicker']}>
-                        <DemoItem>
-                            <StaticDatePicker defaultValue={dayjs('2022-04-17')} />
-                        </DemoItem>
-                    </DemoContainer>
-                </LocalizationProvider>
-            </Box>
+            <SelectDatetimeView />
             <AnalysisBusinessDetail />
         </Box>
     )
