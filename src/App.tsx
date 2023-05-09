@@ -11,7 +11,7 @@ import Order from './views/Order';
 import AnalysisView from './views/AnalysisView';
 import Point from './views/Point';
 import Store from './views/Store';
-import SignIn from './views/SignIn';
+import AuthenticationView from './views/AuthenticationView';
 
 function App() {
   return (
@@ -24,7 +24,7 @@ function App() {
         {/* <AnalysisView/> */}
         {/* <Point/> */}
         {/* <Store/> */}
-        <SignIn/>
+        <AuthenticationView/>
       </Box>
       <Footer />
     </Box>
