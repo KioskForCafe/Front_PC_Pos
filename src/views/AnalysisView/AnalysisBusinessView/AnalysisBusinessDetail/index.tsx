@@ -1,24 +1,26 @@
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import React, { useState } from 'react'
 
-function createData(
-    date: string,
-    time: number,
-    saleAmount: number,
-    saleCount: number,
-    avgSaleAmount: number,
-) {
-    return { date, time, saleAmount, saleCount, avgSaleAmount };
-}
-
-const rows = [
-    createData('2023. 05. 20', 9, 2000000, 200, 10000),
-    createData('2023. 05. 20', 10, 2000000, 200, 10000),
-    createData('2023. 05. 20', 11, 2000000, 200, 10000),
-    createData('2023. 05. 20', 12, 2000000, 200, 10000),
-];
 
 export default function AnalysisBusinessDetail() {
+
+    function createData(
+        date: string,
+        time: number,
+        saleAmount: number,
+        saleCount: number,
+        avgSaleAmount: number,
+    ) {
+        return { date, time, saleAmount, saleCount, avgSaleAmount };
+    }
+    
+    const rows = [
+        createData('2023. 05. 20', 9, 2000000, 200, 10000),
+        createData('2023. 05. 20', 10, 2000000, 200, 10000),
+        createData('2023. 05. 20', 11, 2000000, 200, 10000),
+        createData('2023. 05. 20', 12, 2000000, 200, 10000),
+    ];
+    
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
             <TableContainer component={Table}>
