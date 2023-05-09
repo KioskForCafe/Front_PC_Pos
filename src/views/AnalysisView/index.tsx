@@ -4,6 +4,7 @@ import AnalysisCategoryBar from './AnalysisCategoryBar'
 import SaleAnalysisView from './SaleAnalysisView'
 import AnalysisBusinessView from './AnalysisBusinessView'
 import AnalysisProductView from './AnalysisProductView'
+import AnalysisCustomerView from './AnalysisCustomerView'
 
 export default function AnalysisView() {
   return (
@@ -16,7 +17,8 @@ export default function AnalysisView() {
         <Box sx={{ flex: 1 }}>
           {/* <SaleAnalysisView /> */}
           {/* <AnalysisBusinessView /> */}
-          <AnalysisProductView />
+          {/* <AnalysisProductView /> */}
+          <AnalysisCustomerView/>
         </Box>
       </Box>
     </Box>

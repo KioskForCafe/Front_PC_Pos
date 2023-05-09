@@ -8,7 +8,7 @@ import { useNow } from '@mui/x-date-pickers/internals';
 
 export default function SelectDatetimeView() {
   return (
-    <Box sx={{display: 'flex', flexDirection: 'row'}}>
+    <Box sx={{display: 'flex', flexDirection: 'row' , justifyItems: 'center', alignItems: 'center' }}>
       <Box sx={{ width: '500px' }}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={['StaticDatePicker']}>
