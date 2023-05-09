@@ -11,6 +11,7 @@ import Order from './views/Order';
 import AnalysisView from './views/AnalysisView';
 import Point from './views/Point';
 import Store from './views/Store';
+import SignIn from './views/SignIn';
 
 function App() {
   return (
@@ -22,8 +23,8 @@ function App() {
         {/* <OrderLog/> */}
         {/* <AnalysisView/> */}
         {/* <Point/> */}
-        <Store/>
-
+        {/* <Store/> */}
+        <SignIn/>
       </Box>
       <Footer />
     </Box>
