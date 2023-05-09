@@ -9,11 +9,11 @@ import AnalysisCustomerView from './AnalysisCustomerView'
 export default function AnalysisView() {
   return (
     <Box sx={{display: 'flex', flexDirection: 'column', height: '88vh', overflow: 'auto' }}>
-      <Box sx={{ display: 'flex', flexDirection: 'row', height: '100%'}}>
+      <Box sx={{ display: 'flex', flexDirection: 'row'}}>
         <Box sx={{width: '35vh'}}>
           <AnalysisCategoryBar />
         </Box>
-        <Divider orientation='vertical' flexItem />
+        <Divider orientation='vertical'/>
         <Box sx={{ flex: 1 }}>
           {/* <SaleAnalysisView /> */}
           {/* <AnalysisBusinessView /> */}
