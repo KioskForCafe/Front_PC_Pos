@@ -9,6 +9,9 @@ import NavigationBar from './views/NavigationBar';
 import OrderLog from './views/OrderLog';
 import Order from './views/Order';
 import AnalysisView from './views/AnalysisView';
+import Point from './views/Point';
+import Store from './views/Store';
+import AuthenticationView from './views/AuthenticationView';
 
 function App() {
   return (
@@ -19,6 +22,9 @@ function App() {
         {/* <CustomMenu/> */}
         {/* <OrderLog/> */}
         <AnalysisView/>
+        {/* <Point/> */}
+        {/* <Store/> */}
+        {/* <AuthenticationView/> */}
       </Box>
       <Footer />
     </Box>
