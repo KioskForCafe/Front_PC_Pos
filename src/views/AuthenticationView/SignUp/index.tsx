@@ -1,12 +1,14 @@
-import { Box, Button, FormControl, IconButton, Input, InputAdornment, InputLabel, TextField, Typography } from '@mui/material'
-import React, { ChangeEvent, Dispatch, MouseEventHandler, SetStateAction, useState } from 'react'
+import { Box, Button, FormControl, IconButton, Input, InputAdornment, InputLabel, Typography } from '@mui/material'
+import React, { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
 import axios, { AxiosResponse } from "axios";
-import { DuplicateCheckIdResponseDto } from '../../../apis/response/user';
-import { DuplicateIdRequestDto } from '../../../apis/request/user';
-import { DUPLICATE_USER_ID_URL } from '../../../constants/api';
+import { DuplicateCheckEmailResponseDto, DuplicateCheckIdResponseDto } from '../../../apis/response/user';
+import { DuplicateEmailRequestDto, DuplicateIdRequestDto } from '../../../apis/request/user';
+import { DUPLICATE_USER_EMAIL_URL, DUPLICATE_USER_ID_URL, SIGN_UP_URL } from '../../../constants/api';
 import ResponseDto from '../../../apis/response';
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
+import { SignUpRequestDto } from '../../../apis/request/auth';
+import { SignUpResponseDto } from '../../../apis/response/auth';
 
 interface Props {
     setLoginView: Dispatch<SetStateAction<boolean>>;
@@ -14,14 +16,16 @@ interface Props {
 
 export default function SignUp({setLoginView}:Props) {
 
+    const [isAdmin , setIsAdmin] = useState<boolean>(false);
     const [userId, setUserId] = useState<string>("");
-    const [duplicateUserId, setDuplicateUserId] = useState<boolean>(false);
     const [password, setPassword] = useState<string>("");
     const [passwordCheck, setPasswordCheck] = useState<string>("");
     const [userName, setUserName] = useState<string>("");
-    const [email, setEmail] = useState<string>("");
-    const [duplicateEmail, setDuplicateEmail] = useState<boolean>(false);
+    const [userEmail, setUserEmail] = useState<string>("");
     const [telNumber, setTelNumber] = useState<string>("");
+
+    const [duplicateEmail, setDuplicateEmail] = useState<boolean>(false);
+    const [duplicateUserId, setDuplicateUserId] = useState<boolean>(false);
     const [duplicateTelNumber, setDuplicateTelNumber] = useState<boolean>(false);
     
     const [showPasswordCheck, setShowPasswordCheck] = useState<boolean>(false);
@@ -36,8 +40,8 @@ export default function SignUp({setLoginView}:Props) {
         const data : DuplicateIdRequestDto ={ userId };
 
         axios.post(DUPLICATE_USER_ID_URL, data)
-        .then((response)=> DuplicateUserIdResponseHanlder(response))
-        .catch((error)=>DuplicateUserIdErrorHandler(error));
+        .then((response)=> duplicateUserIdResponseHanlder(response))
+        .catch((error)=>duplicateUserIdErrorHandler(error));
     };
 
     const onPasswordChangeHandler = (event:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -56,15 +60,19 @@ export default function SignUp({setLoginView}:Props) {
         
     }
     const onDuplicateEmailButtonHandler = () =>{
-        
+        const data : DuplicateEmailRequestDto ={ userEmail };
+
+        axios.post(DUPLICATE_USER_EMAIL_URL, data)
+        .then((response)=> duplicateEmailResponseHanlder(response))
+        .catch((error)=>duplicateEmailErrorHandler(error));
     }
     const onEmailChangeHandler = (event:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
         const value = event.target.value;
-        setEmail(value);
+        setUserEmail(value);
         
     }
     const onDuplicateTelNumberButtonHandler = () =>{
-        
+        // todo : 전화번호 중복확인도 필요해 보임
     }
     const onTelNumberChangeHandler = (event:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
         const value = event.target.value;
@@ -72,10 +80,14 @@ export default function SignUp({setLoginView}:Props) {
 
     }
     const onSignUpButtonHandler = () =>{
+        const data : SignUpRequestDto ={ userId, userName, password, telNumber, userEmail ,isAdmin };
 
+        axios.post(SIGN_UP_URL, data)
+        .then((response)=> signUpResponseHanlder(response))
+        .catch((error)=>signUpErrorHandler(error));
     }
 
-    const DuplicateUserIdResponseHanlder = (response: AxiosResponse<any, any>) =>{
+    const duplicateUserIdResponseHanlder = (response: AxiosResponse<any, any>) =>{
         const {data,message,result} = response.data as ResponseDto<DuplicateCheckIdResponseDto>;
         if(!result || !data){
             alert(message);
@@ -84,7 +96,34 @@ export default function SignUp({setLoginView}:Props) {
         setDuplicateUserId(data.result);
     }
 
-    const DuplicateUserIdErrorHandler = (error: any) =>{
+    const duplicateEmailResponseHanlder = (response: AxiosResponse<any, any>) =>{
+        const {data,message,result} = response.data as ResponseDto<DuplicateCheckEmailResponseDto>;
+        if(!result || !data){
+            alert(message);
+            return;
+        }
+        setDuplicateEmail(data.result);
+    }
+
+    const signUpResponseHanlder = (response: AxiosResponse<any, any>) =>{
+        const {data,message,result} = response.data as ResponseDto<SignUpResponseDto>
+        if(!result || !data){
+            alert(message);
+            return;
+        }
+        // todo : 로그인 화면으로 이동
+        setLoginView(false)
+    }
+
+    const duplicateUserIdErrorHandler = (error: any) =>{
+        console.log(error.message);
+    }
+    
+    const duplicateEmailErrorHandler = (error: any) =>{
+        console.log(error.message);
+    }
+    
+    const signUpErrorHandler = (error: any) =>{
         console.log(error.message);
     }
 
@@ -93,20 +132,21 @@ export default function SignUp({setLoginView}:Props) {
     <>
         <Box>
             <Typography variant='h4' marginBottom='30px'>회원가입</Typography>
+            {/* // todo : isAdmin 버튼 만들기 */}
         </Box>
         <Box>
-            <FormControl fullWidth variant='standard'>
+            <FormControl fullWidth variant='standard' sx={{mb:'1rem'}}>
                 <InputLabel>아이디</InputLabel>
                 <Input type='text'endAdornment={
                     <InputAdornment position='end'>
-                        <Button onClick={()=>onDuplicateUserIdButtonHandler()} sx={{minWidth:'80px'}}>중복 확인</Button>
+                        <Button onClick={()=>onDuplicateUserIdButtonHandler()} sx={{minWidth:'80px', height:'25px'}}>중복 확인</Button>
                     </InputAdornment>
 
                 }
                 onChange={(event) => onUserIdChangeHandler(event)}
                 />
             </FormControl>
-            <FormControl fullWidth variant='standard'>
+            <FormControl fullWidth variant='standard' sx={{mb:'1rem'}}>
                 <InputLabel>비밀번호</InputLabel>
                 <Input 
                     type={showPassword ? 'text' :'password' }
@@ -121,7 +161,7 @@ export default function SignUp({setLoginView}:Props) {
                       }
                     onChange={(event) => onPasswordChangeHandler(event)}/>
             </FormControl>
-            <FormControl fullWidth variant='standard'>
+            <FormControl fullWidth variant='standard' sx={{mb:'1rem'}}>
                 <InputLabel>비밀번호 확인</InputLabel>
                 <Input type={showPasswordCheck ? 'text' :'password' }
                 endAdornment={
@@ -135,27 +175,27 @@ export default function SignUp({setLoginView}:Props) {
                   }
                  onChange={(event) => onPasswordCheckChangeHandler(event)}/>
             </FormControl>
-            <FormControl fullWidth variant='standard'>
+            <FormControl fullWidth variant='standard' sx={{mb:'1rem'}}>
                 <InputLabel>이름</InputLabel>
                 <Input type='text'
                  onChange={(event) => onUserNameChangeHandler(event)}/>
             </FormControl>
-            <FormControl fullWidth variant='standard'>
+            <FormControl fullWidth variant='standard' sx={{mb:'1rem'}}>
                 <InputLabel>이메일</InputLabel>
                 <Input type='text'endAdornment={
                     <InputAdornment position='end'>
-                        <Button onClick={()=>onDuplicateEmailButtonHandler()} sx={{minWidth:'80px'}}>중복 확인</Button>
+                        <Button onClick={()=>onDuplicateEmailButtonHandler()} sx={{minWidth:'80px', height:'25px'}}>중복 확인</Button>
                     </InputAdornment>
 
                 }
                 onChange={(event) => onEmailChangeHandler(event)}
                 />
             </FormControl>
-            <FormControl fullWidth variant='standard'>
+            <FormControl fullWidth variant='standard' sx={{mb:'1rem'}}>
                 <InputLabel>전화번호</InputLabel>
                 <Input type='text'endAdornment={
                     <InputAdornment position='end'>
-                        <Button onClick={()=>onDuplicateTelNumberButtonHandler()} sx={{minWidth:'80px'}}>중복 확인</Button>
+                        <Button onClick={()=>onDuplicateTelNumberButtonHandler()} sx={{minWidth:'80px', height:'25px'}}>중복 확인</Button>
                     </InputAdornment>
 
                 }
