@@ -19,7 +19,6 @@ function App() {
         {/* <CustomMenu/> */}
         {/* <OrderLog/> */}
         <AnalysisView/>
-
       </Box>
       <Footer />
     </Box>
