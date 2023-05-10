@@ -7,7 +7,7 @@ import OrderDetail from './OrderDetail.tsx';
 
 export default function Order() {
   return (
-    <Box sx={{display:'flex', height:'100%'}}>
+    <Box sx={{display:'flex', height:'88vh'}}>
         <Box sx={{flexDirection:'column', display:'flex', flex:3, borderRight:'1px solid #E6E8EB'}}>
             <OrderCategoryBar/>
             <OrderContent/>
