@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Badge, Box } from '@mui/material';
 import React from 'react';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationAddIcon from '@mui/icons-material/NotificationAdd';
@@ -12,7 +12,9 @@ function Footer() {
                 <Box sx={{flex:1, textAlign:'center', fontWeight: 'bold', color:'grey'}}>매장 분석</Box>
                 <Box sx={{flex:1, textAlign:'center', fontWeight: 'bold', color:'grey'}}>더보기</Box>
                 <Box sx={{flex:1, textAlign:'center', fontWeight: 'bold', color:'grey'}}>
-                    { notification ? <NotificationsIcon/> : <NotificationAddIcon sx={{color:'red'}}/>}
+                    <Badge badgeContent="" color='primary' variant='dot'>
+                        <NotificationsIcon/>
+                    </Badge>
                 </Box>
             </Box>
     );
