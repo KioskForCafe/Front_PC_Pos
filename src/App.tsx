@@ -21,10 +21,10 @@ function App() {
         {/* <Order/> */}
         {/* <CustomMenu/> */}
         {/* <OrderLog/> */}
-        {/* <AnalysisView/> */}
+        <AnalysisView/>
         {/* <Point/> */}
         {/* <Store/> */}
-        <AuthenticationView/>
+        {/* <AuthenticationView/> */}
       </Box>
       <Footer />
     </Box>

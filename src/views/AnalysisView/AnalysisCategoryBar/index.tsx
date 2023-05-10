@@ -4,7 +4,24 @@ import SaleAnalysisView from '../SaleAnalysisView'
 import AnalysisBusinessView from '../AnalysisBusinessView'
 import AnalysisProductView from '../AnalysisProductView'
 
-export default function AnalysisCategoryBar() {
+interface Props{
+  setNode : React.Dispatch<React.SetStateAction<string>>
+}
+
+export default function AnalysisCategoryBar({setNode}:Props) {
+
+  const SaleAnalysisView = () => {
+    setNode('SaleAnalysisView');
+  }
+
+  const AnalysisBusinessView = () =>{
+    setNode('AnalysisBusinessView');
+  }
+
+  const AnalysisProductView = () => {
+    setNode('AnalysisProductView');
+  }
+
   return (
     <Box>
       <List sx={{ height: '100%' }}>
