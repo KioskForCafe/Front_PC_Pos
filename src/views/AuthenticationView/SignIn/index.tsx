@@ -5,6 +5,8 @@ import axios, { AxiosResponse } from 'axios';
 import { SIGN_IN_URL } from '../../../constants/api';
 import ResponseDto from '../../../apis/response';
 import { SignInResponseDto } from '../../../apis/response/auth';
+import { getExpires } from '../../../utils';
+import { useCookies } from "react-cookie";
 
 interface Props {
   setLoginView: Dispatch<SetStateAction<boolean>>;
@@ -14,6 +16,8 @@ export default function SignIn( {setLoginView} : Props) {
 
   const [userId, setUserId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+
+  const [cookies, setCookie] = useCookies();
 
   const onUserIdChangeHandler = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
     const value = event.target.value;
@@ -35,7 +39,14 @@ export default function SignIn( {setLoginView} : Props) {
 
   const signInResponseHandler = (response: AxiosResponse<any, any>) =>{
     const {data,message,result} = response.data as ResponseDto<SignInResponseDto>;
-    // todo : 토큰 처리(쿠키에 보관)
+    if(!result || !data){
+      alert(message);
+      return;
+    }
+    const {token, expiredTime,isAdmin,telNumber,userEmail,userId,userJoinDate,userName} = data;
+    const expires = getExpires(expiredTime);
+    setCookie('accessToken', token, {expires , path:'/'})
+
     // todo : 매장관리 화면으로 이동
 
   }

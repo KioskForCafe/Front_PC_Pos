@@ -9,6 +9,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import { SignUpRequestDto } from '../../../apis/request/auth';
 import { SignUpResponseDto } from '../../../apis/response/auth';
+import { passwordValidator, telNumberValidator, userEmailValidator, userIdValidator, userNameValidator } from '../../../constants/validate';
 
 interface Props {
     setLoginView: Dispatch<SetStateAction<boolean>>;
@@ -23,16 +24,26 @@ export default function SignUp({setLoginView}:Props) {
     const [userName, setUserName] = useState<string>("");
     const [userEmail, setUserEmail] = useState<string>("");
     const [telNumber, setTelNumber] = useState<string>("");
-
-    const [duplicateEmail, setDuplicateEmail] = useState<boolean>(false);
-    const [duplicateUserId, setDuplicateUserId] = useState<boolean>(false);
-    const [duplicateTelNumber, setDuplicateTelNumber] = useState<boolean>(false);
+    
+    const [userIdPatternCheck, setUserIdPatternCheck] = useState<boolean>(false);
+    const [passwordPatternCheck, setPasswordPatternCheck] = useState<boolean>(false);
+    const [passwordMatchCheck, setPasswordMatchCheck] = useState<boolean>(false);
+    const [userNamePatternCheck, setUserNamePatternCheck] = useState<boolean>(false);
+    const [userEmailPatternCheck, setUserEmailPatternCheck] = useState<boolean>(false);
+    const [telNumberPatternCheck, setTelNumberPatternCheck] = useState<boolean>(false);
+    const [duplicateEmail, setDuplicateUserEmail] = useState<boolean | null>(null);
+    const [duplicateUserId, setDuplicateUserId] = useState<boolean | null>(null);
+    // todo : 전화번호 중복확인 추가하기
+    const [duplicateTelNumber, setDuplicateTelNumber] = useState<boolean | null>(null);
     
     const [showPasswordCheck, setShowPasswordCheck] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
     const onUserIdChangeHandler = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
         const value = event.target.value;
+        const isValidate = userIdValidator.test(value);
+        setUserIdPatternCheck(isValidate);
+        setDuplicateUserId(null);
         setUserId(value);
     }
 
@@ -46,19 +57,26 @@ export default function SignUp({setLoginView}:Props) {
 
     const onPasswordChangeHandler = (event:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const value = event.target.value;
+        const isValidate = passwordValidator.test(value);
+        setPasswordPatternCheck(isValidate); 
         setPassword(value);
     }
     
     const onPasswordCheckChangeHandler = (event:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const value = event.target.value;
+        const isMatched = password === value;
+        setPasswordMatchCheck(isMatched);
         setPasswordCheck(value);
     }
     
     const onUserNameChangeHandler = (event:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
         const value = event.target.value;
+        const isValidate = userNameValidator.test(value);
+        setUserNamePatternCheck(isValidate);
         setUserName(value);
         
     }
+
     const onDuplicateEmailButtonHandler = () =>{
         const data : DuplicateEmailRequestDto ={ userEmail };
 
@@ -66,19 +84,27 @@ export default function SignUp({setLoginView}:Props) {
         .then((response)=> duplicateEmailResponseHanlder(response))
         .catch((error)=>duplicateEmailErrorHandler(error));
     }
-    const onEmailChangeHandler = (event:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
+    const onUserEmailChangeHandler = (event:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
         const value = event.target.value;
+        const isValidate = userEmailValidator.test(value);
+        setUserEmailPatternCheck(isValidate);
+        setDuplicateUserEmail(null);
         setUserEmail(value);
         
     }
+
     const onDuplicateTelNumberButtonHandler = () =>{
         // todo : 전화번호 중복확인도 필요해 보임
     }
+
     const onTelNumberChangeHandler = (event:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
         const value = event.target.value;
+        const isValidate = telNumberValidator.test(value);
+        setTelNumberPatternCheck(isValidate);
         setTelNumber(value);
 
     }
+
     const onSignUpButtonHandler = () =>{
         const data : SignUpRequestDto ={ userId, userName, password, telNumber, userEmail ,isAdmin };
 
@@ -102,7 +128,7 @@ export default function SignUp({setLoginView}:Props) {
             alert(message);
             return;
         }
-        setDuplicateEmail(data.result);
+        setDuplicateUserEmail(data.result);
     }
 
     const signUpResponseHanlder = (response: AxiosResponse<any, any>) =>{
@@ -188,7 +214,7 @@ export default function SignUp({setLoginView}:Props) {
                     </InputAdornment>
 
                 }
-                onChange={(event) => onEmailChangeHandler(event)}
+                onChange={(event) => onUserEmailChangeHandler(event)}
                 />
             </FormControl>
             <FormControl fullWidth variant='standard' sx={{mb:'1rem'}}>
