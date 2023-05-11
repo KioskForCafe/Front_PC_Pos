@@ -6,8 +6,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios, { AxiosResponse } from 'axios';
 import { AnalysisSaleResponseDto } from '../../../apis/response/analysis';
 import ResponseDto from '../../../apis/response';
-import { GET_SALE_ANALYSIS_URL } from '../../../constants/api';
+import { GET_SALE_ANALYSIS_URL, authorizationHeader } from '../../../constants/api';
 import SelectDatetimeView from '../SelectDatetimeView';
+import { useCookies } from 'react-cookie';
 
 
 export default function SaleAnalysisView() {
@@ -15,19 +16,21 @@ export default function SaleAnalysisView() {
     const navigator = useNavigate();
 
     const [storeId, setStoreId] = useState<string>('1');
-    // const [startedAt, setStartedAt] = useState<string>('');
-    // const [endedAt, setEndedAt] = useState<string>('');
     const [saleAmount, setSaleAmount] = useState<number>();
     const [saleCount, setSaleCount] = useState<number>();
     const [avgSaleAmount, setAvgSaleAmount] = useState<number>();
+
     const [startedAt, setStartedAt] = useState<Dayjs | null>(dayjs('2023-05-10'));
     const [endedAt, setEndedAt] = useState<Dayjs | null>(dayjs('2023-05-10'));
 
+    const [cookies] = useCookies();
+
+    const accessToken = cookies.accessToken;
     
 
     //         Event Handler          //
     const getSaleAnalysis = () => {
-        axios.get(GET_SALE_ANALYSIS_URL(storeId as string, startedAt?.format('YYYY-MM-DD') as string, endedAt?.format('YYYY-MM-DD') as string))
+        axios.get(GET_SALE_ANALYSIS_URL(storeId as string, startedAt?.format('YYYY-MM-DD') as string, endedAt?.format('YYYY-MM-DD') as string), authorizationHeader(accessToken))
             .then((response) => getSaleAnalysisResponseHandler(response))
             .catch((error) => getSaleAnalysisErrorHandler(error));
     }

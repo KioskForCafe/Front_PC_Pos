@@ -9,9 +9,12 @@ import AnalysisBusinessDetail from './AnalysisBusinessDetail';
 import SelectDatetimeView from '../SelectDatetimeView';
 import { AnalysisBusinessResponseDto } from '../../../apis/response/analysis';
 import axios, { AxiosResponse } from 'axios';
-import { GET_ANALYSIS_BUSINESS_URL } from '../../../constants/api';
+import { GET_ANALYSIS_BUSINESS_URL, authorizationHeader } from '../../../constants/api';
 import { useNavigate } from 'react-router-dom';
 import ResponseDto from '../../../apis/response';
+import { useCookies } from 'react-cookie';
+import useStore from '../../../stores/user.store';
+import User from '../../../interfaces/User.interface';
 
 export default function AnalysisBusinessView() {
 
@@ -22,9 +25,26 @@ export default function AnalysisBusinessView() {
     const [storeId, setStoreId] = useState<string>('1');
     const [analysisBusinessResponse, setAnalysisBusinessResponse] = useState<AnalysisBusinessResponseDto[] | null>(null);
 
+    const { user } = useStore();
+    const [addUser, setAddUser] = useState<User | null>(null);
+
+    const [cookies] = useCookies();
+
+    const accessToken = cookies.accessToken;
+
     //         Event Handler          //
     const getAnalysisBusiness = () => {
-        axios.get(GET_ANALYSIS_BUSINESS_URL(storeId as string, startedAt?.format('YYYY-MM-DD') as string, endedAt?.format('YYYY-MM-DD') as string))
+        if (!accessToken) {
+            alert('로그인이 필요합니다.')
+            return;
+        }
+
+        if (addUser?.userId !== user?.userId) {
+            alert('권한이 없습니다.')
+            return;
+        }
+
+        axios.get(GET_ANALYSIS_BUSINESS_URL(storeId as string, startedAt?.format('YYYY-MM-DD') as string, endedAt?.format('YYYY-MM-DD') as string), authorizationHeader(accessToken))
             .then((response) => getAnalysisBusinessResponseHandler(response))
             .catch((error) => getAnalysisBusinessErrorHandler(error));
     }
