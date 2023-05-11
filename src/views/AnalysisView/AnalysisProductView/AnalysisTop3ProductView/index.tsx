@@ -26,12 +26,12 @@ export default function AnalysisTop3ProductView({ byMenu }: props) {
                             <Box sx={{ display: 'flex', p: '10px 0px' }}>
                                 <Typography sx={{ mr: '1vh', fontSize: '2vh' }}>2</Typography>
                                 <Typography sx={{ flex: 1, fontSize: '2vh' }}>메뉴명</Typography>
-                                <Typography sx={{ textAlign: 'right', fontSize: '2vh' }}>7건</Typography>
+                                <Typography sx={{ textAlign: 'right', fontSize: '2vh' }}>{}건</Typography>
                             </Box>
                             <Box sx={{ display: 'flex', p: '10px 0px' }}>
                                 <Typography sx={{ mr: '1vh', fontSize: '2vh' }}>3</Typography>
                                 <Typography sx={{ flex: 1, fontSize: '2vh' }}>메뉴명</Typography>
-                                <Typography sx={{ textAlign: 'right', fontSize: '2vh' }}>3건</Typography>
+                                <Typography sx={{ textAlign: 'right', fontSize: '2vh' }}>{}건</Typography>
                             </Box>
                         </Box>
                     </Box>
