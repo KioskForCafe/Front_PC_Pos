@@ -57,8 +57,8 @@ export default function SignUp({setLoginView}:Props) {
 
     const onPasswordChangeHandler = (event:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const value = event.target.value;
-        const isValidate = passwordValidator.test(value);
-        setPasswordPatternCheck(isValidate); 
+        // const isValidate = passwordValidator.test(value);
+        // setPasswordPatternCheck(isValidate); 
         setPassword(value);
     }
     
@@ -137,7 +137,7 @@ export default function SignUp({setLoginView}:Props) {
             alert(message);
             return;
         }
-        setLoginView(false);
+        setLoginView(true);
     }
 
     const duplicateUserIdErrorHandler = (error: any) =>{
