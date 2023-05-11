@@ -22,7 +22,7 @@ function App() {
       <NavigationBar />
       <Box sx={{flex:1}}>
         {
-          node === 'AuthenticationView' ? <AuthenticationView /> :
+          node === 'AuthenticationView' ? <AuthenticationView setNode={setNode} /> :
           node === 'Order' ? <Order/> :
           node === 'CustomMenu' ? <CustomMenu/> :
           node === 'OrderLog' ? <OrderLog/> :
@@ -37,7 +37,7 @@ function App() {
         {/* <Store/> */}
         
       </Box>
-      <Footer />
+      <Footer setNode={setNode}/>
     </Box>
   );
 }

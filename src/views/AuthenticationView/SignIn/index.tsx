@@ -10,9 +10,10 @@ import { useCookies } from "react-cookie";
 
 interface Props {
   setLoginView: Dispatch<SetStateAction<boolean>>;
+  setNode: Dispatch<React.SetStateAction<string>>;
 }
 
-export default function SignIn( {setLoginView} : Props) {
+export default function SignIn( {setLoginView, setNode} : Props) {
 
   const [userId, setUserId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -43,11 +44,12 @@ export default function SignIn( {setLoginView} : Props) {
       alert(message);
       return;
     }
+    console.log(data);
     const {token, expiredTime,isAdmin,telNumber,userEmail,userId,userJoinDate,userName} = data;
     const expires = getExpires(expiredTime);
     setCookie('accessToken', token, {expires , path:'/'})
 
-    // todo : 매장관리 화면으로 이동
+    setNode('Store');
 
   }
 
@@ -65,7 +67,7 @@ export default function SignIn( {setLoginView} : Props) {
           <Typography>회원 아이디</Typography>
           <TextField  onChange={(event)=>onUserIdChangeHandler(event)} margin='dense' fullWidth variant='outlined' size='small'/>
           <Typography>비밀번호</Typography>
-          <TextField onChange={(event)=>onPasswordChangeHandler(event)} margin='dense' fullWidth variant='outlined' size='small'/>
+          <TextField type='password' onChange={(event)=>onPasswordChangeHandler(event)} margin='dense' fullWidth variant='outlined' size='small'/>
       </Box>
       <Button onClick={()=>onSignInButtonHandler()} fullWidth >로그인</Button>
       <Box sx={{display:'flex' , alignItems:'center', my:'30px'}}>
