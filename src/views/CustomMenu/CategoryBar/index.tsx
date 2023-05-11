@@ -80,36 +80,7 @@ export default function CategoryBar() {
           }}
         >
             <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" /> 
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <Tab label="메뉴1" />
-            <IconButton>
+            <IconButton onClick={handleClick}>
             <AddIcon />
           </IconButton>
           <IconButton sx={{ color: '#8c8c8c' }} onClick={handleClick}

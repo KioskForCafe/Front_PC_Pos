@@ -3,6 +3,7 @@ import React from 'react'
 import SaleAnalysisView from '../SaleAnalysisView'
 import AnalysisBusinessView from '../AnalysisBusinessView'
 import AnalysisProductView from '../AnalysisProductView'
+import AnalysisCustomerView from '../AnalysisCustomerView'
 
 interface Props{
   setNode : React.Dispatch<React.SetStateAction<string>>
@@ -22,6 +23,10 @@ export default function AnalysisCategoryBar({setNode}:Props) {
     setNode('AnalysisProductView');
   }
 
+  const AnalysisCustomerView = () => {
+    setNode('AnalysisCustomerView');
+  }
+
   return (
     <Box>
       <List sx={{ height: '100%' }}>
@@ -38,7 +43,7 @@ export default function AnalysisCategoryBar({setNode}:Props) {
         </ListItem>
         <Divider/>
         <ListItem>
-          <ListItemButton>고객 분석</ListItemButton>
+          <ListItemButton onClick={AnalysisCustomerView}>고객 분석</ListItemButton>
         </ListItem>
       </List>
     </Box>

@@ -2,25 +2,35 @@ import { Box, Card, CardContent, Divider, Icon, Typography } from '@mui/material
 import { ResponsivePie } from '@nivo/pie'
 import React from 'react'
 
-export default function AnalysisCategoryView() {
+
+interface props {
+    byCategory : {
+        categoryId : number,
+        categoryName: string,
+        saleCount: number,
+        totalPrice: number
+    }[];
+}
+
+export default function AnalysisCategoryView({byCategory}: props) {
 
 
     const data = [
         {
-            "id": "signiture",
-            "label": "시그니처",
+            "id": "커피",
+            "label": "커피",
             "value": 154,
             "color": "hsl(99, 70%, 50%)"
         },
         {
-            "id": "americano",
-            "label": "아메리카노",
+            "id": "베버리지",
+            "label": "베버리지",
             "value": 554,
             "color": "hsl(47, 70%, 50%)"
         },
         {
-            "id": "cafeLatte",
-            "label": "카페라떼",
+            "id": "베이커리",
+            "label": "베이커리",
             "value": 310,
             "color": "hsl(215, 70%, 50%)"
         }
@@ -29,7 +39,7 @@ export default function AnalysisCategoryView() {
     const MyResponsivePie = (data: any) => (
         <ResponsivePie
             data={data}
-            margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
+            margin={{ top: 10, right: 10, bottom: 70, left: 10 }}
             innerRadius={0.8}
             padAngle={0.7}
             cornerRadius={3}
@@ -125,7 +135,7 @@ export default function AnalysisCategoryView() {
                 <CardContent>
                     <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-                            <Box sx={{height: '20vh',}}>
+                            <Box sx={{height: '30vh',}}>
                                 {MyResponsivePie(data)}
                             </Box>
                         </Box>
