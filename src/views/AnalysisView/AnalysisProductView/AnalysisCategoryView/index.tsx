@@ -2,7 +2,17 @@ import { Box, Card, CardContent, Divider, Icon, Typography } from '@mui/material
 import { ResponsivePie } from '@nivo/pie'
 import React from 'react'
 
-export default function AnalysisCategoryView() {
+
+interface props {
+    byCategory : {
+        categoryId : number,
+        categoryName: string,
+        saleCount: number,
+        totalPrice: number
+    }[];
+}
+
+export default function AnalysisCategoryView({byCategory}: props) {
 
 
     const data = [

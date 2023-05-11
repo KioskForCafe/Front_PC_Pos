@@ -1,7 +1,16 @@
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import React from 'react'
 
-export default function AnalysisTop10ProductView() {
+interface props {
+    byMenu : {
+        menuId: number,
+        menuName: string,
+        saleCount: number,
+        totalPrice: number
+    }[]
+}
+
+export default function AnalysisTop10ProductView( {byMenu} : props ) {
 
     function createData(
         rank: number,

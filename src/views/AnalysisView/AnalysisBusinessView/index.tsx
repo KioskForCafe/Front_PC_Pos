@@ -19,11 +19,8 @@ export default function AnalysisBusinessView() {
 
     const [startedAt, setStartedAt] = useState<Dayjs | null>(dayjs('2023-05-10'));
     const [endedAt, setEndedAt] = useState<Dayjs | null>(dayjs('2023-05-10'));
-    const [time, setTime] = useState<number>();
-    
     const [storeId, setStoreId] = useState<string>('1');
-    const [saleAmount, setSaleAmount] = useState<number>();
-    const [saleCount, setSaleCount] = useState<number>();
+    const [analysisBusinessResponse, setAnalysisBusinessResponse] = useState<AnalysisBusinessResponseDto[] | null>(null);
 
     //         Event Handler          //
     const getAnalysisBusiness = () => {
@@ -40,7 +37,7 @@ export default function AnalysisBusinessView() {
     //              Response Handler                //
 
     const getAnalysisBusinessResponseHandler = (response: AxiosResponse<any, any>) => {
-        const { result, message, data } = response.data as ResponseDto<AnalysisBusinessResponseDto>
+        const { result, message, data } = response.data as ResponseDto<AnalysisBusinessResponseDto[]>
         if (!result || !data) {
             alert(message);
             navigator('/');
@@ -55,30 +52,26 @@ export default function AnalysisBusinessView() {
         console.log(error.message);
     }
 
-
-    //          function            //
-
-    const setAnalysisBusinessResponse = (data: AnalysisBusinessResponseDto) => {
-        const { saleAmount, saleCount, time } = data;
-        setSaleAmount(saleAmount);
-        setSaleCount(saleCount);
-        setTime(time);
-    }
-
     //          Use Effect              //
 
-    useEffect (() => {
-        getAnalysisBusiness();
-    });
+    useEffect(() => {
+        if (startedAt && endedAt) getAnalysisBusiness();
+        console.log();
+    }, [storeId, startedAt, endedAt]);
 
     return (
         <Box>
             <Typography sx={{ fontSize: '3vh', p: '3vh' }}>영업 분석</Typography>
             <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyItems: 'center', alignItems: 'center' }}>
                 <SelectDatetimeView startedAt={startedAt as Dayjs} endedAt={endedAt as Dayjs} onDatetimeChange={handleDatetimeChange} />
-                <AnalysisBusinessDetail time={time as number} saleAmount={saleAmount as number} saleCount={saleCount as number}/>
+                {analysisBusinessResponse && analysisBusinessResponse.length > 0 ? (
+                    analysisBusinessResponse.map((item) => (
+                        <AnalysisBusinessDetail key={item.time} time={item.time} saleAmount={item.saleAmount} saleCount={item.saleCount} />
+                    ))
+                ) : (
+                    <Typography>데이터가 없습니다.</Typography>
+                )}
             </Box>
         </Box>
-
-    )
+    );
 }
