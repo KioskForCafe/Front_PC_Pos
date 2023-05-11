@@ -17,7 +17,7 @@ interface Props {
 
 export default function SignUp({setLoginView}:Props) {
 
-    const [isAdmin , setIsAdmin] = useState<boolean>(false);
+    const [isAdmin , setIsAdmin] = useState<boolean>(true);
     const [userId, setUserId] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [passwordCheck, setPasswordCheck] = useState<string>("");
@@ -57,8 +57,8 @@ export default function SignUp({setLoginView}:Props) {
 
     const onPasswordChangeHandler = (event:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const value = event.target.value;
-        const isValidate = passwordValidator.test(value);
-        setPasswordPatternCheck(isValidate); 
+        // const isValidate = passwordValidator.test(value);
+        // setPasswordPatternCheck(isValidate); 
         setPassword(value);
     }
     
@@ -137,8 +137,7 @@ export default function SignUp({setLoginView}:Props) {
             alert(message);
             return;
         }
-        // todo : 로그인 화면으로 이동
-        setLoginView(false)
+        setLoginView(true);
     }
 
     const duplicateUserIdErrorHandler = (error: any) =>{
@@ -158,7 +157,6 @@ export default function SignUp({setLoginView}:Props) {
     <>
         <Box>
             <Typography variant='h4' marginBottom='30px'>회원가입</Typography>
-            {/* // todo : isAdmin 버튼 만들기 */}
         </Box>
         <Box>
             <FormControl fullWidth variant='standard' sx={{mb:'1rem'}}>
