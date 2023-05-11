@@ -1,26 +1,16 @@
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
-import React, { useState } from 'react'
+import axios from 'axios';
+import dayjs, { Dayjs } from 'dayjs';
+import React, { useEffect, useState } from 'react'
 
+interface  props{
+    time: number,
+    saleAmount: number,
+    saleCount: number
+}
 
-export default function AnalysisBusinessDetail() {
+export default function AnalysisBusinessDetail({time, saleAmount, saleCount}:props) {
 
-    function createData(
-        date: string,
-        time: number,
-        saleAmount: number,
-        saleCount: number,
-        avgSaleAmount: number,
-    ) {
-        return { date, time, saleAmount, saleCount, avgSaleAmount };
-    }
-    
-    const rows = [
-        createData('2023. 05. 20', 9, 2000000, 200, 10000),
-        createData('2023. 05. 20', 10, 2000000, 200, 10000),
-        createData('2023. 05. 20', 11, 2000000, 200, 10000),
-        createData('2023. 05. 20', 12, 2000000, 200, 10000),
-    ];
-    
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
             <TableContainer component={Table}>
@@ -28,9 +18,6 @@ export default function AnalysisBusinessDetail() {
                     <TableHead>
                         <TableRow>
                             <TableCell>
-                                날짜
-                            </TableCell>
-                            <TableCell >
                                 시간
                             </TableCell>
                             <TableCell align="right">
@@ -42,21 +29,11 @@ export default function AnalysisBusinessDetail() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map((row) => (
-                            <TableRow
-                                key={`${row.date}-${row.time}`}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell component="th" scope="row">
-                                    {row.date}
-                                </TableCell>
-                                <TableCell component="th" scope="row">
-                                    {row.time}
-                                </TableCell>
-                                <TableCell align="right">{row.saleAmount}</TableCell>
-                                <TableCell align="right">{row.saleCount}</TableCell>
-                            </TableRow>
-                        ))}
+                        <TableRow>
+                            <TableCell>{time}</TableCell>
+                            <TableCell>{saleAmount}</TableCell>
+                            <TableCell align="right">{saleCount}</TableCell>
+                        </TableRow>
                     </TableBody>
                 </Table>
             </TableContainer>
