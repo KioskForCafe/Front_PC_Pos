@@ -4,37 +4,33 @@ import React from 'react'
 
 
 interface props {
-    byCategory : {
-        categoryId : number,
+    byCategory: {
+        categoryId: number,
         categoryName: string,
         saleCount: number,
         totalPrice: number
     }[];
 }
 
-export default function AnalysisCategoryView({byCategory}: props) {
+export default function AnalysisCategoryView({ byCategory }: props) {
 
 
-    const data = [
-        {
-            "id": "커피",
-            "label": "커피",
-            "value": 154,
-            "color": "hsl(99, 70%, 50%)"
-        },
-        {
-            "id": "베버리지",
-            "label": "베버리지",
-            "value": 554,
-            "color": "hsl(47, 70%, 50%)"
-        },
-        {
-            "id": "베이커리",
-            "label": "베이커리",
-            "value": 310,
-            "color": "hsl(215, 70%, 50%)"
-        }
-    ]
+    const data = assignColorsToData(
+        byCategory.map((category) => ({
+            id: category.categoryName,
+            label: category.categoryName,
+            value: category.saleCount,
+        }))
+    );
+
+    function assignColorsToData(data: any[]) {
+        const colors = ['hsl(0, 70%, 50%)', 'hsl(120, 70%, 50%)', 'hsl(240, 70%, 50%)']; // 색상 배열
+
+        return data.map((item, index) => ({
+            ...item,
+            color: colors[index % colors.length], // 배열 인덱스를 색상 배열의 길이로 나눈 나머지를 사용하여 색상 할당
+        }));
+    }
 
     const MyResponsivePie = (data: any) => (
         <ResponsivePie
@@ -135,22 +131,19 @@ export default function AnalysisCategoryView({byCategory}: props) {
                 <CardContent>
                     <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-                            <Box sx={{height: '30vh',}}>
+                            <Box sx={{ height: '30vh', }}>
                                 {MyResponsivePie(data)}
                             </Box>
                         </Box>
                         <Divider orientation='vertical' flexItem />
                         <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, p: '0px 20px' }}>
-                            <Box sx={{ display: 'flex', p: '10px 0px' }}>
-                                <Typography sx={{ mr: '1vh', fontSize: '2vh' }}>2</Typography>
-                                <Typography sx={{ flex: 1, fontSize: '2vh' }}>메뉴명</Typography>
-                                <Typography sx={{ textAlign: 'right', fontSize: '2vh' }}>7건</Typography>
-                            </Box>
-                            <Box sx={{ display: 'flex', p: '10px 0px' }}>
-                                <Typography sx={{ mr: '1vh', fontSize: '2vh' }}>3</Typography>
-                                <Typography sx={{ flex: 1, fontSize: '2vh' }}>메뉴명</Typography>
-                                <Typography sx={{ textAlign: 'right', fontSize: '2vh' }}>3건</Typography>
-                            </Box>
+                            {byCategory.slice(0, 3).map((category, index) => (
+                                <Box sx={{ display: 'flex', p: '10px 0px' }} key={category.categoryId}>
+                                    <Typography sx={{ mr: '1vh', fontSize: '2vh' }}>{index + 2}</Typography>
+                                    <Typography sx={{ flex: 1, fontSize: '2vh' }}>{category.categoryName}</Typography>
+                                    <Typography sx={{ textAlign: 'right', fontSize: '2vh' }}>{category.saleCount}건</Typography>
+                                </Box>
+                            ))}
                         </Box>
                     </Box>
                 </CardContent>

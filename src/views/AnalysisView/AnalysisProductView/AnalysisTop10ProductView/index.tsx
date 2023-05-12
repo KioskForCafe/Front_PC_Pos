@@ -12,27 +12,7 @@ interface props {
 
 export default function AnalysisTop10ProductView( {byMenu} : props ) {
 
-    function createData(
-        rank: number,
-        menu: string,
-        saleCount: number,
-        saleAmount: number,
-    ) {
-        return { rank, menu, saleAmount, saleCount };
-    }
-    
-    const rows = [
-        createData(1, '시그니처', 10, 200000),
-        createData(2, '아메리카노', 7, 200000),
-        createData(3, '카페라떼', 3, 200000),
-        createData(4, '자몽에이드', 2, 200000),
-        createData(5, '아인슈페너', 1, 200000),
-        createData(6, '밀크티', 1, 200000),
-        createData(7, '캐모마일', 1, 200000),
-        createData(8, '헤이즐넛라떼', 1, 200000),
-        createData(9, '말차라떼', 1, 200000),
-        createData(10, '옥수수라떼', 0, 200000),
-    ];
+    const sortedMenu = byMenu.sort((a, b) => b.saleCount - a.saleCount);
 
   return (
     <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -55,19 +35,19 @@ export default function AnalysisTop10ProductView( {byMenu} : props ) {
                 </TableRow>
             </TableHead>
             <TableBody>
-                {rows.map((row) => (
+                {sortedMenu.map((menu, index) => (
                     <TableRow
-                        key={`${row.rank}`}
+                        key={`${menu.menuId}`}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
                         <TableCell component="th" scope="row">
-                            {row.rank}
+                            {index+1}
                         </TableCell>
                         <TableCell>
-                            {row.menu}
+                            {menu.menuName}
                         </TableCell>
-                        <TableCell align="right">{row.saleCount}</TableCell>
-                        <TableCell align="right">{row.saleAmount}</TableCell>
+                        <TableCell align="right">{menu.saleCount}</TableCell>
+                        <TableCell align="right">{menu.totalPrice}</TableCell>
                     </TableRow>
                 ))}
             </TableBody>
