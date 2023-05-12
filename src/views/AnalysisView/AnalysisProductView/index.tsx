@@ -4,10 +4,13 @@ import React, { useEffect, useState } from 'react'
 import SelectDatetimeView from '../SelectDatetimeView';
 import AnalysisProductDetail from './AnalysisProductDetail';
 import axios, { AxiosResponse } from 'axios';
-import { GET_ANALYSIS_MENU_URL } from '../../../constants/api';
+import { GET_ANALYSIS_MENU_URL, authorizationHeader } from '../../../constants/api';
 import { AnalysisMenuResponseDto } from '../../../apis/response/analysis';
 import ResponseDto from '../../../apis/response';
 import { useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
+import useStore from '../../../stores/user.store';
+import User from '../../../interfaces/User.interface';
 
 export default function AnalysisProductView() {
 
@@ -18,10 +21,27 @@ export default function AnalysisProductView() {
     const [storeId, setStoreId] = useState<string>('1');
     const [analysisProductResponse, setAnalysisProductResponse] = useState<AnalysisMenuResponseDto | null>(null);
 
+    const { user } = useStore();
+    const [addUser, setAddUser] = useState<User | null>(null);
+
+    const [cookies] = useCookies();
+
+    const accessToken = cookies.accessToken;
 
     //         Event Handler          //
     const getAnalysisProduct = () => {
-        axios.get(GET_ANALYSIS_MENU_URL(storeId as string, startedAt?.format('YYYY-MM-DD') as string, endedAt?.format('YYYY-MM-DD') as string))
+
+        if (!accessToken) {
+            alert('로그인이 필요합니다.')
+            return;
+        }
+
+        if (addUser?.userId !== user?.userId) {
+            alert('권한이 없습니다.')
+            return;
+        }
+
+        axios.get(GET_ANALYSIS_MENU_URL(storeId as string, startedAt?.format('YYYY-MM-DD') as string, endedAt?.format('YYYY-MM-DD') as string), authorizationHeader(accessToken))
             .then((response) => getAnalysisProductResponseHandler(response))
             .catch((error) => getAnalysisProductErrorHandler(error));
     }
@@ -60,8 +80,9 @@ export default function AnalysisProductView() {
             <Typography sx={{ fontSize: '3vh', p: '3vh' }}>상품 분석</Typography>
             <Box sx={{ mt: '2vh', display: 'flex', flexDirection: 'column', justifyItems: 'center', alignItems: 'center' }}>
                 <SelectDatetimeView startedAt={startedAt as Dayjs} endedAt={endedAt as Dayjs} onDatetimeChange={handleDatetimeChange} />
-                {!analysisProductResponse == null &&
-                    analysisProductResponse?.byCategory && analysisProductResponse.byCategory.length > 0 ? (
+                {analysisProductResponse !== null &&
+                    (analysisProductResponse?.byCategory && analysisProductResponse.byCategory.length > 0) && 
+                    (analysisProductResponse?.byMenu && analysisProductResponse.byMenu.length > 0) ? (
                     analysisProductResponse.byCategory.map((item) => (
                         <AnalysisProductDetail byCategory={analysisProductResponse.byCategory} byMenu={analysisProductResponse.byMenu} />
                     ))
