@@ -1,8 +1,18 @@
 import { Box, Button, Card, CardContent, CardHeader, CardMedia, IconButton, Menu, MenuItem, Typography } from '@mui/material'
-import React from 'react'
+import React, { Dispatch } from 'react'
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { GetStoreResponseDto } from '../../apis/response/store';
+import { useStoreStore } from '../../stores';
 
-export default function StoreCard() {
+interface Props{
+    setNode: Dispatch<React.SetStateAction<string>>;
+    item: GetStoreResponseDto;
+}
+
+export default function StoreCard({item, setNode} : Props) {
+
+    const {store, resetStore, setStore } = useStoreStore();
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const storeMenuOpen = Boolean(anchorEl);
     const handleStoreMenuClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -12,8 +22,13 @@ export default function StoreCard() {
         setAnchorEl(null);
     };
 
+    const onPosButtonHandler = () =>{
+        setStore(item);
+        setNode('Order');
+    }
+
     return (
-        <Card sx={{ display:'flex', flexDirection:'column', maxWidth: 300 }}>
+        <Card sx={{flex:1, mx:'15px', display:'inline-flex', flexDirection:'column', maxWidth: 300 }}>
             <CardHeader
                 sx={{flex:1}}
                 action={
@@ -21,25 +36,21 @@ export default function StoreCard() {
                         <MoreVertIcon />
                     </IconButton>
                 }
-                title="매장명"
-                subheader="등록일"
+                title={item.storeName}
             />
-            <CardMedia
-                component="img"
-                sx={{flex:3}}
-                height='100%'
-                src="https://cdn.digitaltoday.co.kr/news/photo/202209/460929_431098_5441.jpg"
-                // image='C:/Users/ghtjd/Desktop/workspace/team-project/front-project/src/static/images/noImage.jpg'
-                // image="./static/images/noImage.jpg"
-                alt="이미지"
-            />
+            <Box
+                sx={{flex:3, backgroundSize:'cover' ,backgroundImage: item.storeImgUrl || 'url(https://cdn.digitaltoday.co.kr/news/photo/202209/460929_431098_5441.jpg)'}}
+            ></Box>
             <CardContent sx={{flex:1}}>
                 <Typography variant="body2" color="text.secondary">
-                영업시간 : 매장 오픈 시간 ~ 마감 시간
+                영업시간
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                {`${item.storeOpenTime} ~ ${item.storeCloseTime}`}
                 </Typography>
             </CardContent>
             <Box sx={{flex:1, display: 'flex'}}>
-                <Button sx={{flex:1}}>
+                <Button onClick={()=>onPosButtonHandler()} sx={{flex:1}}>
                     매장 PC 포스
                 </Button>
                 <Button sx={{flex:1}}>

@@ -27,7 +27,7 @@ function App() {
           node === 'CustomMenu' ? <CustomMenu/> :
           node === 'OrderLog' ? <OrderLog/> :
           node === 'AnalysisView' ? <AnalysisView/> :
-          node === 'Store' && <Store/>
+          node === 'Store' && <Store setNode={setNode}/>
         }
         {/* <Order/> */}
         {/* <CustomMenu/> */}
