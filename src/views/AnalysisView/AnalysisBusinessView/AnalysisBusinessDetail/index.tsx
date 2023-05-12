@@ -31,7 +31,7 @@ export default function AnalysisBusinessDetail({ saleListBytime }: props) {
                             <Typography >주문이 적게 들어온 시간대</Typography>
                             <Typography sx={{ fontSize: '4vh', mt: '1vh', mb: '1vh' }}>{sortedBySaleCount[sortedBySaleCount.length - 1].time} : 00</Typography>
                             <Typography>
-                                {(sortedBySaleCount[0].saleCount == sortedBySaleCount[sortedBySaleCount.length-1].saleCount) ? '0' : sortedBySaleCount[sortedBySaleCount.length - 1].saleCount}건</Typography>
+                                {sortedBySaleCount[sortedBySaleCount.length - 1].saleCount}건</Typography>
                         </Box>
                     </Box>
                 </CardContent>
