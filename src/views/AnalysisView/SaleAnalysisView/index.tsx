@@ -9,6 +9,8 @@ import ResponseDto from '../../../apis/response';
 import { GET_SALE_ANALYSIS_URL, authorizationHeader } from '../../../constants/api';
 import SelectDatetimeView from '../SelectDatetimeView';
 import { useCookies } from 'react-cookie';
+import useStore from '../../../stores/user.store';
+import User from '../../../interfaces/User.interface';
 
 
 export default function SaleAnalysisView() {
@@ -23,6 +25,9 @@ export default function SaleAnalysisView() {
     const [startedAt, setStartedAt] = useState<Dayjs | null>(dayjs('2023-05-10'));
     const [endedAt, setEndedAt] = useState<Dayjs | null>(dayjs('2023-05-10'));
 
+    const { user } = useStore();
+    const [addUser, setAddUser] = useState<User | null>(null);
+
     const [cookies] = useCookies();
 
     const accessToken = cookies.accessToken;
@@ -30,6 +35,17 @@ export default function SaleAnalysisView() {
 
     //         Event Handler          //
     const getSaleAnalysis = () => {
+
+        if (!accessToken) {
+            alert('로그인이 필요합니다.')
+            return;
+        }
+
+        if (addUser?.userId !== user?.userId) {
+            alert('권한이 없습니다.')
+            return;
+        }
+
         axios.get(GET_SALE_ANALYSIS_URL(storeId as string, startedAt?.format('YYYY-MM-DD') as string, endedAt?.format('YYYY-MM-DD') as string), authorizationHeader(accessToken))
             .then((response) => getSaleAnalysisResponseHandler(response))
             .catch((error) => getSaleAnalysisErrorHandler(error));
