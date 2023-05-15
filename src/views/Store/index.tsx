@@ -1,4 +1,4 @@
-import { Box, SpeedDial, Tooltip} from '@mui/material'
+import { Box, Button, SpeedDial, Tooltip} from '@mui/material'
 import React, { Dispatch, useEffect, useState } from 'react'
 
 import AddIcon from '@mui/icons-material/Add';
@@ -31,8 +31,8 @@ export default function Store({setNode}:Props) {
   const getStoreResponseHandler = (response: AxiosResponse<any, any>) =>{
     const {data, message, result} = response.data as ResponseDto<GetStoreResponseDto[]>
     if(!result || data === null) return;
-    setStoreList(data);
     console.log(storeList);
+    setStoreList(data);
   }
 
   const getStoreErrorHandler = (error: any) =>{

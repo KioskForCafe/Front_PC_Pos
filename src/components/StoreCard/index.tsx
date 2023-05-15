@@ -23,6 +23,7 @@ export default function StoreCard({item, setNode} : Props) {
     };
 
     const onPosButtonHandler = () =>{
+        //? type을 맞춰야하는지?
         setStore(item);
         setNode('Order');
     }
