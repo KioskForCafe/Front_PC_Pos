@@ -21,10 +21,12 @@ export default function OrderContent() {
     const accessToken = cookies.accessToken;
 
     const getMenuList = (accessToken: string) =>{
-        axios
-            .get(GET_MENU_LIST_URL(store?.storeId as number, category?.categoryId as number),authorizationHeader(accessToken))
-            .then((response)=>getMenuListResponseHandler(response))
-            .catch((error)=>getMenuListErrorHandler(error))
+        if(category !== null){
+            axios
+                .get(GET_MENU_LIST_URL(store?.storeId as number, category?.categoryId as number),authorizationHeader(accessToken))
+                .then((response)=>getMenuListResponseHandler(response))
+                .catch((error)=>getMenuListErrorHandler(error))
+        }
     }
 
     const getMenuListResponseHandler = (response: AxiosResponse<any, any>) =>{
@@ -33,6 +35,7 @@ export default function OrderContent() {
         console.log(message);
         return;
       }
+      console.log(data);
       setMenuList(data);
     }
 
@@ -42,7 +45,7 @@ export default function OrderContent() {
 
     useEffect(()=>{
         getMenuList(accessToken);
-    },[])
+    },[category])
 
   return (
     <Box sx={{flex:1 ,display:'flex', flexDirection:'column', backgroundColor:'#E6E8EB'}}>

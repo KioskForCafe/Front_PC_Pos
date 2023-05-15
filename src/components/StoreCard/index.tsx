@@ -11,7 +11,7 @@ interface Props{
 
 export default function StoreCard({item, setNode} : Props) {
 
-    const {store, resetStore, setStore } = useStoreStore();
+    const {setStore } = useStoreStore();
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const storeMenuOpen = Boolean(anchorEl);
@@ -23,8 +23,8 @@ export default function StoreCard({item, setNode} : Props) {
     };
 
     const onPosButtonHandler = () =>{
-        //? type을 맞춰야하는지?
-        setStore(item);
+        const {...store} = item;
+        setStore(store);
         setNode('Order');
     }
 
