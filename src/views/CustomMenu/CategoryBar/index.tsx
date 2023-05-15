@@ -1,8 +1,16 @@
-import React, { SyntheticEvent, useState } from 'react'
+import React, { SyntheticEvent, useEffect, useState } from 'react'
 import { styled, alpha } from '@mui/material/styles';
 import { AppBar, Box, Toolbar, IconButton, MenuItem, MenuList, MenuProps, Menu, Tab, Tabs, tabsClasses } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import { GetCategoryResponseDto } from '../../../apis/response/category';
+import { useNavigate } from 'react-router-dom';
+import useStore from '../../../stores/user.store';
+import User from '../../../interfaces/User.interface';
+import { useCookies } from 'react-cookie';
+import { GET_CATEGORY_LIST_URL, authorizationHeader } from '../../../constants/api';
+import axios, { AxiosResponse } from 'axios';
+import ResponseDto from '../../../apis/response';
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -49,6 +57,64 @@ const StyledMenu = styled((props: MenuProps) => (
 
 export default function CategoryBar() {
 
+  const navigator = useNavigate();
+
+  const [categoryResponse, setCategoryResponse] = useState<GetCategoryResponseDto[] | null>(null);
+  const [storeId, setStoreId] = useState<string>('1');
+  const [categoryId, setCategoryId] = useState<string>('');
+
+  const { user } = useStore();
+  const [addUser, setAddUser] = useState<User | null>(null);
+
+  const [cookies] = useCookies();
+
+  const accessToken = cookies.accessToken;
+
+
+  //         Event Handler          //
+  const getCategory = (accessToken: string) => {
+    if (!accessToken) {
+      alert('로그인이 필요합니다.')
+      return;
+    }
+
+    if (addUser?.userId !== user?.userId) {
+      alert('권한이 없습니다.')
+      return;
+    }
+
+    axios.get(GET_CATEGORY_LIST_URL(storeId as string), authorizationHeader(accessToken))
+      .then((response) => getCategoryResponseHandler(response))
+      .catch((error) => getCategoryErrorHandler(error));
+  }
+
+  //              Response Handler                //
+
+  const getCategoryResponseHandler = (response: AxiosResponse<any, any>) => {
+    const { result, message, data } = response.data as ResponseDto<GetCategoryResponseDto[]>
+    if (!result || !data) {
+      alert(message);
+      navigator('/');
+      return;
+    }
+    setCategoryResponse(data);
+  }
+
+  //          Error Handler           //
+
+  const getCategoryErrorHandler = (error: any) => {
+    console.log(error.message);
+  }
+
+  //          Use Effect              //
+
+  useEffect(() => {
+    if (storeId) getCategory(accessToken);
+    console.log();
+  }, [storeId]);
+
+
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -64,42 +130,46 @@ export default function CategoryBar() {
     setValue(newValue);
   };
 
+  const sortCategory = categoryResponse?.sort((a,b) => b.categoryId - a.categoryId);
 
   return (
-    <Box sx={{zIndex: 1, position: 'relative', bgcolor: '#ffffff', height: '5vh'}}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          variant="scrollable"
-          scrollButtons
-          aria-label="visible arrows tabs example"
-          sx={{
-            [`& .${tabsClasses.scrollButtons}`]: {
-              '&.Mui-disabled': { opacity: 0.3 },
-            },
+    <Box sx={{ zIndex: 1, position: 'relative', bgcolor: '#ffffff', height: '5vh' }}>
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        variant="scrollable"
+        scrollButtons
+        aria-label="visible arrows tabs example"
+        sx={{
+          [`& .${tabsClasses.scrollButtons}`]: {
+            '&.Mui-disabled': { opacity: 0.3 },
+          },
+        }}
+      >
+        {sortCategory?.map((category) => (
+          <Box>
+            <Tab label={category.categoryName} />
+          </Box>
+        ))}
+        <IconButton onClick={handleClick}>
+          <AddIcon />
+        </IconButton>
+        <IconButton sx={{ color: '#8c8c8c' }} onClick={handleClick}>
+          <MoreHorizIcon />
+        </IconButton>
+        <StyledMenu
+          id="demo-customized-menu"
+          MenuListProps={{
+            'aria-labelledby': 'demo-customized-button',
           }}
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
         >
-            <Tab label="메뉴1" />
-            <IconButton onClick={handleClick}>
-            <AddIcon />
-          </IconButton>
-          <IconButton sx={{ color: '#8c8c8c' }} onClick={handleClick}
-          >
-            <MoreHorizIcon />
-          </IconButton>
-          <StyledMenu
-            id="demo-customized-menu"
-            MenuListProps={{
-              'aria-labelledby': 'demo-customized-button',
-            }}
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-          >
-            <MenuItem onClick={handleClose} disableRipple>수정</MenuItem>
-            <MenuItem onClick={handleClose} disableRipple>삭제</MenuItem>
-          </StyledMenu>
-          </Tabs>
+          <MenuItem onClick={handleClose} disableRipple>수정</MenuItem>
+          <MenuItem onClick={handleClose} disableRipple>삭제</MenuItem>
+        </StyledMenu>
+      </Tabs>
     </Box>
   )
 }

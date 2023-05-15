@@ -53,7 +53,7 @@ export default function AnalysisBusinessDetail({ saleListBytime }: props) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {saleListBytime.map((sale) => (
+                        {sortedBySaleCount.map((sale) => (
                             <TableRow>
                                 <TableCell>{sale.time}</TableCell>
                                 <TableCell>{sale.saleAmount}</TableCell>
