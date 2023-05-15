@@ -1,29 +1,13 @@
 import { AppBar, Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Toolbar, Typography } from '@mui/material'
 import React from 'react'
 
-interface  props{
+interface props {
     saleAmount: number,
     saleCount: number,
     avgSaleAmount: number
 }
 
-// function createData(
-//     date: string,
-//     saleAmount: number,
-//     saleCount: number,
-//     avgSaleAmount: number,
-// ) {
-//     return { date, saleAmount, saleCount, avgSaleAmount };
-// }
-
-// const rows = [
-//     createData('2023. 05. 20', 2000000, 200, 10000),
-//     createData('2023. 05. 20', 2000000, 200, 10000),
-//     createData('2023. 05. 20', 2000000, 200, 10000),
-//     createData('2023. 05. 20', 2000000, 200, 10000),
-// ];
-
-export default function SaleAnalysisDetail({saleAmount, saleCount, avgSaleAmount}:props) {
+export default function SaleAnalysisDetail({ saleAmount, saleCount, avgSaleAmount }: props) {
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ flexGrow: 1 }}>
@@ -37,21 +21,11 @@ export default function SaleAnalysisDetail({saleAmount, saleCount, avgSaleAmount
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {
-                            // rows.map((row) => (
-                                <TableRow
-                                    // key={row.date}
-                                    // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
-                                    {/* <TableCell component="th" scope="row">
-                                        {row.date} */}
-                                    {/* </TableCell> */}
-                                    <TableCell>{saleAmount}</TableCell>
-                                    <TableCell align="right">{saleCount}</TableCell>
-                                    <TableCell align="right">{avgSaleAmount}</TableCell>
-                                </TableRow>
-                            // ))
-                            }
+                            <TableRow>
+                                <TableCell>{saleAmount}</TableCell>
+                                <TableCell align="right">{saleCount}</TableCell>
+                                <TableCell align="right">{avgSaleAmount}</TableCell>
+                            </TableRow>
                         </TableBody>
                     </Table>
                 </TableContainer>

@@ -14,9 +14,12 @@ interface props {
 
 export default function AnalysisCategoryView({ byCategory }: props) {
 
+    const sortedCategory = byCategory.sort((a, b) => b.saleCount - a.saleCount);
+
 
     const data = assignColorsToData(
-        byCategory.map((category) => ({
+        sortedCategory.map((category) => ({
+
             id: category.categoryName,
             label: category.categoryName,
             value: category.saleCount,
@@ -137,7 +140,8 @@ export default function AnalysisCategoryView({ byCategory }: props) {
                         </Box>
                         <Divider orientation='vertical' flexItem />
                         <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, p: '0px 20px' }}>
-                            {byCategory.slice(0, 3).map((category, index) => (
+                            {sortedCategory.slice(0, 3).map((category, index) => (
+
                                 <Box sx={{ display: 'flex', p: '10px 0px' }} key={category.categoryId}>
                                     <Typography sx={{ mr: '1vh', fontSize: '2vh' }}>{index + 2}</Typography>
                                     <Typography sx={{ flex: 1, fontSize: '2vh' }}>{category.categoryName}</Typography>
