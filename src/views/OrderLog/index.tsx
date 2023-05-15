@@ -1,9 +1,71 @@
 import { Box, IconButton, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { useNavigate } from 'react-router-dom';
+import { GET_ORDER_LOG_LIST_URL, authorizationHeader } from '../../constants/api';
+import useStore from '../../stores/user.store';
+import axios, { AxiosResponse } from 'axios';
+import { useCookies } from 'react-cookie';
+import ResponseDto from '../../apis/response';
+import { AnalysisBusinessResponseDto } from '../../apis/response/analysis';
+import User from '../../interfaces/User.interface';
 
 function OrderLog() {
+
+    const navigator = useNavigate();
+
+    const [analysisBusinessResponse, setAnalysisBusinessResponse] = useState<[] | null>(null);
+
+    const { user } = useStore();
+    const [addUser, setAddUser] = useState<User | null>(null);
+
+    const [cookies] = useCookies();
+
+    const accessToken = cookies.accessToken;
+
+    //         Event Handler          //
+    const getAnalysisBusiness = () => {
+        if (!accessToken) {
+            alert('로그인이 필요합니다.')
+            return;
+        }
+
+        if (addUser?.userId !== user?.userId) {
+            alert('권한이 없습니다.')
+            return;
+        }
+
+        axios.get(GET_ORDER_LOG_LIST_URL, authorizationHeader(accessToken))
+            .then((response) => getAnalysisBusinessResponseHandler(response))
+            .catch((error) => getAnalysisBusinessErrorHandler(error));
+    }
+
+
+    //              Response Handler                //
+
+    const getAnalysisBusinessResponseHandler = (response: AxiosResponse<any, any>) => {
+        const { result, message, data } = response.data as ResponseDto<[]>
+        if (!result || !data) {
+            alert(message);
+            navigator('/');
+            return;
+        }
+        setAnalysisBusinessResponse(data);
+    }
+
+    //          Error Handler           //
+
+    const getAnalysisBusinessErrorHandler = (error: any) => {
+        console.log(error.message);
+    }
+
+    //          Use Effect              //
+
+    useEffect(() => {
+        if (startedAt && endedAt) getAnalysisBusiness();
+        console.log();
+    }, [storeId, startedAt, endedAt]);
     return (
     <Box sx={{display:'flex', flexDirection:'column',height:'88vh'}}>
         <Box sx={{display:'flex', border:'1px solid #FFFFFF', height:'3.5rem', alignItems: 'center'}}>

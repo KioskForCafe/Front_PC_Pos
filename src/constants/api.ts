@@ -14,3 +14,4 @@ export const GET_ANALYSIS_BUSINESS_URL = (storeId: string, startedAt: string, en
 export const GET_ANALYSIS_MENU_URL = (storeId: string, startedAt: string, endedAt: string) =>`${HOST}api/analysis/menu/${storeId}/${startedAt}/${endedAt}`;
 export const GET_MENU_LIST_URL = (storeId: string, categoryId: string) => `${HOST}api/menu/list/${storeId}/${categoryId}`;
 export const GET_CATEGORY_LIST_URL = (storeId: string) => `${HOST}api/category/list/${storeId}`;
+export const GET_ORDER_LOG_LIST_URL = `${HOST}api/order-log/list`;
