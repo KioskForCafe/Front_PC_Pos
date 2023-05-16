@@ -23,7 +23,11 @@ export default function OrderCategoryBar() {
     const storeId = store?.storeId;
 
     const getCategory = (accessToken: string) =>{
-        axios.get(GET_CATEGORY_LIST_URL(storeId as number), authorizationHeader(accessToken))
+        if(storeId == null) {
+            alert('존재하지 않는 점포입니다.')
+            return;
+        }
+        axios.get(GET_CATEGORY_LIST_URL(storeId+''), authorizationHeader(accessToken))
         .then((response) => getCategoryResponseHandler(response))
         .catch((error) => getCategoryErrorHandler(error))
     }

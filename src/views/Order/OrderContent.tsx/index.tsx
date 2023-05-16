@@ -21,9 +21,12 @@ export default function OrderContent() {
     const accessToken = cookies.accessToken;
 
     const getMenuList = (accessToken: string) =>{
+
+
         if(category !== null){
+
             axios
-                .get(GET_MENU_LIST_URL(store?.storeId as number, category?.categoryId as number),authorizationHeader(accessToken))
+                .get(GET_MENU_LIST_URL(store?.storeId+'', category?.categoryId+''), authorizationHeader(accessToken))
                 .then((response)=>getMenuListResponseHandler(response))
                 .catch((error)=>getMenuListErrorHandler(error))
         }

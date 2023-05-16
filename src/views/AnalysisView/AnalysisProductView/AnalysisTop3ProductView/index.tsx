@@ -1,18 +1,26 @@
 import { Box, Card, CardContent, Divider, Icon, Typography } from '@mui/material'
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
+interface ByMenu{
+    menuId: number,
+    menuName: string,
+    saleCount: number,
+    totalPrice: number
+}
 interface props {
-    byMenu: {
-        menuId: number,
-        menuName: string,
-        saleCount: number,
-        totalPrice: number
-    }[];
+    byMenu: ByMenu[];
 }
 export default function AnalysisTop3ProductView({ byMenu }: props) {
 
-    const sortedMenu = byMenu.sort((a, b) => b.saleCount - a.saleCount);
+    let sorted = byMenu.sort((a, b) => b.saleCount - a.saleCount);
+    const [sortedMenu, setSortedMenu] = useState<ByMenu[]>(sorted);
+    // const sortedMenu = byMenu.sort((a, b) => b.saleCount - a.saleCount);
+
+    useEffect(() => {
+        sorted = byMenu.sort((a, b) => b.saleCount - a.saleCount);
+        setSortedMenu(sorted);
+    },[byMenu])
     
     return (
         <Box sx={{ width: '100%' }}>
