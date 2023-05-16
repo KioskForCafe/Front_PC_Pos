@@ -12,6 +12,16 @@ interface props {
     }[];
 }
 
+function assignColorsToData(data: any[]) {
+    const colors = ['hsl(0, 70%, 50%)', 'hsl(120, 70%, 50%)', 'hsl(240, 70%, 50%)']; // 색상 배열
+
+    return data.map((item, index) => ({
+        ...item,
+        color: colors[index % colors.length], // 배열 인덱스를 색상 배열의 길이로 나눈 나머지를 사용하여 색상 할당
+    }));
+}
+
+
 export default function AnalysisCategoryView({ byCategory }: props) {
 
     const sortedCategory = byCategory.sort((a, b) => b.saleCount - a.saleCount);
@@ -25,14 +35,6 @@ export default function AnalysisCategoryView({ byCategory }: props) {
         }))
     );
 
-    function assignColorsToData(data: any[]) {
-        const colors = ['hsl(0, 70%, 50%)', 'hsl(120, 70%, 50%)', 'hsl(240, 70%, 50%)']; // 색상 배열
-
-        return data.map((item, index) => ({
-            ...item,
-            color: colors[index % colors.length], // 배열 인덱스를 색상 배열의 길이로 나눈 나머지를 사용하여 색상 할당
-        }));
-    }
 
     const MyResponsivePie = (data: any) => (
         <ResponsivePie
