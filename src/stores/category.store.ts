@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import Category from "../interfaces/category.interface";
+import Category from "../interfaces/Category.interface";
 
 interface ICategoryStore {
     category: Category | null;

@@ -1,7 +1,6 @@
 import { Box, Button, Grid } from '@mui/material'
-import React, { useState } from 'react'
+import React, { Dispatch, useState } from 'react'
 import { GetMenuDetailResponseDto, GetMenuResponseDto } from '../../apis/response/menu';
-import MenuDetailCard from '../MenuDetailCard';
 import axios, { AxiosResponse } from 'axios';
 import { GET_MENU_DETAIL_URL } from '../../constants/api';
 import { useMenuStore } from '../../stores';
@@ -9,11 +8,11 @@ import ResponseDto from '../../apis/response';
 
 interface Props{
     menu : GetMenuResponseDto;
+    setMenuDetailView: Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function MenuCard({menu}:Props) {
+export default function MenuCard({menu, setMenuDetailView}:Props) {
 
-    const [menuDetailView, setMenuDetailView] = useState<boolean>(false);
     const {setMenu} = useMenuStore();
 
     const onMenuDetailButtonHandler = () =>{
@@ -44,9 +43,6 @@ export default function MenuCard({menu}:Props) {
             <Box sx={{p:'10px'}}>{menu.menuName}</Box>
             <Box sx={{p:'10px'}}>{menu.menuPrice}</Box>
         </Button>
-        {
-            menuDetailView && <MenuDetailCard setMenuDetailView={setMenuDetailView}/>
-        }
     </Grid>
  
     )
