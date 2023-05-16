@@ -7,6 +7,7 @@ import ResponseDto from '../../../apis/response';
 import { SignInResponseDto } from '../../../apis/response/auth';
 import { getExpires } from '../../../utils';
 import { useCookies } from "react-cookie";
+import { useUserStore } from '../../../stores';
 
 interface Props {
   setLoginView: Dispatch<SetStateAction<boolean>>;
@@ -17,6 +18,7 @@ export default function SignIn( {setLoginView, setNode} : Props) {
 
   const [userId, setUserId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const {setUser} =useUserStore();
 
   const [cookies, setCookie] = useCookies();
 
@@ -44,12 +46,11 @@ export default function SignIn( {setLoginView, setNode} : Props) {
       alert(message);
       return;
     }
-    console.log(data);
-    const {token, expiredTime,isAdmin,telNumber,userEmail,userId,userJoinDate,userName} = data;
+    const {token, expiredTime, ...user} = data;
     const expires = getExpires(expiredTime);
     setCookie('accessToken', token, {expires , path:'/'})
-
-    setNode('store');
+    setUser(user);
+    setNode('Store');
 
   }
 

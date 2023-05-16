@@ -106,7 +106,7 @@ export default function SignUp({setLoginView}:Props) {
     }
 
     const onSignUpButtonHandler = () =>{
-        const data : SignUpRequestDto ={ userId, userName, password, telNumber, userEmail ,isAdmin };
+        const data : SignUpRequestDto ={ userId, userName, password, telNumber, userEmail ,isAdmin:true };
 
         axios.post(SIGN_UP_URL, data)
         .then((response)=> signUpResponseHanlder(response))

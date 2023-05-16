@@ -22,8 +22,8 @@ export default function MenuInCategoryView() {
   const navigator = useNavigate();
 
   const [menuInCategoryResponse, setMenuInCategoryResponse] = useState<GetMenuResponseDto[] | null>(null);
-  const [storeId, setStoreId] = useState<string>('1');
-  const [categoryId, setCategoryId] = useState<string>('');
+  const [storeId, setStoreId] = useState<number>(1);
+  const [categoryId, setCategoryId] = useState<number>(1);
 
   const { user } = useStore();
   const [addUser, setAddUser] = useState<User | null>(null);
@@ -45,7 +45,7 @@ export default function MenuInCategoryView() {
       return;
     }
 
-    axios.get(GET_MENU_LIST_URL(storeId as string, categoryId as string), authorizationHeader(accessToken))
+    axios.get(GET_MENU_LIST_URL(storeId as number, categoryId as number), authorizationHeader(accessToken))
       .then((response) => getMenuInCategoryResponseHandler(response))
       .catch((error) => getMenuInCategoryErrorHandler(error));
   }

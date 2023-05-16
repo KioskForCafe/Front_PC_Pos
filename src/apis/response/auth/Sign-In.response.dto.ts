@@ -3,7 +3,7 @@ interface Dto {
   userName: string;
   telNumber: string;
   userEmail: string;
-  userJoinDate: string;
+  createdAt: string;
   isAdmin: boolean;
   token: string;
   expiredTime: number;

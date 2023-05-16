@@ -12,10 +12,15 @@ import AnalysisView from './views/AnalysisView';
 import Point from './views/Point';
 import Store from './views/Store';
 import AuthenticationView from './views/AuthenticationView';
+import { useStoreStore, useUserStore } from './stores';
 
 function App() {
 
   const [node , setNode] = useState<string>('AuthenticationView');
+
+  const {user} = useUserStore();
+  const {store} = useStoreStore();
+
 
   return (
     <Box>
@@ -27,7 +32,7 @@ function App() {
           node === 'CustomMenu' ? <CustomMenu/> :
           node === 'OrderLog' ? <OrderLog/> :
           node === 'AnalysisView' ? <AnalysisView/> :
-          node === 'Store' && <Store/>
+          node === 'Store' && <Store setNode={setNode}/>
         }
         {/* <Order/> */}
         {/* <CustomMenu/> */}
@@ -37,7 +42,9 @@ function App() {
         {/* <Store/> */}
         
       </Box>
-      <Footer setNode={setNode}/>
+      {
+        user && store && <Footer setNode={setNode}/>
+      }
     </Box>
   );
 }
