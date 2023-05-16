@@ -1,77 +1,68 @@
-import { Box, Card, CardContent, CardHeader, CardMedia, IconButton, Menu, MenuItem, SpeedDial, SpeedDialAction, SpeedDialIcon, Tooltip, Typography } from '@mui/material'
-import React from 'react'
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import PrintIcon from '@mui/icons-material/Print';
-import ShareIcon from '@mui/icons-material/Share';
+import { Box, Button, SpeedDial, Tooltip} from '@mui/material'
+import React, { Dispatch, useEffect, useState } from 'react'
+
 import AddIcon from '@mui/icons-material/Add';
+import StoreCard from '../../components/StoreCard';
+import axios, { AxiosResponse } from 'axios';
+import { GET_STORE_URL, authorizationHeader } from '../../constants/api';
+import { useCookies } from 'react-cookie';
+import { GetStoreResponseDto } from '../../apis/response/store';
+import ResponseDto from '../../apis/response';
 
-export default function Store() {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [speedDialOpen, setSpeedDialOpen] = React.useState(false);
-  const storeMenuOpen = Boolean(anchorEl);
-  const handleStoreMenuClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleStoreMenuClose = () => {
-    setAnchorEl(null);
-  };
+interface Props{
+  setNode:Dispatch<React.SetStateAction<string>>;
+}
 
-  const actions = [
-    { icon: <FileCopyIcon />, name: 'Copy' },
-    { icon: <SaveIcon />, name: 'Save' },
-    { icon: <PrintIcon />, name: 'Print' },
-    { icon: <ShareIcon />, name: 'Share' },
-  ];
+export default function Store({setNode}:Props) {
 
-  const handleSpeedDialOpen = () => setSpeedDialOpen(true);
-  const handleSpeedDialClose = () => setSpeedDialOpen(false);
+  const [cookies] = useCookies();
+
+  const [storeList, setStoreList] = useState<GetStoreResponseDto[] | null>(null);
+    
+  const accessToken = cookies.accessToken;
+
+  const getStore = (accessToken: string) =>{
+    axios
+      .get(GET_STORE_URL, authorizationHeader(accessToken))
+      .then((response)=>getStoreResponseHandler(response))
+      .catch((error)=> getStoreErrorHandler(error));
+  }
+
+  const getStoreResponseHandler = (response: AxiosResponse<any, any>) =>{
+    const {data, message, result} = response.data as ResponseDto<GetStoreResponseDto[]>
+    if(!result || data === null) return;
+    console.log(storeList);
+    setStoreList(data);
+  }
+
+  const getStoreErrorHandler = (error: any) =>{
+    console.log(error.message);
+  }
+  
+  useEffect(()=>{
+    getStore(accessToken);
+  },[])
 
   return (
     <Box sx={{display:'flex', height:'88vh'}}>
-      <Box sx={{flex:1, p:'1rem', display:'flex'}}>
-        <Card sx={{ maxWidth: 300, height:'40vh' }}>
-          <CardHeader
-            action={
-              <IconButton onClick={handleStoreMenuClick}>
-                <MoreVertIcon />
-              </IconButton>
-            }
-            title="매장명"
-            subheader="등록일"
-          />
-          <CardMedia
-            component="img"
-            sx={{height:'20vh'}}
-            src=""
-            // image='C:/Users/ghtjd/Desktop/workspace/team-project/front-project/src/static/images/noImage.jpg'
-            // image="./static/images/noImage.jpg"
-            alt="이미지"
-          />
-          <CardContent>
-            <Typography variant="body2" color="text.secondary">
-              영업시간 : 매장 오픈 시간 ~ 마감 시간
-            </Typography>
-          </CardContent>
-        </Card>
+      <Box sx={{flex:1, p:'1rem', display:'flex', flexDirection:'column'}}>
+        <Box sx={{p:'5px', display:'flex', height:'50%'}}>
+          {
+            storeList !== null ? 
+              storeList?.map((store) => (
+                <StoreCard setNode={setNode} item={store}/> 
+              ))
+              : '매장을 등록하세요'
+          }
+        </Box>
+        <Box sx={{display:'flex', height:'50%'}}></Box>
         <Tooltip placement="top" title="매장 추가 하기">
           <SpeedDial
-          ariaLabel="SpeedDial controlled open example"
-          sx={{ position: 'fixed', bottom:'7vh', right:'3vh'}}
-          icon={<AddIcon/>}/>
+            ariaLabel="SpeedDial controlled open example"
+            sx={{ position: 'fixed', bottom:'7vh', right:'3vh'}}
+            icon={<AddIcon/>}
+          />
         </Tooltip>
-          
-
-        <Menu 
-          anchorEl={anchorEl}
-          open={storeMenuOpen}
-          onClose={handleStoreMenuClose}
-          onClick={handleStoreMenuClose} 
-        >
-          <MenuItem onClick={handleStoreMenuClose}>수정</MenuItem>
-          <MenuItem onClick={handleStoreMenuClose}>삭제</MenuItem>
-        </Menu>
       </Box>
     </Box>
   )

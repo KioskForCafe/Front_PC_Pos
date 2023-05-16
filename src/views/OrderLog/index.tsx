@@ -3,27 +3,30 @@ import React, { useEffect, useState } from 'react';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useNavigate } from 'react-router-dom';
-import { GET_ORDER_LOG_LIST_URL, authorizationHeader } from '../../constants/api';
+import { GET_ORDER_DETAIL_LIST_URL, GET_ORDER_LOG_LIST_URL, authorizationHeader } from '../../constants/api';
 import useStore from '../../stores/user.store';
 import axios, { AxiosResponse } from 'axios';
 import { useCookies } from 'react-cookie';
 import ResponseDto from '../../apis/response';
 import { AnalysisBusinessResponseDto } from '../../apis/response/analysis';
 import User from '../../interfaces/User.interface';
-import { GetOrderListResponse } from '../../apis/response/order';
+import { GetOrderDetailResponse, GetOrderResponse } from '../../apis/response/order';
+import { useStoreStore } from '../../stores';
+import OrderLogDetail from './OrderLogDetail';
 
 
 function OrderLog() {
 
     const navigator = useNavigate();
 
-    const [orderLogResponse, setorderLogResponse] = useState<GetOrderListResponse[] | null>(null);
+    const [orderLogResponse, setorderLogResponse] = useState<GetOrderResponse[] | null>(null);
 
     const { user } = useStore();
     const [addUser, setAddUser] = useState<User | null>(null);
 
+    const { store } = useStoreStore();
+
     const [cookies] = useCookies();
-    const [storeId, setStoreId] = useState<string>('');
 
     const accessToken = cookies.accessToken;
 
@@ -33,29 +36,34 @@ function OrderLog() {
             alert('로그인이 필요합니다.')
             return;
         }
-
-        if (addUser?.userId !== user?.userId) {
-            alert('권한이 없습니다.')
+        
+        if(store?.storeId == null) {
+            alert('점포가 존재하지 않습니다.')
             return;
         }
 
-        axios.get(GET_ORDER_LOG_LIST_URL(storeId as string), authorizationHeader(accessToken))
+        axios.get(GET_ORDER_LOG_LIST_URL(store.storeId+''), authorizationHeader(accessToken))
             .then((response) => getOrderLogResponseHandler(response))
             .catch((error) => getOrderLogErrorHandler(error));
+
     }
+
 
 
     //              Response Handler                //
 
     const getOrderLogResponseHandler = (response: AxiosResponse<any, any>) => {
-        const { result, message, data } = response.data as ResponseDto<GetOrderListResponse[]>;
+        const { result, message, data } = response.data as ResponseDto<GetOrderResponse[]>;
         if (!result || !data) {
             alert(message);
             navigator('/');
             return;
         }
+        console.log(data);
         setorderLogResponse(data);
     }
+
+
 
     //          Error Handler           //
 
@@ -63,10 +71,12 @@ function OrderLog() {
         console.log(error.message);
     }
 
+
+
     //          Use Effect              /
 
     useEffect(() => {
-        if (storeId !== null) getOrderLog(accessToken);
+        getOrderLog(accessToken);
         console.log();
     }, []);
 
@@ -79,22 +89,14 @@ function OrderLog() {
             </Box>
 
             <Box sx={{ p: '10px', backgroundColor: '#E6E8EB', flex: 1 }}>
-                {orderLogResponse?.map((order) =>
+                {orderLogResponse && orderLogResponse?.map((order) =>
                     <Box sx={{ display: 'flex', flexDirection: 'column', backgroundColor: 'white', width: '15rem', height: '20rem', borderRadius: '1rem' }}>
                         <Box sx={{ p: '10px', display: 'flex', flex: 0.5 }}>
                             <Typography sx={{ flex: 1 }}>{order.orderId}</Typography>
-                            <Typography sx={{ flex: 1, textAlign: 'end' }}>{order.createAt.toString()}</Typography>
+                            <Typography sx={{ flex: 1, textAlign: 'end' }}>{order.updatedAt+''}</Typography>
                         </Box>
                         <Box sx={{ px: '10px', flex: 3, flexDirection: 'column' }}>
-                            {order.orderDetailList.map((menu) =>
-                                <Box sx={{ display: 'flex' }}>
-                                    <Box sx={{ display: 'flex', flexDirection: 'column', flex: 3 }}>
-                                        <Typography>{menu.menuName}</Typography>
-                                        <Typography>ㄴ{menu.optionList}</Typography>
-                                    </Box>
-                                    <Typography sx={{ flex: 1 }}>{menu.count}</Typography>
-                                </Box>
-                            )}
+                            <OrderLogDetail orderId={order.orderId}/>
                         </Box>
                         {/* <Box sx={{ p: '10px', position: 'relative', bottom: '0', flex: 0.5, borderTop: '2px solid #f1f3f4', borderRadius: '0 0 1rem 1rem' }}>
                             <Typography>2품목{}</Typography>

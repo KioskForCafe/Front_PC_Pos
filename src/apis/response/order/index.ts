@@ -1,3 +1,4 @@
 import PostOrderDetailResponse from './Post-Order-Detail.response.dto';
-import GetOrderListResponse from './Get-Order-List.Response.Dto';
-export type { PostOrderDetailResponse, GetOrderListResponse };
+import GetOrderResponse from './Get-Order.response.dto';
+import GetOrderDetailResponse from './Get-Order-Detail.response.dto';
+export type { PostOrderDetailResponse, GetOrderResponse, GetOrderDetailResponse };

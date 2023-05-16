@@ -9,6 +9,8 @@ import ResponseDto from '../../../apis/response';
 import { GetMenuResponseDto } from '../../../apis/response/menu';
 import { useNavigate } from 'react-router-dom';
 import { GET_MENU_LIST_URL, authorizationHeader } from '../../../constants/api';
+import { useStoreStore } from '../../../stores';
+import useCategory from '../../../stores/category.store';
 
 const Img = styled('img')({
   margin: 'auto',
@@ -22,10 +24,10 @@ export default function MenuInCategoryView() {
   const navigator = useNavigate();
 
   const [menuInCategoryResponse, setMenuInCategoryResponse] = useState<GetMenuResponseDto[] | null>(null);
-  const [storeId, setStoreId] = useState<string>('1');
-  const [categoryId, setCategoryId] = useState<string>('');
 
   const { user } = useStore();
+  const {store} = useStoreStore();
+  const {category} = useCategory();
   const [addUser, setAddUser] = useState<User | null>(null);
 
   const [cookies] = useCookies();
@@ -45,7 +47,17 @@ export default function MenuInCategoryView() {
       return;
     }
 
-    axios.get(GET_MENU_LIST_URL(storeId as string, categoryId as string), authorizationHeader(accessToken))
+    if(store?.storeId == null) {
+      alert('존재하지 않는 점포입니다.')
+      return;
+    }
+
+    if(category?.categoryId == null) {
+      alert('존재하지 않는 카테고리입니다.')
+      return;
+    }
+
+    axios.get(GET_MENU_LIST_URL(store.storeId.toString(), category.categoryId.toString()), authorizationHeader(accessToken))
       .then((response) => getMenuInCategoryResponseHandler(response))
       .catch((error) => getMenuInCategoryErrorHandler(error));
   }
@@ -71,9 +83,9 @@ export default function MenuInCategoryView() {
   //          Use Effect              //
 
   useEffect(() => {
-    if (storeId && categoryId) getMenuInCategory(accessToken);
+    if (store?.storeId && category?.categoryId) getMenuInCategory(accessToken);
     console.log();
-  }, [storeId, categoryId]);
+  }, [store?.storeId, category?.categoryId]);
 
 
   return (
