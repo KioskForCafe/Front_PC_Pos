@@ -79,11 +79,6 @@ export default function CategoryBar() {
       return;
     }
 
-    if (addUser?.userId !== user?.userId) {
-      alert('권한이 없습니다.')
-      return;
-    }
-
     if(store?.storeId == null) {
       alert('존재하지 않는 점포입니다.')
       return;
@@ -93,6 +88,29 @@ export default function CategoryBar() {
       .then((response) => getCategoryResponseHandler(response))
       .catch((error) => getCategoryErrorHandler(error));
   }
+
+  const addCategory = (accessToken: string, categoryName: string) => {
+    if (!accessToken) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+  
+    if (store?.storeId == null) {
+      alert('존재하지 않는 점포입니다.');
+      return;
+    }
+  
+    const requestData = {
+      categoryName: categoryName
+    };
+  
+    axios.post(ADD_CATEGORY_URL(store.storeId.toString()), requestData, authorizationHeader(accessToken))
+      .then((response) => {
+        alert('카테고리가 추가되었습니다.');
+        getCategory(accessToken); // 추가된 카테고리를 포함한 새로운 목록을 가져옴
+      })
+      .catch((error) => AddCategoryErrorHandler(error));
+  };
 
   //              Response Handler                //
 
@@ -106,9 +124,23 @@ export default function CategoryBar() {
     setCategoryResponse(data);
   }
 
+  const AddCategoryResponseHandler = (response: AxiosResponse<any, any>) => {
+    const { result, message, data } = response.data as ResponseDto<GetCategoryResponseDto[]>
+    if (!result || !data) {
+      alert(message);
+      navigator('/');
+      return;
+    }
+    setCategoryResponse(data);
+  }
+
   //          Error Handler           //
 
   const getCategoryErrorHandler = (error: any) => {
+    console.log(error.message);
+  }
+
+  const AddCategoryErrorHandler = (error: any) => {
     console.log(error.message);
   }
 
