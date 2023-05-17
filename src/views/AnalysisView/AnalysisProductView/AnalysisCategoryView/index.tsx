@@ -12,6 +12,16 @@ interface props {
     }[];
 }
 
+function assignColorsToData(data: any[]) {
+    const colors = ['hsl(0, 70%, 50%)', 'hsl(120, 70%, 50%)', 'hsl(240, 70%, 50%)']; // 색상 배열
+
+    return data.map((item, index) => ({
+        ...item,
+        color: colors[index % colors.length], // 배열 인덱스를 색상 배열의 길이로 나눈 나머지를 사용하여 색상 할당
+    }));
+}
+
+
 export default function AnalysisCategoryView({ byCategory }: props) {
 
     const sortedCategory = byCategory.sort((a, b) => b.saleCount - a.saleCount);
@@ -19,21 +29,12 @@ export default function AnalysisCategoryView({ byCategory }: props) {
 
     const data = assignColorsToData(
         sortedCategory.map((category) => ({
-
             id: category.categoryName,
             label: category.categoryName,
             value: category.saleCount,
         }))
     );
 
-    function assignColorsToData(data: any[]) {
-        const colors = ['hsl(0, 70%, 50%)', 'hsl(120, 70%, 50%)', 'hsl(240, 70%, 50%)']; // 색상 배열
-
-        return data.map((item, index) => ({
-            ...item,
-            color: colors[index % colors.length], // 배열 인덱스를 색상 배열의 길이로 나눈 나머지를 사용하여 색상 할당
-        }));
-    }
 
     const MyResponsivePie = (data: any) => (
         <ResponsivePie
@@ -141,7 +142,6 @@ export default function AnalysisCategoryView({ byCategory }: props) {
                         <Divider orientation='vertical' flexItem />
                         <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, p: '0px 20px' }}>
                             {sortedCategory.slice(0, 3).map((category, index) => (
-
                                 <Box sx={{ display: 'flex', p: '10px 0px' }} key={category.categoryId}>
                                     <Typography sx={{ mr: '1vh', fontSize: '2vh' }}>{index + 2}</Typography>
                                     <Typography sx={{ flex: 1, fontSize: '2vh' }}>{category.categoryName}</Typography>

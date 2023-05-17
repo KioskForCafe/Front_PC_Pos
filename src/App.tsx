@@ -13,6 +13,8 @@ import Point from './views/Point';
 import Store from './views/Store';
 import AuthenticationView from './views/AuthenticationView';
 import { useStoreStore, useUserStore } from './stores';
+import PostStoreView from './views/Store/PostStoreView';
+import PatchStoreView from './views/Store/PatchStoreView';
 
 function App() {
 
@@ -32,7 +34,9 @@ function App() {
           node === 'CustomMenu' ? <CustomMenu/> :
           node === 'OrderLog' ? <OrderLog/> :
           node === 'AnalysisView' ? <AnalysisView/> :
-          node === 'Store' && <Store setNode={setNode}/>
+          node === 'Store' ? <Store setNode={setNode}/> : 
+          node === 'PostStoreView' ? <PostStoreView setNode={setNode} /> :
+          node === 'PatchStoreView' && <PatchStoreView setNode={setNode} />
         }
         {/* <Order/> */}
         {/* <CustomMenu/> */}
