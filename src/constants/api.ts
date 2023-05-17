@@ -30,4 +30,6 @@ export const GET_ORDER_DETAIL_LIST_URL = (orderId: string) => `${HOST}api/order/
 
 export const PATCH_STORE_URL = `${HOST}api/store`;
 
+export const DELETE_STORE_URL = (storeId: string) => `${HOST}api/store/${storeId}`;
+
 export const FILE_UPLOAD_URL = `${HOST}file/upload`;

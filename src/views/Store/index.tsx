@@ -51,7 +51,7 @@ export default function Store({setNode}:Props) {
           {
             storeList !== null ? 
               storeList?.map((store) => (
-                <StoreCard setNode={setNode} item={store}/> 
+                <StoreCard getStore={getStore} setNode={setNode} item={store}/> 
               ))
               : '매장을 등록하세요'
           }
