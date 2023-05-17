@@ -8,6 +8,7 @@ import { GET_STORE_URL, authorizationHeader } from '../../constants/api';
 import { useCookies } from 'react-cookie';
 import { GetStoreResponseDto } from '../../apis/response/store';
 import ResponseDto from '../../apis/response';
+import PostStoreView from './PostStoreView';
 
 interface Props{
   setNode:Dispatch<React.SetStateAction<string>>;
@@ -38,7 +39,7 @@ export default function Store({setNode}:Props) {
   const getStoreErrorHandler = (error: any) =>{
     console.log(error.message);
   }
-  
+
   useEffect(()=>{
     getStore(accessToken);
   },[])
@@ -61,6 +62,7 @@ export default function Store({setNode}:Props) {
             ariaLabel="SpeedDial controlled open example"
             sx={{ position: 'fixed', bottom:'7vh', right:'3vh'}}
             icon={<AddIcon/>}
+            onClick={()=>setNode('PostStoreView')}
           />
         </Tooltip>
       </Box>
