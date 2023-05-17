@@ -15,6 +15,7 @@ export const SIGN_IN_URL = `${HOST}auth/sign-in`;
 
 export const GET_STORE_URL = `${HOST}api/store`;
 
+
 export const GET_MENU_DETAIL_URL = (menuId:number) => `${HOST}api/menu/${menuId}`;
 
 export const POST_ORDER_DETAIL_URL = `${HOST}api/order-detail`;
@@ -33,3 +34,4 @@ export const PATCH_STORE_URL = `${HOST}api/store`;
 export const DELETE_STORE_URL = (storeId: string) => `${HOST}api/store/${storeId}`;
 
 export const FILE_UPLOAD_URL = `${HOST}file/upload`;
+
