@@ -21,9 +21,6 @@ export default function AnalysisProductView() {
     const [storeId, setStoreId] = useState<string>('1');
     const [analysisProductResponse, setAnalysisProductResponse] = useState<AnalysisMenuResponseDto | null>(null);
 
-    const { user } = useStore();
-    const [addUser, setAddUser] = useState<User | null>(null);
-
     const [cookies] = useCookies();
 
     const accessToken = cookies.accessToken;
@@ -33,11 +30,6 @@ export default function AnalysisProductView() {
 
         if (!accessToken) {
             alert('로그인이 필요합니다.')
-            return;
-        }
-
-        if (addUser?.userId !== user?.userId) {
-            alert('권한이 없습니다.')
             return;
         }
 

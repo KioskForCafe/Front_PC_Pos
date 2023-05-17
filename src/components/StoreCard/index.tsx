@@ -1,19 +1,28 @@
 import { Box, Button, Card, CardContent, CardHeader, CardMedia, IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import React, { Dispatch } from 'react'
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { GetStoreResponseDto } from '../../apis/response/store';
+import { DeleteStoreResponseDto, GetStoreResponseDto } from '../../apis/response/store';
 import { useStoreStore } from '../../stores';
+import { useCookies } from 'react-cookie';
+import Store from '../../views/Store';
+import axios, { AxiosResponse } from 'axios';
+import { DELETE_STORE_URL, authorizationHeader } from '../../constants/api';
+import ResponseDto from '../../apis/response';
 
 interface Props{
+    getStore: (accessToken: string) => void;
     setNode: Dispatch<React.SetStateAction<string>>;
     item: GetStoreResponseDto;
 }
 
-export default function StoreCard({item, setNode} : Props) {
+export default function StoreCard({getStore, item, setNode} : Props) {
 
-    const {setStore } = useStoreStore();
+    const {store, setStore,resetStore } = useStoreStore();
+    const [cookies] = useCookies();
+    const accessToken = cookies.accessToken;
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
     const storeMenuOpen = Boolean(anchorEl);
     const handleStoreMenuClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -27,6 +36,44 @@ export default function StoreCard({item, setNode} : Props) {
         setStore(store);
         setNode('Order');
     }
+
+    const onStoreUpdateButtonHandler = () => {
+        const {...store} = item;
+        setStore(store);
+        setNode('PatchStoreView');
+    }
+
+    const onStoreDeleteButtonHandler = () => {
+        const {...store} = item;
+        setStore(store);
+
+        if (!accessToken) {
+            alert('로그인이 필요합니다.');
+            return;
+        }
+
+        axios.delete(DELETE_STORE_URL(store?.storeId+''), authorizationHeader(accessToken))
+            .then((response) => deleteStoreResponseHandler(response))
+            .catch((error) => deleteStoreErrorHandler(error));
+
+        resetStore();
+        setNode('Store');
+    }
+
+
+    const deleteStoreResponseHandler = (response: AxiosResponse<any, any>) => {
+        const { result, message, data } = response.data as ResponseDto<DeleteStoreResponseDto>;
+        if ( !result || !data || !data.result ) {
+            alert(message);
+            return;
+        }
+        getStore(accessToken);
+    }
+
+    const deleteStoreErrorHandler = (error: any) => {
+        console.log(error.message);
+    }
+
 
     return (
         <Card sx={{flex:1, mx:'15px', display:'inline-flex', flexDirection:'column', maxWidth: 300 }}>
@@ -65,8 +112,8 @@ export default function StoreCard({item, setNode} : Props) {
                 onClose={handleStoreMenuClose}
                 onClick={handleStoreMenuClose} 
             >
-            <MenuItem onClick={handleStoreMenuClose}>수정</MenuItem>
-            <MenuItem onClick={handleStoreMenuClose}>삭제</MenuItem>
+            <MenuItem onClick={()=>onStoreUpdateButtonHandler()}>수정</MenuItem>
+            <MenuItem onClick={()=>onStoreDeleteButtonHandler()}>삭제</MenuItem>
             </Menu>
         </Card>
     )

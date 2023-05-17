@@ -79,11 +79,6 @@ export default function CategoryBar() {
       return;
     }
 
-    if (addUser?.userId !== user?.userId) {
-      alert('권한이 없습니다.')
-      return;
-    }
-
     if(store?.storeId == null) {
       alert('존재하지 않는 점포입니다.')
       return;
@@ -93,6 +88,7 @@ export default function CategoryBar() {
       .then((response) => getCategoryResponseHandler(response))
       .catch((error) => getCategoryErrorHandler(error));
   }
+
 
   //              Response Handler                //
 
@@ -106,11 +102,14 @@ export default function CategoryBar() {
     setCategoryResponse(data);
   }
 
+
+
   //          Error Handler           //
 
   const getCategoryErrorHandler = (error: any) => {
     console.log(error.message);
   }
+
 
   //          Use Effect              //
 
