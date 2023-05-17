@@ -28,4 +28,6 @@ export const GET_CATEGORY_LIST_URL = (storeId: string) => `${HOST}api/category/l
 export const GET_ORDER_LOG_LIST_URL = (storeId: string) => `${HOST}api/order/list/${storeId}`;
 export const GET_ORDER_DETAIL_LIST_URL = (orderId: string) => `${HOST}api/order/${orderId}`;
 
+export const PATCH_STORE_URL = `${HOST}api/store`;
+
 export const FILE_UPLOAD_URL = `${HOST}file/upload`;

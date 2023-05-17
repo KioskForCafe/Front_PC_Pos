@@ -28,6 +28,12 @@ export default function StoreCard({item, setNode} : Props) {
         setNode('Order');
     }
 
+    const onStoreUpdateButtonHandler = () => {
+        const {...store} = item;
+        setStore(store);
+        setNode('PatchStoreView');
+    }
+
     return (
         <Card sx={{flex:1, mx:'15px', display:'inline-flex', flexDirection:'column', maxWidth: 300 }}>
             <CardHeader
@@ -65,7 +71,7 @@ export default function StoreCard({item, setNode} : Props) {
                 onClose={handleStoreMenuClose}
                 onClick={handleStoreMenuClose} 
             >
-            <MenuItem onClick={handleStoreMenuClose}>수정</MenuItem>
+            <MenuItem onClick={()=>onStoreUpdateButtonHandler()}>수정</MenuItem>
             <MenuItem onClick={handleStoreMenuClose}>삭제</MenuItem>
             </Menu>
         </Card>
