@@ -161,21 +161,21 @@ export default function PatchStoreView({ setNode }: Props) {
     }, []);
 
     return (
-        <Box sx={{ display: 'flex', height: '100%' }}>
-            <Box>
-                <Typography>점포명</Typography>
-                <Input placeholder={storeName} onChange={(event) => setStoreName(event.target.value)} />
-                <Typography>오픈 시간</Typography>
-                <Input placeholder={storeOpenTime} onChange={(event) => setStoreOpenTime(event.target.value)} />
-                <Typography>마감 시간</Typography>
-                <Input placeholder={storeCloseTime} onChange={(event) => setStoreCloseTime(event.target.value)} />
-                <Typography>점포 이미지</Typography>
+        <Box sx={{ display: 'flex', height: '88vh' }}>
+            <Box sx={{display: 'flex', flexDirection: 'column' , alignItems: 'left'}}>
+                <Typography sx={{ml: '2vh', display: 'flex', fontSize: '2vh'}}>점포명</Typography>
+                <Input sx={{ml: '2vh', display: 'flex'}} placeholder={storeName} onChange={(event) => setStoreName(event.target.value)} />
+                <Typography sx={{ml: '2vh', display: 'flex', fontSize: '2vh'}}>오픈 시간</Typography>
+                <Input sx={{ml: '2vh', display: 'flex'}} placeholder={storeOpenTime} onChange={(event) => setStoreOpenTime(event.target.value)} />
+                <Typography sx={{ml: '2vh', display: 'flex', fontSize: '2vh'}}>마감 시간</Typography>
+                <Input sx={{ml: '2vh', display: 'flex'}} placeholder={storeCloseTime} onChange={(event) => setStoreCloseTime(event.target.value)} />
+                <Typography sx={{ml: '2vh', display: 'flex', fontSize: '2vh'}}>점포 이미지</Typography>
                 <IconButton onClick={() => onImageUploadButtonHandler()}>
                     <ImageOutlinedIcon />
                     <input ref={imageRef} hidden type='file' accept='image/*' onChange={(event) => storeImageUploadChangeHandler(event)} />
                 </IconButton>
                 <Box sx={{ width: '100%' }} component='img' src={storeImgUrl} />
-                <Typography>점포 로고 이미지</Typography>
+                <Typography sx={{ml: '2vh', display: 'flex', fontSize: '2vh'}}>점포 로고 이미지</Typography>
                 <IconButton onClick={() => onImageUploadButtonHandler()}>
                     <ImageOutlinedIcon />
                     <input ref={imageRef} hidden type='file' accept='image/*' onChange={(event) => storeLogoUploadChangeHandler(event)} />
