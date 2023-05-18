@@ -19,7 +19,7 @@ export default function AnalysisCustomerView() {
             <Typography align='left' sx={{fontSize: '3vh', p: '3vh' }}>고객 분석</Typography>
             <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <SelectDatetimeView startedAt={startedAt as Dayjs} endedAt={endedAt as Dayjs} onDatetimeChange={handleDatetimeChange} />
-                <AnalysisCustomerDetail />
+                <AnalysisCustomerDetail startedAt={startedAt as Dayjs} endedAt={endedAt as Dayjs} />
             </Box>
         </Box>
 
