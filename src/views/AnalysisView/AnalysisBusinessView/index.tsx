@@ -15,17 +15,15 @@ import ResponseDto from '../../../apis/response';
 import { useCookies } from 'react-cookie';
 import useStore from '../../../stores/user.store';
 import User from '../../../interfaces/User.interface';
+import { useStoreStore } from '../../../stores';
 
 export default function AnalysisBusinessView() {
 
-    const navigator = useNavigate();
 
     const [startedAt, setStartedAt] = useState<Dayjs | null>(dayjs('2023-05-10'));
     const [endedAt, setEndedAt] = useState<Dayjs | null>(dayjs('2023-05-10'));
-    const [storeId, setStoreId] = useState<string>('1');
+    const {store} = useStoreStore();
     const [analysisBusinessResponse, setAnalysisBusinessResponse] = useState<AnalysisBusinessResponseDto[] | null>(null);
-
-    const { user } = useStore();
 
     const [cookies] = useCookies();
 
@@ -38,7 +36,7 @@ export default function AnalysisBusinessView() {
             return;
         }
 
-        axios.get(GET_ANALYSIS_BUSINESS_URL(storeId as string, startedAt?.format('YYYY-MM-DD') as string, endedAt?.format('YYYY-MM-DD') as string), authorizationHeader(accessToken))
+        axios.get(GET_ANALYSIS_BUSINESS_URL(store?.storeId+'', startedAt?.format('YYYY-MM-DD') as string, endedAt?.format('YYYY-MM-DD') as string), authorizationHeader(accessToken))
             .then((response) => getAnalysisBusinessResponseHandler(response))
             .catch((error) => getAnalysisBusinessErrorHandler(error));
     }
@@ -54,7 +52,6 @@ export default function AnalysisBusinessView() {
         const { result, message, data } = response.data as ResponseDto<AnalysisBusinessResponseDto[]>
         if (!result || !data) {
             alert(message);
-            navigator('/');
             return;
         }
         setAnalysisBusinessResponse(data);
@@ -71,7 +68,7 @@ export default function AnalysisBusinessView() {
     useEffect(() => {
         if (startedAt && endedAt) getAnalysisBusiness();
         console.log();
-    }, [storeId, startedAt, endedAt]);
+    }, [store?.storeId, startedAt, endedAt]);
 
     return (
         <Box>

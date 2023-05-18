@@ -1,7 +1,7 @@
 interface Dto {
   totalVisitedUserCount: number;
   newVisitedUserCount: number;
-  userTop10List: [
+  userTop10List:
     {
       userId: string;
       userName: string;
@@ -9,7 +9,6 @@ interface Dto {
       visitedCount: number;
       point: number;
       amountPayment: number;
-    }
-  ];
+    }[];
 }
 export default Dto;

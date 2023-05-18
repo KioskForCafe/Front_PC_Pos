@@ -27,6 +27,7 @@ export const GET_MENU_LIST_URL = (storeId: string, categoryId: string) => `${HOS
 export const GET_CATEGORY_LIST_URL = (storeId: string) => `${HOST}api/category/list/${storeId}`;
 export const GET_ORDER_LOG_LIST_URL = (storeId: string) => `${HOST}api/order/list/${storeId}`;
 export const GET_ORDER_DETAIL_LIST_URL = (orderId: string) => `${HOST}api/order/${orderId}`;
+export const GET_USER_ANALYSIS_URL = (storeId: string, startedAt: string, endedAt: string) => `${HOST}api/analysis/user/${storeId}/${startedAt}/${endedAt}`
 
 export const PATCH_STORE_URL = `${HOST}api/store`;
 

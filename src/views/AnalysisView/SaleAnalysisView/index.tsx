@@ -11,13 +11,14 @@ import SelectDatetimeView from '../SelectDatetimeView';
 import { useCookies } from 'react-cookie';
 import useStore from '../../../stores/user.store';
 import User from '../../../interfaces/User.interface';
+import { useStoreStore } from '../../../stores';
 
 
 export default function SaleAnalysisView() {
 
-    const navigator = useNavigate();
 
-    const [storeId, setStoreId] = useState<string>('1');
+    const {store} = useStoreStore();
+
     const [saleAmount, setSaleAmount] = useState<number>();
     const [saleCount, setSaleCount] = useState<number>();
     const [avgSaleAmount, setAvgSaleAmount] = useState<number>();
@@ -40,7 +41,7 @@ export default function SaleAnalysisView() {
             return;
         }
 
-        axios.get(GET_SALE_ANALYSIS_URL(storeId as string, startedAt?.format('YYYY-MM-DD') as string, endedAt?.format('YYYY-MM-DD') as string), authorizationHeader(accessToken))
+        axios.get(GET_SALE_ANALYSIS_URL(store?.storeId+'', startedAt?.format('YYYY-MM-DD') as string, endedAt?.format('YYYY-MM-DD') as string), authorizationHeader(accessToken))
             .then((response) => getSaleAnalysisResponseHandler(response))
             .catch((error) => getSaleAnalysisErrorHandler(error));
     }
@@ -56,7 +57,6 @@ export default function SaleAnalysisView() {
         const { result, message, data } = response.data as ResponseDto<AnalysisSaleResponseDto>
         if (!result || !data) {
             alert(message);
-            navigator('/');
             return;
         }
         setSaleAnalysisResponse(data);
