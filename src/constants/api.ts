@@ -8,8 +8,8 @@ export const mutipartHeader = () => {
     return { headers: { 'Content-Type': 'multipart/form-data' } };
 }
 
-export const DUPLICATE_USER_ID_URL = `${HOST}api/user/checkId/duplicate`;
-export const DUPLICATE_USER_EMAIL_URL = `${HOST}api/user/checkEmail/duplicate`;
+export const DUPLICATE_USER_ID_URL = `${HOST}api/user/duplicate/checkId`;
+export const DUPLICATE_USER_EMAIL_URL = `${HOST}api/user/duplicate/checkEmail`;
 export const SIGN_UP_URL = `${HOST}auth/sign-up`;
 export const SIGN_IN_URL = `${HOST}auth/sign-in`;
 
