@@ -26,12 +26,11 @@ export default function SaleAnalysisView() {
     const [startedAt, setStartedAt] = useState<Dayjs | null>(dayjs('2023-05-10'));
     const [endedAt, setEndedAt] = useState<Dayjs | null>(dayjs('2023-05-10'));
 
-    const { user } = useStore();
-
     const [cookies] = useCookies();
 
     const accessToken = cookies.accessToken;
     
+    let isLoad = false;
 
     //         Event Handler          //
     const getSaleAnalysis = () => {
@@ -55,11 +54,11 @@ export default function SaleAnalysisView() {
 
     const getSaleAnalysisResponseHandler = (response: AxiosResponse<any, any>) => {
         const { result, message, data } = response.data as ResponseDto<AnalysisSaleResponseDto>
-        if (!result || !data) {
+        if (!result) {
             alert(message);
             return;
         }
-        setSaleAnalysisResponse(data);
+        if(data) setSaleAnalysisResponse(data);
     }
 
     //          Error Handler           //
@@ -81,9 +80,10 @@ export default function SaleAnalysisView() {
     //          Use Effect          //
 
     useEffect(() => {
+        if (isLoad) return;
         console.log(startedAt?.format('DD/MM/YYYY'), endedAt?.format('DD/MM/YYYY'));
+        isLoad = true;
         getSaleAnalysis();
-        console.log(saleAmount, saleCount, avgSaleAmount);
     }, [startedAt, endedAt]);
 
     return (

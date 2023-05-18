@@ -15,7 +15,7 @@ import { useStoreStore } from '../../../stores';
 
 export default function AnalysisProductView() {
 
-    const {store} = useStoreStore();
+    const { store } = useStoreStore();
 
     const [startedAt, setStartedAt] = useState<Dayjs | null>(dayjs('2023-05-10'));
     const [endedAt, setEndedAt] = useState<Dayjs | null>(dayjs('2023-05-10'));
@@ -33,7 +33,7 @@ export default function AnalysisProductView() {
             return;
         }
 
-        axios.get(GET_ANALYSIS_MENU_URL(store?.storeId+'', startedAt?.format('YYYY-MM-DD') as string, endedAt?.format('YYYY-MM-DD') as string), authorizationHeader(accessToken))
+        axios.get(GET_ANALYSIS_MENU_URL(store?.storeId + '', startedAt?.format('YYYY-MM-DD') as string, endedAt?.format('YYYY-MM-DD') as string), authorizationHeader(accessToken))
             .then((response) => getAnalysisProductResponseHandler(response))
             .catch((error) => getAnalysisProductErrorHandler(error));
     }
@@ -71,12 +71,8 @@ export default function AnalysisProductView() {
             <Typography sx={{ fontSize: '3vh', p: '3vh' }}>상품 분석</Typography>
             <Box sx={{ mt: '2vh', display: 'flex', flexDirection: 'column', justifyItems: 'center', alignItems: 'center' }}>
                 <SelectDatetimeView startedAt={startedAt as Dayjs} endedAt={endedAt as Dayjs} onDatetimeChange={handleDatetimeChange} />
-                {analysisProductResponse !== null &&
-                    (analysisProductResponse?.byCategory && analysisProductResponse.byCategory.length > 0) && 
-                    (analysisProductResponse?.byMenu && analysisProductResponse.byMenu.length > 0) ? (
-                    analysisProductResponse.byCategory.map((item) => (
-                        <AnalysisProductDetail byCategory={analysisProductResponse.byCategory} byMenu={analysisProductResponse.byMenu} />
-                    ))
+                {analysisProductResponse !== null && analysisProductResponse.byCategory.length > 0 && analysisProductResponse.byMenu.length > 0 ? (
+                    <AnalysisProductDetail byCategory={analysisProductResponse.byCategory} byMenu={analysisProductResponse.byMenu} />
                 ) : (
                     <Typography>데이터가 없습니다.</Typography>
                 )}
