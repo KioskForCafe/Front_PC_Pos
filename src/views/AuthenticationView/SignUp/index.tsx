@@ -71,6 +71,7 @@ export default function SignUp({setLoginView}:Props) {
     const onUserNameChangeHandler = (event:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
         const value = event.target.value;
         const isValidate = userNameValidator.test(value);
+        console.log(isValidate);
         setUserNamePatternCheck(isValidate);
         setUserName(value);
         
@@ -117,7 +118,7 @@ export default function SignUp({setLoginView}:Props) {
         if(duplicateTelNumber === null) return alert('전화번호 중복확인이 필요합니다.');
         if(!passwordMatchCheck) return alert('비밀번호가 일치하지 않습니다.')
 
-        const data : SignUpRequestDto ={ userId, userName, password, telNumber, userEmail ,isAdmin:true };
+        const data : SignUpRequestDto ={ userId, userName, password, telNumber, userEmail ,admin:true };
 
         axios.post(SIGN_UP_URL, data)
         .then((response)=> signUpResponseHanlder(response))

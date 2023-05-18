@@ -3,5 +3,6 @@ import useUserStore from './user.store';
 import useMenuStore from './menu.store';
 import useCategoryStore from './category.store';
 import useMenuDetailListStore from './menu-detail-list.store';
+import useNavigationStore from './navigation.store';
 
-export { useStoreStore, useUserStore , useMenuStore, useCategoryStore, useMenuDetailListStore};
+export { useStoreStore, useUserStore , useMenuStore, useCategoryStore, useMenuDetailListStore, useNavigationStore};

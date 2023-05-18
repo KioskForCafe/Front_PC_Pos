@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Menu, MenuItem } from '@mui/material'
+import { Box, Button, IconButton, Menu, MenuItem, SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material'
 import React, { MouseEvent, useEffect, useState } from 'react'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
@@ -32,7 +32,7 @@ export default function OrderCategoryBar() {
 
 
     const getCategory = (accessToken: string) =>{
-        axios.get(GET_CATEGORY_LIST_URL(storeId as number), authorizationHeader(accessToken))
+        axios.get(GET_CATEGORY_LIST_URL(storeId+''), authorizationHeader(accessToken))
         .then((response) => getCategoryResponseHandler(response))
         .catch((error) => getCategoryErrorHandler(error))
     }
@@ -85,6 +85,8 @@ export default function OrderCategoryBar() {
             <MenuItem onClick={onCategoryMenuCloseHandler}>수정</MenuItem>
             <MenuItem onClick={onCategoryMenuCloseHandler}>삭제</MenuItem>
         </Menu>
+
+        
     </Box>
   )
 }

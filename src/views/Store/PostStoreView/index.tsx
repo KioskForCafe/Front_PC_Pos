@@ -9,12 +9,12 @@ import { FILE_UPLOAD_URL, POST_STORE_URL, authorizationHeader, mutipartHeader } 
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import { useNavigate } from 'react-router-dom';
+import { useNavigationStore } from '../../../stores';
+import { Navigation } from '../../../constants/navigationEnum';
 
-interface Props {
-    setNode: Dispatch<React.SetStateAction<string>>;
-}
+export default function PostStoreView() {
 
-export default function PostStoreView({ setNode }: Props) {
+    const {setNavigation} = useNavigationStore();
 
     const navigator = useNavigate();
 
@@ -79,7 +79,7 @@ export default function PostStoreView({ setNode }: Props) {
             return;
         }
         onPostStore();
-        setNode('Store');
+        setNavigation(Navigation.Store);
     }
 
     const onStoreNameChangeHandler = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -159,7 +159,7 @@ export default function PostStoreView({ setNode }: Props) {
                 </IconButton>
                 <Box sx={{ width: '100%' }} component='img' src={storeLogoUrl} />
             </Box>
-            <IconButton onClick={()=>setNode('Store')}>
+            <IconButton onClick={()=>setNavigation(Navigation.Store)}>
                 <Typography>뒤로가기</Typography>
             </IconButton>
             <Fab sx={{ position: 'fixed', bottom: '200px', right: '248px', backgroundColor: '#999999' }} onClick={onWriteHandler}>
