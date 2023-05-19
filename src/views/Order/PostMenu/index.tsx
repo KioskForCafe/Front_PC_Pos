@@ -2,12 +2,13 @@ import { Box, Button, FormControl, Input, InputAdornment, InputLabel, MenuItem, 
 import axios, { AxiosResponse } from 'axios';
 import React, { useEffect, useState } from 'react'
 import { GET_CATEGORY_LIST_URL, POST_MENU_URL, authorizationHeader } from '../../../constants/api';
-import { useStoreStore } from '../../../stores';
+import { useNavigationStore, useStoreStore } from '../../../stores';
 import ResponseDto from '../../../apis/response';
 import { GetCategoryResponseDto } from '../../../apis/response/category';
 import { useCookies } from 'react-cookie';
 import { PostMenuResponseDto } from '../../../apis/response/menu';
 import { PostMenuRequestDto } from '../../../apis/request/menu';
+import { Navigation } from '../../../constants/navigationEnum';
 
 interface Option{
   optionName : string;
@@ -17,6 +18,7 @@ interface Option{
 export default function PostMenu() {
 
   const {store} = useStoreStore();
+  const {setNavigation} = useNavigationStore();
 
   const [category, setCategory] = useState<string>('');
   const [categoryList, setCategoryList] = useState<GetCategoryResponseDto[] | null>(null);
@@ -77,7 +79,7 @@ export default function PostMenu() {
       alert(message);
       return;
     }
-
+    setNavigation(Navigation.Order);
   }
 
   const onAddOptionButtonHandler = () =>{
@@ -141,7 +143,7 @@ export default function PostMenu() {
         </FormControl>
         <Button onClick={()=>onAddOptionButtonHandler()} >옵션 추가</Button>
 
-        <Button onClick={()=>onAddMenuButtonHandler()}>메뉴추가</Button>
+        <Button onClick={()=>onAddMenuButtonHandler()}>메뉴 추가</Button>
     </Box>
   )
 }
