@@ -107,7 +107,6 @@ export default function StoreCard({getStore, item} : Props) {
                     매장 Kiosk
                 </Button>
             </Box>
-
             <Menu 
                 anchorEl={anchorEl}
                 open={storeMenuOpen}

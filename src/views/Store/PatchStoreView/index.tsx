@@ -24,7 +24,7 @@ export default function PatchStoreView() {
     const StoreImageRef = useRef<HTMLInputElement | null>(null);
     const LogoImageRef = useRef<HTMLInputElement | null>(null);
 
-    const { store } = useStoreStore();
+    const { store, resetStore } = useStoreStore();
 
     const [storeList, setStoreList] = useState<GetStoreResponseDto[] | null>(null);
     const [storeCloseTime, setStoreCloseTime] = useState<string>('');
@@ -121,6 +121,7 @@ export default function PatchStoreView() {
             return;
         }
         setNavigation(Navigation.Store);
+        
     }
 
     const storeImageUploadResponseHandler = (response: AxiosResponse<any, any>) => {
@@ -190,7 +191,7 @@ export default function PatchStoreView() {
                 </Typography>
                 <Box sx={{ width: '100%' }} component='img' src={storeLogoUrl} />
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <IconButton sx={{ flex: 1 }} onClick={() => setNavigation(Navigation.Store)}>
+                    <IconButton sx={{ flex: 1 }} onClick={() => {setNavigation(Navigation.Store); resetStore();}}>
                         <Typography>뒤로가기</Typography>
                     </IconButton>
                     <IconButton sx={{ flex: 1 }} onClick={onUpdateButtonHandler}>
