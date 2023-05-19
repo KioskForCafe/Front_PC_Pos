@@ -143,7 +143,7 @@ export default function AnalysisCategoryView({ byCategory }: props) {
                         <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, p: '0px 20px' }}>
                             {sortedCategory.slice(0, 3).map((category, index) => (
                                 <Box sx={{ display: 'flex', p: '10px 0px' }} key={category.categoryId}>
-                                    <Typography sx={{ mr: '1vh', fontSize: '2vh' }}>{index + 2}</Typography>
+                                    <Typography sx={{ mr: '1vh', fontSize: '2vh' }}>{index + 1}</Typography>
                                     <Typography sx={{ flex: 1, fontSize: '2vh' }}>{category.categoryName}</Typography>
                                     <Typography sx={{ textAlign: 'right', fontSize: '2vh' }}>{category.saleCount}건</Typography>
                                 </Box>

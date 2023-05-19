@@ -11,13 +11,14 @@ import SelectDatetimeView from '../SelectDatetimeView';
 import { useCookies } from 'react-cookie';
 import useStore from '../../../stores/user.store';
 import User from '../../../interfaces/User.interface';
+import { useStoreStore } from '../../../stores';
 
 
 export default function SaleAnalysisView() {
 
-    const navigator = useNavigate();
 
-    const [storeId, setStoreId] = useState<string>('1');
+    const {store} = useStoreStore();
+
     const [saleAmount, setSaleAmount] = useState<number>();
     const [saleCount, setSaleCount] = useState<number>();
     const [avgSaleAmount, setAvgSaleAmount] = useState<number>();
@@ -25,12 +26,11 @@ export default function SaleAnalysisView() {
     const [startedAt, setStartedAt] = useState<Dayjs | null>(dayjs('2023-05-10'));
     const [endedAt, setEndedAt] = useState<Dayjs | null>(dayjs('2023-05-10'));
 
-    const { user } = useStore();
-
     const [cookies] = useCookies();
 
     const accessToken = cookies.accessToken;
     
+    let isLoad = false;
 
     //         Event Handler          //
     const getSaleAnalysis = () => {
@@ -40,7 +40,7 @@ export default function SaleAnalysisView() {
             return;
         }
 
-        axios.get(GET_SALE_ANALYSIS_URL(storeId as string, startedAt?.format('YYYY-MM-DD') as string, endedAt?.format('YYYY-MM-DD') as string), authorizationHeader(accessToken))
+        axios.get(GET_SALE_ANALYSIS_URL(store?.storeId+'', startedAt?.format('YYYY-MM-DD') as string, endedAt?.format('YYYY-MM-DD') as string), authorizationHeader(accessToken))
             .then((response) => getSaleAnalysisResponseHandler(response))
             .catch((error) => getSaleAnalysisErrorHandler(error));
     }
@@ -54,12 +54,11 @@ export default function SaleAnalysisView() {
 
     const getSaleAnalysisResponseHandler = (response: AxiosResponse<any, any>) => {
         const { result, message, data } = response.data as ResponseDto<AnalysisSaleResponseDto>
-        if (!result || !data) {
+        if (!result) {
             alert(message);
-            navigator('/');
             return;
         }
-        setSaleAnalysisResponse(data);
+        if(data) setSaleAnalysisResponse(data);
     }
 
     //          Error Handler           //
@@ -81,9 +80,10 @@ export default function SaleAnalysisView() {
     //          Use Effect          //
 
     useEffect(() => {
+        if (isLoad) return;
         console.log(startedAt?.format('DD/MM/YYYY'), endedAt?.format('DD/MM/YYYY'));
+        isLoad = true;
         getSaleAnalysis();
-        console.log(saleAmount, saleCount, avgSaleAmount);
     }, [startedAt, endedAt]);
 
     return (
