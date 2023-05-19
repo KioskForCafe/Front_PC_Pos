@@ -17,7 +17,6 @@ interface Props {
 
 export default function PatchStoreView({ setNode }: Props) {
 
-    const navigator = useNavigate();
 
     const [cookies] = useCookies();
 
@@ -104,7 +103,6 @@ export default function PatchStoreView({ setNode }: Props) {
         const { result, message, data } = response.data as ResponseDto<GetStoreResponseDto[]>;
         if (!result || !data) {
             alert(message);
-            navigator('/');
             return;
         }
         setStoreList(data);
@@ -162,32 +160,34 @@ export default function PatchStoreView({ setNode }: Props) {
 
     return (
         <Box sx={{ display: 'flex', height: '88vh' }}>
-            <Box sx={{display: 'flex', flexDirection: 'column' , alignItems: 'left'}}>
-                <Typography sx={{ml: '2vh', display: 'flex', fontSize: '2vh'}}>점포명</Typography>
-                <Input sx={{ml: '2vh', display: 'flex'}} placeholder={storeName} onChange={(event) => setStoreName(event.target.value)} />
-                <Typography sx={{ml: '2vh', display: 'flex', fontSize: '2vh'}}>오픈 시간</Typography>
-                <Input sx={{ml: '2vh', display: 'flex'}} placeholder={storeOpenTime} onChange={(event) => setStoreOpenTime(event.target.value)} />
-                <Typography sx={{ml: '2vh', display: 'flex', fontSize: '2vh'}}>마감 시간</Typography>
-                <Input sx={{ml: '2vh', display: 'flex'}} placeholder={storeCloseTime} onChange={(event) => setStoreCloseTime(event.target.value)} />
-                <Typography sx={{ml: '2vh', display: 'flex', fontSize: '2vh'}}>점포 이미지</Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left' }}>
+                <Typography sx={{ mt: '2vh', ml: '2vh', display: 'flex', fontSize: '2vh' }}>점포명</Typography>
+                <Input sx={{ ml: '2vh', display: 'flex' }} placeholder={storeName} onChange={(event) => setStoreName(event.target.value)} />
+                <Typography sx={{ ml: '2vh', display: 'flex', fontSize: '2vh' }}>오픈 시간</Typography>
+                <Input sx={{ ml: '2vh', display: 'flex' }} placeholder={storeOpenTime} onChange={(event) => setStoreOpenTime(event.target.value)} />
+                <Typography sx={{ ml: '2vh', display: 'flex', fontSize: '2vh' }}>마감 시간</Typography>
+                <Input sx={{ ml: '2vh', display: 'flex' }} placeholder={storeCloseTime} onChange={(event) => setStoreCloseTime(event.target.value)} />
+                <Typography sx={{ ml: '2vh', display: 'flex', fontSize: '2vh' }}>점포 이미지</Typography>
                 <IconButton onClick={() => onImageUploadButtonHandler()}>
                     <ImageOutlinedIcon />
                     <input ref={imageRef} hidden type='file' accept='image/*' onChange={(event) => storeImageUploadChangeHandler(event)} />
                 </IconButton>
                 <Box sx={{ width: '100%' }} component='img' src={storeImgUrl} />
-                <Typography sx={{ml: '2vh', display: 'flex', fontSize: '2vh'}}>점포 로고 이미지</Typography>
+                <Typography sx={{ ml: '2vh', display: 'flex', fontSize: '2vh' }}>점포 로고 이미지</Typography>
                 <IconButton onClick={() => onImageUploadButtonHandler()}>
                     <ImageOutlinedIcon />
                     <input ref={imageRef} hidden type='file' accept='image/*' onChange={(event) => storeLogoUploadChangeHandler(event)} />
                 </IconButton>
                 <Box sx={{ width: '100%' }} component='img' src={storeLogoUrl} />
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <IconButton sx={{flex: 1}} onClick={() => setNode('Store')}>
+                        <Typography>뒤로가기</Typography>
+                    </IconButton>
+                    <IconButton sx={{flex: 1}} onClick={onUpdateButtonHandler}>
+                        <Typography>수정</Typography>
+                    </IconButton>
+                </Box>
             </Box>
-            <IconButton onClick={() => setNode('Store')}>
-                <Typography>뒤로가기</Typography>
-            </IconButton>
-            <Fab sx={{ position: 'fixed', bottom: '200px', right: '248px', backgroundColor: '#999999' }} onClick={onUpdateButtonHandler}>
-                <AddBusinessIcon />
-            </Fab>
         </Box>
     )
 }
