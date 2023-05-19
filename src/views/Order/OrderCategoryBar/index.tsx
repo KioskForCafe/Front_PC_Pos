@@ -1,7 +1,6 @@
-import { Box, Button, IconButton } from '@mui/material'
-import React, { useEffect, useState } from 'react'
-import SearchIcon from '@mui/icons-material/Search';
-import SettingsIcon from '@mui/icons-material/Settings';
+import { Box, Button, IconButton, Menu, MenuItem, SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material'
+import React, { MouseEvent, useEffect, useState } from 'react'
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import axios, { AxiosResponse } from 'axios';
@@ -18,15 +17,25 @@ export default function OrderCategoryBar() {
     const {store} = useStoreStore();
     const [categoryList, setCategoryList] = useState<GetCategoryResponseDto[] | null>(null);
     const {category, setCategory} = useCategoryStore();
-
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const storeMenuOpen = Boolean(anchorEl);
+    
     const accessToken = cookies.accessToken;
     const storeId = store?.storeId;
 
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    
+    const onCategoryMenuButtonHandler = (event: MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const onCategoryMenuCloseHandler = () => {
+        setAnchorEl(null);
+    };
+
+
     const getCategory = (accessToken: string) =>{
-        if(storeId == null) {
-            alert('존재하지 않는 점포입니다.')
-            return;
-        }
         axios.get(GET_CATEGORY_LIST_URL(storeId+''), authorizationHeader(accessToken))
         .then((response) => getCategoryResponseHandler(response))
         .catch((error) => getCategoryErrorHandler(error))
@@ -66,13 +75,22 @@ export default function OrderCategoryBar() {
             <IconButton sx={{flex:1}}>
                 <KeyboardArrowRightIcon/>
             </IconButton>
-            <IconButton sx={{flex:1}}>
-                <SearchIcon/>
-            </IconButton>
-            <IconButton sx={{flex:1}}>
-                <SettingsIcon/>
+            <IconButton onClick={onCategoryMenuButtonHandler} sx={{flex:1}}>
+                <MoreHorizIcon />
             </IconButton>
         </Box>
+        
+        <Menu 
+            anchorEl={anchorEl}
+            open={storeMenuOpen}
+            onClose={onCategoryMenuCloseHandler}
+            onClick={onCategoryMenuCloseHandler} 
+        >
+            <MenuItem onClick={onCategoryMenuCloseHandler}>수정</MenuItem>
+            <MenuItem onClick={onCategoryMenuCloseHandler}>삭제</MenuItem>
+        </Menu>
+
+        
     </Box>
   )
 }

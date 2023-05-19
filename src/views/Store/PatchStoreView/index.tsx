@@ -9,20 +9,20 @@ import { GetStoreResponseDto, PatchStoreResponseDto, PostStoreResponseDto } from
 import { POST_STORE_URL, authorizationHeader, FILE_UPLOAD_URL, mutipartHeader, PATCH_STORE_URL, GET_STORE_URL } from '../../../constants/api';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
-import { useStoreStore } from '../../../stores';
+import { useNavigationStore, useStoreStore } from '../../../stores';
+import { Navigation } from '../../../constants/navigationEnum';
 
-interface Props {
-    setNode: Dispatch<React.SetStateAction<string>>;
-}
+export default function PatchStoreView() {
 
-export default function PatchStoreView({ setNode }: Props) {
+    const { setNavigation } = useNavigationStore();
 
 
     const [cookies] = useCookies();
 
     const accessToken = cookies.accessToken;
 
-    const imageRef = useRef<HTMLInputElement | null>(null);
+    const StoreImageRef = useRef<HTMLInputElement | null>(null);
+    const LogoImageRef = useRef<HTMLInputElement | null>(null);
 
     const { store } = useStoreStore();
 
@@ -84,17 +84,17 @@ export default function PatchStoreView({ setNode }: Props) {
             return;
         }
         onPatchStore(accessToken);
-        setNode('Store');
     }
 
-    const onStoreNameChangeHandler = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        const value = event.target.value;
-        setStoreName(value);
+
+    const onStoreImageUploadButtonHandler = () => {
+        if (!StoreImageRef.current) return;
+        StoreImageRef.current.click();
     }
 
-    const onImageUploadButtonHandler = () => {
-        if (!imageRef.current) return;
-        imageRef.current.click();
+    const onLogoImageUploadButtonHandler = () => {
+        if(!LogoImageRef.current) return;
+        LogoImageRef.current.click();
     }
 
     //          Response Handler          //
@@ -105,7 +105,13 @@ export default function PatchStoreView({ setNode }: Props) {
             alert(message);
             return;
         }
+        console.log('storeImgUrl');
+        console.log(storeImgUrl);
+        console.log('storeLogoUrl');
+        console.log(storeLogoUrl);
         setStoreList(data);
+        if (storeImgUrl) setStoreImgUrl(storeImgUrl);
+        if (storeLogoUrl) setStoreLogoUrl(storeLogoUrl);
     }
 
     const patchStoreResponseHandler = (response: AxiosResponse<any, any>) => {
@@ -114,6 +120,7 @@ export default function PatchStoreView({ setNode }: Props) {
             alert(message);
             return;
         }
+        setNavigation(Navigation.Store);
     }
 
     const storeImageUploadResponseHandler = (response: AxiosResponse<any, any>) => {
@@ -167,23 +174,26 @@ export default function PatchStoreView({ setNode }: Props) {
                 <Input sx={{ ml: '2vh', display: 'flex' }} placeholder={storeOpenTime} onChange={(event) => setStoreOpenTime(event.target.value)} />
                 <Typography sx={{ ml: '2vh', display: 'flex', fontSize: '2vh' }}>마감 시간</Typography>
                 <Input sx={{ ml: '2vh', display: 'flex' }} placeholder={storeCloseTime} onChange={(event) => setStoreCloseTime(event.target.value)} />
-                <Typography sx={{ ml: '2vh', display: 'flex', fontSize: '2vh' }}>점포 이미지</Typography>
-                <IconButton onClick={() => onImageUploadButtonHandler()}>
-                    <ImageOutlinedIcon />
-                    <input ref={imageRef} hidden type='file' accept='image/*' onChange={(event) => storeImageUploadChangeHandler(event)} />
-                </IconButton>
+                <Typography sx={{ ml: '2vh', display: 'flex', fontSize: '2vh' }}>
+                    점포 이미지
+                    <IconButton onClick={() => onStoreImageUploadButtonHandler()}>
+                        <ImageOutlinedIcon />
+                        <input ref={StoreImageRef} hidden type='file' accept='image/*' onChange={(event) => storeImageUploadChangeHandler(event)} />
+                    </IconButton>
+                </Typography>
                 <Box sx={{ width: '100%' }} component='img' src={storeImgUrl} />
-                <Typography sx={{ ml: '2vh', display: 'flex', fontSize: '2vh' }}>점포 로고 이미지</Typography>
-                <IconButton onClick={() => onImageUploadButtonHandler()}>
-                    <ImageOutlinedIcon />
-                    <input ref={imageRef} hidden type='file' accept='image/*' onChange={(event) => storeLogoUploadChangeHandler(event)} />
-                </IconButton>
+                <Typography sx={{ ml: '2vh', display: 'flex', fontSize: '2vh' }}>점포 로고 이미지
+                    <IconButton sx={{ flex: 1 }} onClick={() => onLogoImageUploadButtonHandler()}>
+                        <ImageOutlinedIcon />
+                        <input ref={LogoImageRef} hidden type='file' accept='image/*' onChange={(event) => storeLogoUploadChangeHandler(event)} />
+                    </IconButton>
+                </Typography>
                 <Box sx={{ width: '100%' }} component='img' src={storeLogoUrl} />
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <IconButton sx={{flex: 1}} onClick={() => setNode('Store')}>
+                    <IconButton sx={{ flex: 1 }} onClick={() => setNavigation(Navigation.Store)}>
                         <Typography>뒤로가기</Typography>
                     </IconButton>
-                    <IconButton sx={{flex: 1}} onClick={onUpdateButtonHandler}>
+                    <IconButton sx={{ flex: 1 }} onClick={onUpdateButtonHandler}>
                         <Typography>수정</Typography>
                     </IconButton>
                 </Box>

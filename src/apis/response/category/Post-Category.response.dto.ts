@@ -1,6 +1,7 @@
 interface Dto {
-  categoryName: string;
-  categoryPriority: number;
-  storeId: number;
+  resultState : boolean;
+  // categoryName: string;
+  // categoryPriority: number;
+  // storeId: number;
 }
 export default Dto;

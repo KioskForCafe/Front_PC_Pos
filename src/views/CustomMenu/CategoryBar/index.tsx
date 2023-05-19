@@ -61,6 +61,7 @@ export default function CategoryBar() {
   const navigator = useNavigate();
 
   const [categoryResponse, setCategoryResponse] = useState<GetCategoryResponseDto[] | null>(null);
+  const [storeId, setStoreId] = useState<string>('1');
   const [categoryId, setCategoryId] = useState<string>('');
 
   const { user } = useStore();
@@ -84,7 +85,7 @@ export default function CategoryBar() {
       return;
     }
 
-    axios.get(GET_CATEGORY_LIST_URL(store.storeId.toString()), authorizationHeader(accessToken))
+    axios.get(GET_CATEGORY_LIST_URL(storeId as string), authorizationHeader(accessToken))
       .then((response) => getCategoryResponseHandler(response))
       .catch((error) => getCategoryErrorHandler(error));
   }
