@@ -1,0 +1,14 @@
+export enum Navigation {
+    AuthenticationView = 'AuthenticationView',
+    Order = 'Order',
+    CustomMenu = 'CustomMenu',
+    OrderLog = 'OrderLog',
+    AnalysisView = 'AnalysisView',
+    Store = 'Store',
+    PostStoreView = 'PostStoreView',
+    PatchStoreView = 'PatchStoreView',
+    PostMenu = 'PostMenu',
+    PostCategory = 'PostCategory'
+    
+
+}

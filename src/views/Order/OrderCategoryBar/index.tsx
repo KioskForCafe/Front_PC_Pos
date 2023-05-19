@@ -90,22 +90,7 @@ export default function OrderCategoryBar() {
             <MenuItem onClick={onCategoryMenuCloseHandler}>삭제</MenuItem>
         </Menu>
 
-        <SpeedDial
-        ariaLabel="SpeedDial tooltip example"
-        sx={{ position: 'absolute', bottom: 16, right: 16 }}
-        icon={<SpeedDialIcon />}
-        onClose={handleClose}
-        onOpen={handleOpen}
-        open={open}
-      >
-        {/* {actions.map((action) => ( */}
-          <SpeedDialAction
-            sx={{width:'300px', height: '50px', borderRadius:0}}
-            icon='카테고리 추가'
-            onClick={handleClose}
-          />
-        {/* ))} */}
-      </SpeedDial>
+        
     </Box>
   )
 }

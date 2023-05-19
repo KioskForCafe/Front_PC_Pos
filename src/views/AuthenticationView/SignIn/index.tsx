@@ -7,14 +7,16 @@ import ResponseDto from '../../../apis/response';
 import { SignInResponseDto } from '../../../apis/response/auth';
 import { getExpires } from '../../../utils';
 import { useCookies } from "react-cookie";
-import { useUserStore } from '../../../stores';
+import { useNavigationStore, useUserStore } from '../../../stores';
+import { Navigation } from '../../../constants/navigationEnum';
 
 interface Props {
   setLoginView: Dispatch<SetStateAction<boolean>>;
-  setNode: Dispatch<React.SetStateAction<string>>;
 }
 
-export default function SignIn( {setLoginView, setNode} : Props) {
+export default function SignIn( {setLoginView} : Props) {
+
+  const {setNavigation} = useNavigationStore();
 
   const [userId, setUserId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -50,7 +52,7 @@ export default function SignIn( {setLoginView, setNode} : Props) {
     const expires = getExpires(expiredTime);
     setCookie('accessToken', token, {expires , path:'/'})
     setUser(user);
-    setNode('Store');
+    setNavigation(Navigation.Store);
 
   }
 

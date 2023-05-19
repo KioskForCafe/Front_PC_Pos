@@ -12,42 +12,42 @@ import AnalysisView from './views/AnalysisView';
 import Point from './views/Point';
 import Store from './views/Store';
 import AuthenticationView from './views/AuthenticationView';
-import { useStoreStore, useUserStore } from './stores';
+import { useNavigationStore, useStoreStore, useUserStore } from './stores';
 import PostStoreView from './views/Store/PostStoreView';
 import PatchStoreView from './views/Store/PatchStoreView';
+import { Navigation } from './constants/navigationEnum';
+import PostMenu from './views/Order/PostMenu';
+import PostCategory from './views/Order/PostCategory';
 
 function App() {
 
-  const [node , setNode] = useState<string>('AuthenticationView');
+  const {navigation, setNavigation} = useNavigationStore();
 
   const {user} = useUserStore();
   const {store} = useStoreStore();
 
+  
 
   return (
     <Box>
       <NavigationBar />
       <Box sx={{flex:1}}>
         {
-          node === 'AuthenticationView' ? <AuthenticationView setNode={setNode} /> :
-          node === 'Order' ? <Order/> :
-          node === 'CustomMenu' ? <CustomMenu/> :
-          node === 'OrderLog' ? <OrderLog/> :
-          node === 'AnalysisView' ? <AnalysisView/> :
-          node === 'Store' ? <Store setNode={setNode}/> : 
-          node === 'PostStoreView' ? <PostStoreView setNode={setNode} /> :
-          node === 'PatchStoreView' && <PatchStoreView setNode={setNode} />
+          navigation === Navigation.AuthenticationView ? <AuthenticationView/> :
+          navigation === Navigation.Order ? <Order/> :
+          navigation === Navigation.CustomMenu ? <CustomMenu/> :
+          navigation === Navigation.OrderLog ? <OrderLog/> :
+          navigation === Navigation.AnalysisView ? <AnalysisView/> :
+          navigation === Navigation.Store ? <Store/> :
+          navigation === Navigation.PostStoreView ? <PostStoreView/> :
+          navigation === Navigation.PatchStoreView ? <PatchStoreView/> :
+          navigation === Navigation.PostMenu ? <PostMenu/> :
+          navigation === Navigation.PostCategory && <PostCategory/> 
+
         }
-        {/* <Order/> */}
-        {/* <CustomMenu/> */}
-        {/* <OrderLog/> */}
-        {/* <AnalysisView/> */}
-        {/* <Point/> */}
-        {/* <Store/> */}
-        
       </Box>
       {
-        user && store && <Footer setNode={setNode}/>
+        user && store && <Footer/>
       }
     </Box>
   );

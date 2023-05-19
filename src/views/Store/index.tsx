@@ -9,12 +9,15 @@ import { useCookies } from 'react-cookie';
 import { GetStoreResponseDto } from '../../apis/response/store';
 import ResponseDto from '../../apis/response';
 import PostStoreView from './PostStoreView';
+import { useNavigationStore, useStoreStore } from '../../stores';
+import { Navigation } from '../../constants/navigationEnum';
 
-interface Props{
-  setNode:Dispatch<React.SetStateAction<string>>;
-}
 
-export default function Store({setNode}:Props) {
+export default function Store() {
+
+  const {setNavigation} = useNavigationStore();
+
+  const {resetStore} = useStoreStore();
 
   const [cookies] = useCookies();
 
@@ -41,6 +44,7 @@ export default function Store({setNode}:Props) {
   }
   useEffect(()=>{
     getStore(accessToken);
+    resetStore();
   },[])
 
   return (
@@ -50,7 +54,7 @@ export default function Store({setNode}:Props) {
           {
             storeList !== null ? 
               storeList?.map((store) => (
-                <StoreCard getStore={getStore} setNode={setNode} item={store}/> 
+                <StoreCard getStore={getStore} item={store}/> 
               ))
               : '매장을 등록하세요'
           }
@@ -61,7 +65,7 @@ export default function Store({setNode}:Props) {
             ariaLabel="SpeedDial controlled open example"
             sx={{ position: 'fixed', bottom:'7vh', right:'3vh'}}
             icon={<AddIcon/>}
-            onClick={()=>setNode('PostStoreView')}
+            onClick={()=>setNavigation(Navigation.PostStoreView)}
           />
         </Tooltip>
       </Box>

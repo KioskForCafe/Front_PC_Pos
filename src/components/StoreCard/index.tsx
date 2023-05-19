@@ -2,20 +2,22 @@ import { Box, Button, Card, CardContent, CardHeader, CardMedia, IconButton, Menu
 import React, { Dispatch } from 'react'
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { DeleteStoreResponseDto, GetStoreResponseDto } from '../../apis/response/store';
-import { useStoreStore } from '../../stores';
+import { useNavigationStore, useStoreStore } from '../../stores';
 import { useCookies } from 'react-cookie';
 import Store from '../../views/Store';
 import axios, { AxiosResponse } from 'axios';
 import { DELETE_STORE_URL, authorizationHeader } from '../../constants/api';
 import ResponseDto from '../../apis/response';
+import { Navigation } from '../../constants/navigationEnum';
 
 interface Props{
     getStore: (accessToken: string) => void;
-    setNode: Dispatch<React.SetStateAction<string>>;
     item: GetStoreResponseDto;
 }
 
-export default function StoreCard({getStore, item, setNode} : Props) {
+export default function StoreCard({getStore, item} : Props) {
+
+    const {setNavigation} = useNavigationStore();
 
     const {store, setStore,resetStore } = useStoreStore();
     const [cookies] = useCookies();
@@ -34,13 +36,13 @@ export default function StoreCard({getStore, item, setNode} : Props) {
     const onPosButtonHandler = () =>{
         const {...store} = item;
         setStore(store);
-        setNode('Order');
+        setNavigation(Navigation.Order);
     }
 
     const onStoreUpdateButtonHandler = () => {
         const {...store} = item;
         setStore(store);
-        setNode('PatchStoreView');
+        setNavigation(Navigation.PatchStoreView);
     }
 
     const onStoreDeleteButtonHandler = () => {
@@ -57,7 +59,7 @@ export default function StoreCard({getStore, item, setNode} : Props) {
             .catch((error) => deleteStoreErrorHandler(error));
 
         resetStore();
-        setNode('Store');
+        setNavigation(Navigation.Store);
     }
 
 

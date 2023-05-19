@@ -16,6 +16,7 @@ export const SIGN_IN_URL = `${HOST}auth/sign-in`;
 export const GET_STORE_URL = `${HOST}api/store`;
 
 export const GET_MENU_DETAIL_URL = (menuId:number) => `${HOST}api/menu/${menuId}`;
+export const POST_MENU_URL = `${HOST}api/menu`;
 
 export const POST_ORDER_DETAIL_URL = `${HOST}api/order-detail`;
 export const POST_STORE_URL = `${HOST}api/store`;
