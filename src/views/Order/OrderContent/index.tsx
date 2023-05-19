@@ -9,18 +9,19 @@ import ResponseDto from '../../../apis/response';
 import { GetMenuResponseDto } from '../../../apis/response/menu';
 import MenuCard from '../../../components/MenuCard';
 import { useCookies } from 'react-cookie';
-import { PostOrderDetailRequestDto } from '../../../apis/request/order';
-import MenuDetailCard from '../../../components/MenuDetailCard';
 import { Navigation } from '../../../constants/navigationEnum';
 
-export default function OrderContent() {
+interface Props {
+    setMenuDetailView: Dispatch<React.SetStateAction<boolean>>
+}
+
+export default function OrderContent({setMenuDetailView}:Props) {
 
     const {setNavigation} = useNavigationStore();
 
     const {store} = useStoreStore();
     const {category} = useCategoryStore();
     const [menuList, setMenuList] = useState<GetMenuResponseDto[] | null>(null);
-    const [menuDetailView, setMenuDetailView] = useState<boolean>(false);
 
     const [cookies] = useCookies();
 
@@ -87,10 +88,6 @@ export default function OrderContent() {
                 <KeyboardArrowRightIcon/>
             </IconButton>
         </Box>
-
-        {
-            menuDetailView && <MenuDetailCard setMenuDetailView={setMenuDetailView}/>
-        }
 
         <SpeedDial
             ariaLabel="SpeedDial tooltip example"
