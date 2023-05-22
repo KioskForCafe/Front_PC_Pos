@@ -1,7 +1,7 @@
 import { Box, Card, CardContent, Divider, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import axios from 'axios';
-import dayjs, { Dayjs } from 'dayjs';
 import React, { useEffect, useState } from 'react'
+import { ResponsiveLine } from '@nivo/line'
 
 interface props {
     saleListBytime: {
@@ -14,7 +14,87 @@ interface props {
 
 export default function AnalysisBusinessDetail({ saleListBytime }: props) {
 
+    const saleData = [{
+        id: "매출",
+        "color": "hsl(295, 70%, 50%)",
+        data: saleListBytime.map((sale) => ({
+            x: sale.time+'시',
+            y: sale.saleAmount
+        }))
+    }];
+
+
+    const SaleLineChart = (saleData: any) => (
+        <ResponsiveLine
+            data={saleData}
+            margin={{ top: 50, right: 110, bottom: 50, left: 80 }}
+            xScale={{ type: 'point' }}
+            yScale={{
+                type: 'linear',
+                min: 'auto',
+                max: 'auto',
+                stacked: true,
+                reverse: false
+            }}
+            yFormat=" >-.2f"
+            axisTop={null}
+            axisRight={null}
+            axisBottom={{
+                tickSize: 5,
+                tickPadding: 5,
+                tickRotation: 0,
+                legend: '',
+                legendOffset: 36,
+                legendPosition: 'middle'
+            }}
+            axisLeft={{
+                tickSize: 5,
+                tickPadding: 5,
+                tickRotation: 0,
+                legend: '매출액',
+                legendOffset: -55,
+                legendPosition: 'middle'
+            }}
+            pointSize={10}
+            pointColor={{ theme: 'background' }}
+            pointBorderWidth={2}
+            pointBorderColor={{ from: 'serieColor' }}
+            pointLabelYOffset={-12}
+            useMesh={true}
+            legends={[
+                {
+                    anchor: 'bottom-right',
+                    direction: 'column',
+                    justify: false,
+                    translateX: 100,
+                    translateY: 0,
+                    itemsSpacing: 0,
+                    itemDirection: 'left-to-right',
+                    itemWidth: 80,
+                    itemHeight: 20,
+                    itemOpacity: 0.75,
+                    symbolSize: 12,
+                    symbolShape: 'circle',
+                    symbolBorderColor: 'rgba(0, 0, 0, .5)',
+                    effects: [
+                        {
+                            on: 'hover',
+                            style: {
+                                itemBackground: 'rgba(0, 0, 0, .03)',
+                                itemOpacity: 1
+                            }
+                        }
+                    ]
+                }
+            ]}
+        />
+    );
+
     const sortedBySaleCount = saleListBytime.sort((a, b) => b.saleCount - a.saleCount);
+
+    useEffect(() => {
+        console.log(saleData);
+    })
 
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -37,32 +117,9 @@ export default function AnalysisBusinessDetail({ saleListBytime }: props) {
                 </CardContent>
             </Card>
             <Typography sx={{ ml: '3vh', mb: '3vh', fontSize: '2vh', fontWeight: 550, color: '#00208c' }}>시간별 결제 금액</Typography>
-            <TableContainer component={Table}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>
-                                시간
-                            </TableCell>
-                            <TableCell align="right">
-                                매출액
-                            </TableCell>
-                            <TableCell align="right">
-                                건수
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {saleListBytime.map((sale) => (
-                            <TableRow>
-                                <TableCell>{sale.time}</TableCell>
-                                <TableCell align='right'>{sale.saleAmount}</TableCell>
-                                <TableCell align="right">{sale.saleCount}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+            <Box sx={{height: '50vh', width: '100%'}}>
+                {SaleLineChart(saleData)}
+            </Box>
         </Box>
     )
 }
