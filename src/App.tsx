@@ -1,15 +1,12 @@
-import React, { useState } from 'react';
-import logo from './logo.svg';
+import React from 'react';
 import CustomMenu from './views/CustomMenu';
 import './App.css';
 import { Box } from '@mui/material';
 import Footer from './views/Footer';
-import { Route, Routes } from 'react-router-dom';
 import NavigationBar from './views/NavigationBar';
 import OrderLog from './views/OrderLog';
 import Order from './views/Order';
 import AnalysisView from './views/AnalysisView';
-import Point from './views/Point';
 import Store from './views/Store';
 import AuthenticationView from './views/AuthenticationView';
 import { useNavigationStore, useStoreStore, useUserStore } from './stores';
@@ -21,7 +18,7 @@ import PostCategory from './views/Order/PostCategory';
 
 function App() {
 
-  const {navigation, setNavigation} = useNavigationStore();
+  const {navigation} = useNavigationStore();
 
   const {user} = useUserStore();
   const {store} = useStoreStore();
@@ -35,7 +32,7 @@ function App() {
         {
           navigation === Navigation.AuthenticationView ? <AuthenticationView/> :
           navigation === Navigation.Order ? <Order/> :
-          navigation === Navigation.CustomMenu ? <CustomMenu/> :
+          // navigation === Navigation.CustomMenu ? <CustomMenu/> :
           navigation === Navigation.OrderLog ? <OrderLog/> :
           navigation === Navigation.AnalysisView ? <AnalysisView/> :
           navigation === Navigation.Store ? <Store/> :
@@ -43,7 +40,6 @@ function App() {
           navigation === Navigation.PatchStoreView ? <PatchStoreView/> :
           navigation === Navigation.PostMenu ? <PostMenu/> :
           navigation === Navigation.PostCategory && <PostCategory/> 
-
         }
       </Box>
       {

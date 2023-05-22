@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, Input, InputAdornment, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material'
+import { Box, Button, FormControl, IconButton, Input, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material'
 import axios, { AxiosResponse } from 'axios';
 import React, { useEffect, useState } from 'react'
 import { GET_CATEGORY_LIST_URL, POST_MENU_URL, authorizationHeader } from '../../../constants/api';
@@ -9,6 +9,7 @@ import { useCookies } from 'react-cookie';
 import { PostMenuResponseDto } from '../../../apis/response/menu';
 import { PostMenuRequestDto } from '../../../apis/request/menu';
 import { Navigation } from '../../../constants/navigationEnum';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface Option{
   optionName : string;
@@ -20,6 +21,7 @@ export default function PostMenu() {
   const {store} = useStoreStore();
   const {setNavigation} = useNavigationStore();
 
+  const [patchOptionView , setPatchOptionView] = useState<boolean>(false);
   const [category, setCategory] = useState<string>('');
   const [categoryList, setCategoryList] = useState<GetCategoryResponseDto[] | null>(null);
   const [categoryId, setCategoryId] = useState<number|null>(null);
@@ -29,7 +31,7 @@ export default function PostMenu() {
   const [menuImgUrl, setMenuImgUrl] = useState<string | null>(null);
   const [optionList, setOptionList] = useState<Option[]>([]);
   const [optionName,setOptionName] = useState<string>('');
-  const [optionPrice,setOptionPrice] = useState<number>(0);
+  const [optionPrice,setOptionPrice] = useState<number | null>(null);
 
   const [cookies] = useCookies();
 
@@ -82,12 +84,20 @@ export default function PostMenu() {
     setNavigation(Navigation.Order);
   }
 
-  const onAddOptionButtonHandler = () =>{
-    optionList.push({optionName,optionPrice});
+  const onAddOptionButtonHandler = () => {
+    if(optionName === '') return alert('옵션이름을 입력해주세요.');
+    optionList.push({optionName,optionPrice: optionPrice as number});
+    setOptionList([...optionList]);
+    setOptionName('');
+    setOptionPrice(null);
+  }
+
+  const onDeleteOptionButtonHandler = (index: number) => {
+    optionList.splice(index,1);
     setOptionList([...optionList]);
   }
 
-  const getCategoryListErrorHandler = (error: any) =>{
+  const getCategoryListErrorHandler = (error: any) => {
     console.log(error.message);
   }
 
@@ -100,16 +110,21 @@ export default function PostMenu() {
   },[])
 
   return (
-    <Box sx={{display:'flex', flexDirection:'column', height:'88vh'}}>
-        <FormControl variant='filled' sx={{mb:'0.5rem'}}>
+    <Box sx={{display: 'flex',height:'88vh', justifyContent:'center', alignItems:'center'}}>
+      <Box sx={{position:'relative', display:'flex', flexDirection:'column', width:'350px'}}>
+        <Typography variant='h4' marginBottom='10px' >메뉴 등록</Typography>
+        <IconButton onClick={()=>setNavigation(Navigation.Order)} sx={{position:'absolute', right:0}}>
+          <CloseIcon/>
+        </IconButton>
+        <FormControl variant='standard' sx={{mb:'0.5rem'}}>
             <InputLabel>상품 이름</InputLabel>
             <Input onChange={(event)=>setMenuName(event.target.value)} type='text'/>
         </FormControl>
-        <FormControl variant='filled' sx={{mb:'0.5rem'}}>
+        <FormControl variant='standard' sx={{mb:'0.5rem'}}>
             <InputLabel>상품 가격</InputLabel>
             <Input onChange={(event)=>setMenuPrice(Number(event.target.value))} type='number'/>
         </FormControl>
-        <FormControl variant='filled' sx={{mb:'0.5rem'}}>
+        <FormControl variant='standard' sx={{mb:'0.5rem'}}>
           <InputLabel id="demo-simple-select-label">카테고리</InputLabel>
           <Select
             labelId="demo-simple-select-label"
@@ -126,24 +141,34 @@ export default function PostMenu() {
           </Select>
         </FormControl>
         {
-          optionList.map((option)=>(
-            <Box>
-              <Box>{option.optionName}</Box>
-              <Box>{option.optionPrice}</Box>
+          optionList.length < 1 ? (<Typography sx={{color:'orange'}}>해당 상품의 옵션을 추가하세요.</Typography>) :optionList.map((option,index)=>(
+            <Box sx={{display:'flex', mb:'0.5rem'}}>
+              <FormControl variant='standard' sx={{display:'inline-flex'}}>
+                  <InputLabel>옵션 이름</InputLabel>
+                  <Input readOnly value={option.optionName} type='text'/>
+              </FormControl>
+              <FormControl variant='standard' sx={{mx:'0.5rem', display:'inline-flex'}}>
+                  <InputLabel>옵션 가격</InputLabel>
+                  <Input readOnly value={option.optionPrice} type='number'/>
+              </FormControl>
+              <Button onClick={()=>onDeleteOptionButtonHandler(index)} >삭제</Button>
             </Box>
           ))
         }
-        <FormControl variant='filled' sx={{mb:'0.5rem'}}>
-            <InputLabel>옵션 이름</InputLabel>
-            <Input onChange={(event)=>setOptionName(event.target.value)} type='text'/>
-        </FormControl>
-        <FormControl variant='filled' sx={{mb:'0.5rem'}}>
-            <InputLabel>옵션 가격</InputLabel>
-            <Input onChange={(event)=>setOptionPrice(Number(event.target.value))} type='number'/>
-        </FormControl>
-        <Button onClick={()=>onAddOptionButtonHandler()} >옵션 추가</Button>
+        <Box sx={{display:'flex', mb:'0.5rem', border:'1px solid orange', borderRadius:3, p:'1rem'}}>
+          <FormControl variant='standard' sx={{display:'inline-flex'}}>
+              <InputLabel>옵션 이름</InputLabel>
+              <Input value={optionName} onChange={(event)=>setOptionName(event.target.value)} type='text'/>
+          </FormControl>
+          <FormControl variant='standard' sx={{mx:'0.5rem', display:'inline-flex'}}>
+              <InputLabel>옵션 가격</InputLabel>
+              <Input value={optionPrice} onChange={(event)=>setOptionPrice(Number(event.target.value))} type='number'/>
+          </FormControl>
+          <Button sx={{width:'150px'}} onClick={()=>onAddOptionButtonHandler()} >옵션 추가</Button>
+        </Box>
 
-        <Button onClick={()=>onAddMenuButtonHandler()}>메뉴 추가</Button>
+        <Button sx={{my:'2rem'}} variant='outlined' onClick={()=>onAddMenuButtonHandler()}>메뉴 추가</Button>
+      </Box>
     </Box>
   )
 }

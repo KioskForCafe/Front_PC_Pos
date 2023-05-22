@@ -36,7 +36,7 @@ export default function NavigationBar() {
         setAnchorEl(null);
     };
 
-    const [cookies] = useCookies();
+    const [cookies, ,removeCookie] = useCookies();
 
     const accessToken = cookies.accessToken;
 
@@ -45,6 +45,7 @@ export default function NavigationBar() {
     const onLogoutButtonHandler = () => {
         resetUser();
         resetStore();
+        removeCookie('accessToken');
         setNavigation(Navigation.AuthenticationView);
     }
 
