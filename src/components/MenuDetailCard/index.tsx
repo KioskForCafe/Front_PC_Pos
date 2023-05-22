@@ -1,12 +1,10 @@
-import { Box, Button, Checkbox, FormControlLabel, IconButton } from '@mui/material'
-import axios from 'axios'
-import React, { Dispatch, useEffect, useState } from 'react'
-import { POST_ORDER_DETAIL_URL } from '../../constants/api'
-import { PostOrderDetailRequestDto } from '../../apis/request/order'
-import { useMenuDetailListStore, useMenuStore } from '../../stores'
+import { Backdrop, Box, Button, Checkbox, FormControlLabel, IconButton, Typography } from '@mui/material'
+import React, { ChangeEvent, Dispatch, useEffect, useState } from 'react'
+import { useMenuStore, useOrderDetailListStore } from '../../stores'
 import IndeterminateCheckBoxOutlinedIcon from '@mui/icons-material/IndeterminateCheckBoxOutlined';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
-import MenuDetail from '../../interfaces/Menu-Detail.interface'
+import CloseIcon from '@mui/icons-material/Close';
+import OrderDetailList from '../../interfaces/OrderDetailList.interface';
 
 interface Option{
   optionId: number;
@@ -20,88 +18,94 @@ interface Props {
 export default function MenuDetailCard({setMenuDetailView}: Props) {
 
   const {menu} = useMenuStore();
+  const {orderDetailList,setOrderDetailList} = useOrderDetailListStore();
+  const [optionList,setOptionList] = useState<Option[]>([]);
   const [orderDetailCount, setOrderDetailCount] = useState<number>(1);
-  const [selectedMenuDetail, setSelectedMenuDetail] = useState<MenuDetail | null>(null);
+  const [checked, setChecked] = useState<{[key:string]:boolean}>({});
 
-  const {menuDetailList,setMenuDetailList} = useMenuDetailListStore();
-
-  const onCheckChangeHandler = (option : Option) =>{
-    if(!selectedMenuDetail) return;
-    if(selectedMenuDetail.optionList){
-      const optionList = selectedMenuDetail.optionList;
-      optionList.push(option);
-      setSelectedMenuDetail({...selectedMenuDetail,optionList});
-    }else{
-      setSelectedMenuDetail({...selectedMenuDetail,optionList:[option]})
-    }
-
+  const onCheckChangeHandler = (event: ChangeEvent<HTMLInputElement>) =>{
+    setChecked({
+      ...checked,
+      [event.target.name]: event.target.checked,
+    })
   }
 
   const onPlusButtonHandler = () => {
-    const newOrderDetailCount = orderDetailCount +1;
-    setOrderDetailCount(newOrderDetailCount);
-    if(!selectedMenuDetail) return;
-    setSelectedMenuDetail({...selectedMenuDetail,menuCount:orderDetailCount})
+    setOrderDetailCount(orderDetailCount +1);
   }
 
   const onMinusButtonHandler = () => {
     if(orderDetailCount <= 1) return;
     setOrderDetailCount(orderDetailCount-1);
-    if(!selectedMenuDetail) return;
-    setSelectedMenuDetail({...selectedMenuDetail,menuCount:orderDetailCount})
   }
 
   const onAddMenuButtonHandler = () =>{
-    if (!menuDetailList) return;
-    const newMenuDetailList: MenuDetail[] = menuDetailList.map(item => item) as MenuDetail[];
-    if (!selectedMenuDetail) return;
-    newMenuDetailList.push(selectedMenuDetail);
-    setMenuDetailList(newMenuDetailList);
+
+    menu!.optionList.map((option)=>{
+      const optionId = (option.optionId)+'';
+      if(checked[optionId] === true){
+        const newOption : Option = {
+          optionId: option.optionId,
+          optionName: option.optionName,
+          optionPrice: option.optionPrice
+        }
+        optionList.push(newOption);
+        setOptionList([...optionList]);
+      }
+    })
+    
+    const newOrderDetail:OrderDetailList = {
+      menuCount : orderDetailCount,
+      menuId : menu!.menuId,
+      menuName : menu!.menuName,
+      menuPrice : menu!.menuPrice,
+      optionList : optionList
+    }
+    orderDetailList.push(newOrderDetail);
+    setOrderDetailList([...orderDetailList]);
+
     setMenuDetailView(false);
-    console.log(newMenuDetailList);
+
   }
 
   useEffect(()=>{
-    setSelectedMenuDetail({
-      menuId: menu!.menuId,
-      menuName: menu!.menuName,
-      menuCount: orderDetailCount,
-      menuPrice: menu!.menuPrice,
-      optionList: [],
-    })
-
+    
   },[])
 
   return (
-    <Box>
-      <Box>
-        <Box display='inline-block'>상세 주문</Box>
-        <Box display='inline-block'> 닫기아이콘</Box>
+    <>
+      <Backdrop open={true} />
+      <Box bgcolor='#ffffff' sx={{p:'1rem' ,position:'absolute', top:'50%', left:'50%', transform:'translate(-50%, -60%)', width:'300px', display:'flex', flexDirection:'column', justifyContent:'center'}}>
+          <Typography variant='h5' marginBottom='10px' >메뉴 선택</Typography>
+          <IconButton onClick={()=>setMenuDetailView(false)} sx={{position:'absolute',top:0, right:0}}>
+            <CloseIcon/>
+          </IconButton>
+        <Typography>{menu?.menuName}</Typography>
+        <Typography>{menu?.menuPrice}원</Typography>
+        {
+          menu?.optionList &&
+          (
+            <>
+              <Typography>옵션 선택</Typography>
+              {menu?.optionList.map((option)=>(
+                <FormControlLabel sx={{display:'block'}} label={`${option.optionName} : ${option.optionPrice}`} control={<Checkbox name={option.optionId+''} onChange={(event)=>onCheckChangeHandler(event)} />}/>
+              ))}
+            </>
+          )
+        }
+        <Typography>수량</Typography>
+        <Box sx={{display:'flex', alignItems:'center'}}>
+          <IconButton onClick={()=>onMinusButtonHandler()}>
+            <IndeterminateCheckBoxOutlinedIcon/>
+          </IconButton>
+          <Box>{orderDetailCount}</Box>
+          <IconButton onClick={()=>onPlusButtonHandler()}>
+            <AddBoxOutlinedIcon/>
+          </IconButton>
+
+        </Box>
+        <Button variant='outlined' onClick={()=> onAddMenuButtonHandler()}>주문추가</Button>
       </Box>
-      <Box>메뉴 이름</Box>
-      <Box>{menu?.menuName}</Box>
-      <Box>메뉴 가격</Box>
-      <Box>{menu?.menuPrice}</Box>
-      {
-        menu?.optionList &&
-        (
-          <>
-            <Box>메뉴 옵션</Box>
-            {menu?.optionList.map((option)=>(
-              <FormControlLabel label={`${option.optionName} : ${option.optionPrice}`} control={<Checkbox onChange={()=>onCheckChangeHandler(option)} />}/>
-            ))}
-          </>
-        )
-      }
-      <IconButton onClick={()=>onMinusButtonHandler()}>
-        <IndeterminateCheckBoxOutlinedIcon/>
-      </IconButton>
-      <Box>수량</Box>
-      <IconButton onClick={()=>onPlusButtonHandler()}>
-        <AddBoxOutlinedIcon/>
-      </IconButton>
-      <Box>{orderDetailCount}</Box>
-      <Button onClick={()=> onAddMenuButtonHandler()}>주문추가</Button>
-    </Box>
+    </>
   )
 }

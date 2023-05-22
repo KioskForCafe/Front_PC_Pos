@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, FormHelperText, Input, InputLabel } from '@mui/material'
+import { Box, Button, FormControl, FormHelperText, IconButton, Input, InputLabel, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { useNavigationStore, useStoreStore } from '../../../stores'
 import axios, { AxiosResponse } from 'axios';
@@ -8,6 +8,7 @@ import { useCookies } from 'react-cookie';
 import ResponseDto from '../../../apis/response';
 import { PostCategoryResponseDto } from '../../../apis/response/category';
 import { Navigation } from '../../../constants/navigationEnum';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function PostCategory() {
 
@@ -47,17 +48,23 @@ export default function PostCategory() {
 
 
   return (
-    <Box sx={{display:'flex', flexDirection:'column', height:'88vh'}}>
-        <FormControl variant='filled' sx={{mb:'0.5rem'}}>
+    <Box sx={{display:'flex', height:'88vh', justifyContent:'center', alignItems:'center'}}>
+      <Box sx={{position:'relative', display:'flex', flexDirection:'column', width:'350px'}}>
+      <Typography variant='h4' marginBottom='10px' >메뉴 등록</Typography>
+      <IconButton onClick={()=>setNavigation(Navigation.Order)} sx={{position:'absolute', right:0}}>
+        <CloseIcon/>
+      </IconButton>
+        <FormControl variant='standard' sx={{mb:'0.5rem'}}>
             <InputLabel>카테고리 이름</InputLabel>
             <Input onChange={(event)=>setCategoryName(event.target.value)} type='text'/>
         </FormControl>
-        <FormControl variant='filled' sx={{mb:'0.5rem'}}>
+        <FormControl variant='standard' sx={{mb:'0.5rem'}}>
             <InputLabel>카테고리 순위</InputLabel>
             <Input value={categoryPriority} onChange={(event)=>setCategoryPriority(Number(event.target.value))} type='number'/>
             <FormHelperText sx={{color:'orange'}}>순위가 낮은 번호가 앞으로 표시됩니다.</FormHelperText>
         </FormControl>
-        <Button onClick={()=>onAddCategoryButtonHandler()}>카테고리 추가</Button>
+        <Button variant='outlined' sx={{my:'2rem'}} onClick={()=>onAddCategoryButtonHandler()}>카테고리 추가</Button>
+      </Box>
     </Box>
   )
 }

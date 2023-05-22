@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import { GetOrderDetailResponse, GetOrderResponse } from '../../../apis/response/order';
+import { GetOrderDetailListResponseDto, GetOrderListResponseDto } from '../../../apis/response/order';
 import axios, { AxiosResponse } from 'axios';
 import ResponseDto from '../../../apis/response';
 import { GET_ORDER_DETAIL_LIST_URL, authorizationHeader } from '../../../constants/api';
@@ -18,7 +18,7 @@ export default function OrderLogDetail({orderId}: props) {
 
     const navigator = useNavigate();
 
-    const [orderDetailResponse, setOrderDetailResponse] = useState<GetOrderDetailResponse[] | null>(null);
+    const [orderDetailResponse, setOrderDetailResponse] = useState<GetOrderDetailListResponseDto[] | null>(null);
     const { store } = useStoreStore();
 
     const [cookies] = useCookies();
@@ -37,7 +37,7 @@ export default function OrderLogDetail({orderId}: props) {
     //          Response Handler        //
 
     const getOrderDetailResponseHandler = (response: AxiosResponse<any, any>) => {
-        const { result, message, data } = response.data as ResponseDto<GetOrderDetailResponse[]>;
+        const { result, message, data } = response.data as ResponseDto<GetOrderDetailListResponseDto[]>;
         if (!result || !data) {
             alert(message);
             navigator('/');

@@ -10,7 +10,7 @@ import { useCookies } from 'react-cookie';
 import ResponseDto from '../../apis/response';
 import { AnalysisBusinessResponseDto } from '../../apis/response/analysis';
 import User from '../../interfaces/User.interface';
-import { GetOrderDetailResponse, GetOrderResponse } from '../../apis/response/order';
+import { GetOrderDetailListResponseDto, GetOrderListResponseDto } from '../../apis/response/order';
 import { useStoreStore } from '../../stores';
 import OrderLogDetail from './OrderLogDetail';
 
@@ -19,7 +19,7 @@ function OrderLog() {
 
     const navigator = useNavigate();
 
-    const [orderLogResponse, setorderLogResponse] = useState<GetOrderResponse[] | null>(null);
+    const [orderLogResponse, setorderLogResponse] = useState<GetOrderListResponseDto[] | null>(null);
 
     const { user } = useStore();
     const [addUser, setAddUser] = useState<User | null>(null);
@@ -53,7 +53,7 @@ function OrderLog() {
     //              Response Handler                //
 
     const getOrderLogResponseHandler = (response: AxiosResponse<any, any>) => {
-        const { result, message, data } = response.data as ResponseDto<GetOrderResponse[]>;
+        const { result, message, data } = response.data as ResponseDto<GetOrderListResponseDto[]>;
         if (!result || !data) {
             alert(message);
             navigator('/');

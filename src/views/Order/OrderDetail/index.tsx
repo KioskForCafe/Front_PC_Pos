@@ -1,22 +1,81 @@
-import { Box, Button, Typography } from '@mui/material'
-import React, { useState } from 'react'
-import PostOrderDetailRequestDto from '../../../apis/request/order/Post-Order-Detail.request.dto';
-import { useMenuDetailListStore } from '../../../stores';
-
+import { Box, Button, IconButton, Typography } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import axios, { AxiosResponse } from 'axios';
+import { PostOrderDetailRequestDto, PostOrderRequestDto } from '../../../apis/request/order';
+import { useOrderDetailListStore, useStoreStore } from '../../../stores';
+import { POST_ORDER_URL } from '../../../constants/api';
+import ResponseDto from '../../../apis/response';
+import { PostOrderResponseDto } from '../../../apis/response/order';
+import { getTotalPrice } from '../../../utils';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 export default function OrderDetail() {
 
-  const {menuDetailList,resetMenuDetailList} = useMenuDetailListStore();
+  const {store} = useStoreStore();
+
   const [totalPrice, setTotalPrice] = useState<number>(0);
 
+  const {orderDetailList, resetOrderDetailList} = useOrderDetailListStore();
+
   const onPaymentButtonHandler = () => {
-    resetMenuDetailList();
-    // setTotalPrice(0);
+
+    const patchList : PostOrderDetailRequestDto[] = [];
+    orderDetailList.map((orderDetail)=>{
+
+      const patchOptionList : number[] = [];
+      orderDetail.optionList.map((option)=>{
+        patchOptionList.push(option.optionId);
+      })
+
+      const patch : PostOrderDetailRequestDto = {
+        menuId: orderDetail.menuId,
+        menuCount: orderDetail.menuCount,
+        optionList: patchOptionList
+      }
+      
+      patchList.push(patch);
+
+    })
+    
+    const data : PostOrderRequestDto ={
+      storeId:store!.storeId,
+      totalPrice,
+      orderDetailList: patchList
+    }
+    
+    axios
+      .post(POST_ORDER_URL,data)
+      .then((response)=>postOrderResponseHandler(response))
+      .catch((error)=>postOrderErrorHandler(error))
   }
+
+  const postOrderResponseHandler = (response: AxiosResponse<any, any>) => {
+    const {data,message,result} = response.data as ResponseDto<PostOrderResponseDto>;
+    if(!data || !result){
+      alert(message);
+      return;
+    }
+    resetOrderDetailList();
+    console.log('주문완료')
+
+  }
+
+  const postOrderErrorHandler = (error: any) => {
+    console.log(error.message);
+  }
+
+  useEffect(()=>{
+    const sumPrice = getTotalPrice(orderDetailList);
+    setTotalPrice(sumPrice);
+  },[orderDetailList])
 
   return (
     <Box sx={{ display:'flex', flexDirection:'column', flex:2}}>
-        <Box sx={{height: '4rem'}}>옵션기능</Box>
+        <Box sx={{display:'flex',justifyContent:'flex-end',alignItems:'center', height: '4rem'}}>
+          <IconButton onClick={()=>resetOrderDetailList()}>
+            <RestartAltIcon fontSize='large'/>
+          </IconButton>
+        </Box>
         <Box sx={{display:'flex', flexDirection:'column', p:'20px', flex:1}}>
             <Box sx={{display:'flex', height:'2rem', alignItems:'center'}}>
                 <Typography sx={{flex:2}}>상품명</Typography>
@@ -24,15 +83,15 @@ export default function OrderDetail() {
                 <Typography sx={{flex:1, textAlign:'end'}}>가격</Typography>
             </Box>
             {
-              menuDetailList.map((menuDetail)=>(
+              orderDetailList.map((orderDetail)=>(
               <>
                 <Box sx={{display:'flex', height:'2rem', alignItems:'center'}}>
-                    <Typography sx={{flex:2}}>{menuDetail.menuName}</Typography>
-                    <Box sx={{flex:1}}>{menuDetail.menuCount}</Box>
-                    <Typography sx={{flex:1, textAlign:'end'}}>{menuDetail.menuPrice}</Typography>
+                    <Typography sx={{flex:2}}>{orderDetail.menuName}</Typography>
+                    <Box sx={{flex:1}}>{orderDetail.menuCount}</Box>
+                    <Typography sx={{flex:1, textAlign:'end'}}>{orderDetail.menuPrice}</Typography>
                 </Box>
                 {
-                  menuDetail.optionList.map((option)=>(
+                  orderDetail.optionList.map((option)=>(
                     <Box sx={{display:'flex', height:'2rem', alignItems:'center'}}>
                       <Typography sx={{flex:2}}>ㄴ {option.optionName}</Typography>
                       <Box sx={{flex:1}}></Box>
