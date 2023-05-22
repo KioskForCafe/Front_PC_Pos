@@ -94,7 +94,7 @@ function OrderLog() {
                             <Typography sx={{ flex: 0.3, fontSize: '25px', fontWeight: 600 }}>{order.orderId}</Typography>
                             <Typography sx={{ flex: 1, textAlign: 'end' }}>{(order.updatedAt + '').slice(0, 10) + ' ' + (order.updatedAt + '').slice(11, 13) + '시' + (order.updatedAt + '').slice(14, 16) + '분'}</Typography>
                         </Box>
-                        <Divider/>
+                        <Divider />
                         <Box sx={{ p: '10px', flex: 3, flexDirection: 'column' }}>
                             <OrderLogDetail orderId={order.orderId} />
                         </Box>

@@ -56,7 +56,7 @@ export default function AnalysisBusinessDetail({ saleListBytime }: props) {
                         {saleListBytime.map((sale) => (
                             <TableRow>
                                 <TableCell>{sale.time}</TableCell>
-                                <TableCell>{sale.saleAmount}</TableCell>
+                                <TableCell align='right'>{sale.saleAmount}</TableCell>
                                 <TableCell align="right">{sale.saleCount}</TableCell>
                             </TableRow>
                         ))}
