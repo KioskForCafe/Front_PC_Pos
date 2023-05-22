@@ -80,7 +80,7 @@ export default function AnalysisBusinessView() {
                         <AnalysisBusinessDetail key={index} saleListBytime={analysisBusinessResponse}/>
                     ))
                 ) : (
-                    <Typography>데이터가 없습니다.</Typography>
+                    <Typography sx={{mt: '10px'}}>데이터가 없습니다.</Typography>
                 )}
             </Box>
         </Box>
