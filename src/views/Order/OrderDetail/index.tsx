@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Button, IconButton, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import axios, { AxiosResponse } from 'axios';
 import { PostOrderDetailRequestDto, PostOrderRequestDto } from '../../../apis/request/order';
@@ -7,6 +7,7 @@ import { POST_ORDER_URL } from '../../../constants/api';
 import ResponseDto from '../../../apis/response';
 import { PostOrderResponseDto } from '../../../apis/response/order';
 import { getTotalPrice } from '../../../utils';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 export default function OrderDetail() {
 
@@ -70,7 +71,11 @@ export default function OrderDetail() {
 
   return (
     <Box sx={{ display:'flex', flexDirection:'column', flex:2}}>
-        <Box sx={{height: '4rem'}}>옵션기능</Box>
+        <Box sx={{display:'flex',justifyContent:'flex-end',alignItems:'center', height: '4rem'}}>
+          <IconButton onClick={()=>resetOrderDetailList()}>
+            <RestartAltIcon fontSize='large'/>
+          </IconButton>
+        </Box>
         <Box sx={{display:'flex', flexDirection:'column', p:'20px', flex:1}}>
             <Box sx={{display:'flex', height:'2rem', alignItems:'center'}}>
                 <Typography sx={{flex:2}}>상품명</Typography>

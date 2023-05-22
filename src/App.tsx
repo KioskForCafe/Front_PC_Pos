@@ -32,7 +32,7 @@ function App() {
         {
           navigation === Navigation.AuthenticationView ? <AuthenticationView/> :
           navigation === Navigation.Order ? <Order/> :
-          navigation === Navigation.CustomMenu ? <CustomMenu/> :
+          // navigation === Navigation.CustomMenu ? <CustomMenu/> :
           navigation === Navigation.OrderLog ? <OrderLog/> :
           navigation === Navigation.AnalysisView ? <AnalysisView/> :
           navigation === Navigation.Store ? <Store/> :

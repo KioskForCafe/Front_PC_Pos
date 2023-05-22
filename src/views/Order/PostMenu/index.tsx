@@ -31,7 +31,7 @@ export default function PostMenu() {
   const [menuImgUrl, setMenuImgUrl] = useState<string | null>(null);
   const [optionList, setOptionList] = useState<Option[]>([]);
   const [optionName,setOptionName] = useState<string>('');
-  const [optionPrice,setOptionPrice] = useState<number>(0);
+  const [optionPrice,setOptionPrice] = useState<number | null>(null);
 
   const [cookies] = useCookies();
 
@@ -86,8 +86,10 @@ export default function PostMenu() {
 
   const onAddOptionButtonHandler = () => {
     if(optionName === '') return alert('옵션이름을 입력해주세요.');
-    optionList.push({optionName,optionPrice});
+    optionList.push({optionName,optionPrice: optionPrice as number});
     setOptionList([...optionList]);
+    setOptionName('');
+    setOptionPrice(null);
   }
 
   const onDeleteOptionButtonHandler = (index: number) => {
@@ -153,14 +155,14 @@ export default function PostMenu() {
             </Box>
           ))
         }
-        <Box sx={{display:'flex', mb:'0.5rem'}}>
+        <Box sx={{display:'flex', mb:'0.5rem', border:'1px solid orange', borderRadius:3, p:'1rem'}}>
           <FormControl variant='standard' sx={{display:'inline-flex'}}>
               <InputLabel>옵션 이름</InputLabel>
-              <Input onChange={(event)=>setOptionName(event.target.value)} type='text'/>
+              <Input value={optionName} onChange={(event)=>setOptionName(event.target.value)} type='text'/>
           </FormControl>
           <FormControl variant='standard' sx={{mx:'0.5rem', display:'inline-flex'}}>
               <InputLabel>옵션 가격</InputLabel>
-              <Input onChange={(event)=>setOptionPrice(Number(event.target.value))} type='number'/>
+              <Input value={optionPrice} onChange={(event)=>setOptionPrice(Number(event.target.value))} type='number'/>
           </FormControl>
           <Button sx={{width:'150px'}} onClick={()=>onAddOptionButtonHandler()} >옵션 추가</Button>
         </Box>
