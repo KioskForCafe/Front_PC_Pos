@@ -5,6 +5,7 @@ import IndeterminateCheckBoxOutlinedIcon from '@mui/icons-material/Indeterminate
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 import OrderDetailList from '../../interfaces/OrderDetailList.interface';
+import EditIcon from '@mui/icons-material/Edit';
 
 interface Option{
   optionId: number;
@@ -13,9 +14,10 @@ interface Option{
 }
 interface Props {
   setMenuDetailView: Dispatch<React.SetStateAction<boolean>>;
+  setEditView : Dispatch<React.SetStateAction<boolean>>
 }
 
-export default function MenuDetailCard({setMenuDetailView}: Props) {
+export default function MenuDetailCard({setEditView ,setMenuDetailView}: Props) {
 
   const {menu} = useMenuStore();
   const {orderDetailList,setOrderDetailList} = useOrderDetailListStore();
@@ -74,11 +76,14 @@ export default function MenuDetailCard({setMenuDetailView}: Props) {
 
   return (
     <>
-      <Backdrop open={true} />
-      <Box bgcolor='#ffffff' sx={{p:'1rem' ,position:'absolute', top:'50%', left:'50%', transform:'translate(-50%, -60%)', width:'300px', display:'flex', flexDirection:'column', justifyContent:'center'}}>
+      <Backdrop invisible={false} open={true} />
+      <Box bgcolor='#ffffff' sx={{p:'1rem' ,position:'absolute', top:'50%', left:'50%', transform:'translate(-50%, -60%)', width:'350px', display:'flex', flexDirection:'column', justifyContent:'center'}}>
           <Typography variant='h5' marginBottom='10px' >메뉴 선택</Typography>
+          <IconButton onClick={()=>setEditView(true)} sx={{position:'absolute',top:0, right:30}}>
+            <EditIcon fontSize='small'/>
+          </IconButton>
           <IconButton onClick={()=>setMenuDetailView(false)} sx={{position:'absolute',top:0, right:0}}>
-            <CloseIcon/>
+            <CloseIcon fontSize='small'/>
           </IconButton>
         <Typography>{menu?.menuName}</Typography>
         <Typography>{menu?.menuPrice}원</Typography>

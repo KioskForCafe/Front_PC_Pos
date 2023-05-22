@@ -54,7 +54,6 @@ export default function OrderContent({setMenuDetailView}:Props) {
         console.log(message);
         return;
       }
-      console.log(data);
       setMenuList(data);
     }
 
@@ -67,8 +66,8 @@ export default function OrderContent({setMenuDetailView}:Props) {
     },[category])
 
   return (
-    <Box sx={{flex:1, position:'relative' ,display:'flex', flexDirection:'column', backgroundColor:'#E6E8EB'}}>
-        <Typography sx={{p:'1rem'}}>총 9개</Typography>
+    <Box sx={{flex:1, position:'relative' ,display:'flex', overflow:'auto', flexDirection:'column', backgroundColor:'#E6E8EB'}}>
+        <Typography sx={{p:'1rem'}}>총 {menuList?.length}개</Typography>
         <Box sx={{flex:1, px:'1rem'}}>
             <Grid container rowSpacing={3} columnSpacing={1}>
                 {
@@ -97,7 +96,7 @@ export default function OrderContent({setMenuDetailView}:Props) {
             onOpen={()=>setSpeedDialOpen(true)}
             open={speedDialOpen}
         >
-            <Backdrop open={speedDialOpen} />
+            <Backdrop  open={speedDialOpen} />
             <SpeedDialAction
                 sx={{width:'100px', height: '50px', borderRadius:1}}
                 icon='카테고리 추가'

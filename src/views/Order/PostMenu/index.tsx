@@ -31,7 +31,7 @@ export default function PostMenu() {
   const [menuImgUrl, setMenuImgUrl] = useState<string | null>(null);
   const [optionList, setOptionList] = useState<Option[]>([]);
   const [optionName,setOptionName] = useState<string>('');
-  const [optionPrice,setOptionPrice] = useState<number | null>(null);
+  const [optionPrice,setOptionPrice] = useState<number | string>('');
 
   const [cookies] = useCookies();
 
@@ -56,7 +56,6 @@ export default function PostMenu() {
     const data : PostMenuRequestDto ={
       categoryId,menuName,menuPrice,menuImgUrl,menuState,optionList,storeId:store!.storeId
     }
-    console.log(data)
 
     axios.post(POST_MENU_URL, data , authorizationHeader(accessToken))
     .then((response)=>onAddMenuResponseHandler(response))
@@ -70,7 +69,6 @@ export default function PostMenu() {
       alert(message);
       return;
     }
-    console.log(data);
     setCategoryList(data);
 
   }
@@ -89,7 +87,7 @@ export default function PostMenu() {
     optionList.push({optionName,optionPrice: optionPrice as number});
     setOptionList([...optionList]);
     setOptionName('');
-    setOptionPrice(null);
+    setOptionPrice('');
   }
 
   const onDeleteOptionButtonHandler = (index: number) => {
@@ -162,7 +160,7 @@ export default function PostMenu() {
           </FormControl>
           <FormControl variant='standard' sx={{mx:'0.5rem', display:'inline-flex'}}>
               <InputLabel>옵션 가격</InputLabel>
-              <Input value={optionPrice} onChange={(event)=>setOptionPrice(Number(event.target.value))} type='number'/>
+              <Input value={optionPrice} onChange={(event)=>setOptionPrice(Number(event.target.value))} type='number' />
           </FormControl>
           <Button sx={{width:'150px'}} onClick={()=>onAddOptionButtonHandler()} >옵션 추가</Button>
         </Box>
