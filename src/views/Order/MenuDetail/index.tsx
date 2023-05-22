@@ -1,11 +1,14 @@
 import { Backdrop, Box, Button, Checkbox, FormControlLabel, IconButton, Typography } from '@mui/material'
 import React, { ChangeEvent, Dispatch, useEffect, useState } from 'react'
-import { useMenuStore, useOrderDetailListStore } from '../../stores'
+import { useMenuStore, useOrderDetailListStore } from '../../../stores'
 import IndeterminateCheckBoxOutlinedIcon from '@mui/icons-material/IndeterminateCheckBoxOutlined';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import CloseIcon from '@mui/icons-material/Close';
-import OrderDetailList from '../../interfaces/OrderDetailList.interface';
+import OrderDetailList from '../../../interfaces/OrderDetailList.interface';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { confirmAlert } from 'react-confirm-alert';
+import axios from 'axios';
 
 interface Option{
   optionId: number;
@@ -24,6 +27,7 @@ export default function MenuDetailCard({setEditView ,setMenuDetailView}: Props) 
   const [optionList,setOptionList] = useState<Option[]>([]);
   const [orderDetailCount, setOrderDetailCount] = useState<number>(1);
   const [checked, setChecked] = useState<{[key:string]:boolean}>({});
+  const [backdropOpen, setBackdropOpen] = useState<boolean>(true);
 
   const onCheckChangeHandler = (event: ChangeEvent<HTMLInputElement>) =>{
     setChecked({
@@ -39,6 +43,42 @@ export default function MenuDetailCard({setEditView ,setMenuDetailView}: Props) 
   const onMinusButtonHandler = () => {
     if(orderDetailCount <= 1) return;
     setOrderDetailCount(orderDetailCount-1);
+  }
+
+  const onDeleteMenuButtonHandler = () => {
+    setBackdropOpen(false);
+    confirmAlert({
+      customUI:({onClose}) =>{
+        const onYesButtonHandler = () => {
+          setBackdropOpen(true);
+          onClose();
+
+          // axios
+          //   .delete()
+          //   .then()
+          //   .catch()
+
+        }
+        const onNoButtonHandler = () =>{
+          setBackdropOpen(true);
+          onClose()
+        }
+
+        return (
+          <>
+            <Backdrop open={true} />
+            <Box bgcolor='#ffffff' sx={{position:'absolute', top:'50%', left:'50%', transform:'translate(-50%, -60%)', p:'2rem'}}>
+              <Typography>Menu를 삭제하시겠습니까?</Typography>
+              <Button onClick={()=>onYesButtonHandler()}>Yes</Button>
+              <Button onClick={()=>onNoButtonHandler()}>No</Button>
+            </Box>
+          </>
+        )
+      }
+    })
+
+    
+
   }
 
   const onAddMenuButtonHandler = () =>{
@@ -76,11 +116,14 @@ export default function MenuDetailCard({setEditView ,setMenuDetailView}: Props) 
 
   return (
     <>
-      <Backdrop invisible={false} open={true} />
+      <Backdrop open={backdropOpen} />
       <Box bgcolor='#ffffff' sx={{p:'1rem' ,position:'absolute', top:'50%', left:'50%', transform:'translate(-50%, -60%)', width:'350px', display:'flex', flexDirection:'column', justifyContent:'center'}}>
           <Typography variant='h5' marginBottom='10px' >메뉴 선택</Typography>
-          <IconButton onClick={()=>setEditView(true)} sx={{position:'absolute',top:0, right:30}}>
+          <IconButton onClick={()=>setEditView(true)} sx={{position:'absolute',top:0, right:60}}>
             <EditIcon fontSize='small'/>
+          </IconButton>
+          <IconButton onClick={()=>onDeleteMenuButtonHandler()} sx={{position:'absolute',top:0, right:30}}>
+            <DeleteIcon fontSize='small'/>
           </IconButton>
           <IconButton onClick={()=>setMenuDetailView(false)} sx={{position:'absolute',top:0, right:0}}>
             <CloseIcon fontSize='small'/>

@@ -1,11 +1,15 @@
 import { Backdrop, Box, Button, FormControl, FormControlLabel, IconButton, Input, InputLabel, Select, SelectChangeEvent, Typography, MenuItem, Checkbox } from '@mui/material';
 import React, { Dispatch, useEffect, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
-import { useMenuStore, useStoreStore } from '../../stores';
-import { GetCategoryResponseDto } from '../../apis/response/category';
-import ResponseDto from '../../apis/response';
 import axios, { AxiosResponse } from 'axios';
-import { GET_CATEGORY_LIST_URL } from '../../constants/api';
+import { useCategoryStore, useMenuStore, useStoreStore } from '../../../stores';
+import { GetCategoryResponseDto } from '../../../apis/response/category';
+import { GET_CATEGORY_LIST_URL, PATCH_MENU_URL, authorizationHeader } from '../../../constants/api';
+import ResponseDto from '../../../apis/response';
+import CustomMenuItem from '../../../components/CustomMenuItem/CustomMenuItem';
+import { useCookies } from 'react-cookie';
+import { PatchMenuRequestDto } from '../../../apis/request/menu';
+import { PatchMenuResponseDto } from '../../../apis/response/menu';
 
 interface Option {
     optionId: number | null;
@@ -17,22 +21,38 @@ interface Props {
     setEditView : Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function MenuDetailEditCard({setEditView}: Props) {
+export default function PatchMenuDetail({setEditView}: Props) {
 
-    const {menu} = useMenuStore();
+    const {menu,setMenu} = useMenuStore();
     const {store} = useStoreStore();
-    const [category, setCategory] = useState<string>('');
+    const {category,setCategory} = useCategoryStore();
+    const [menuId] = useState<number>(menu!.menuId);
+    const [menuName,setMenuName] = useState<string>(menu!.menuName);
+    const [menuPrice, setMenuPrice] = useState<number>(menu!.menuPrice);
+    const [menuState, setMenuState] = useState<boolean>(menu!.menuState);
+
     const [categoryList, setCategoryList] = useState<GetCategoryResponseDto[] | null>(null);
-    const [categoryId, setCategoryId] = useState<number|null>(null);
+    const [categoryId, setCategoryId] = useState<number>(category!.categoryId);
+    const [categoryName, setCategoryName] = useState<string>('');
     const [optionName, setOptionName] = useState<string>('');
     const [optionPrice, setOptionPrice] = useState<number | string>('');
     const [optionList, setOptionList] = useState<Option[]>([...menu!.optionList]);
 
+    const [cookies] = useCookies();
+    const accessToken = cookies.accessToken;
+
     const onUpdateMenuButtonHandler = () =>{
-        // axios
-        //     .patch()
-        //     .then()
-        //     .catch()
+
+        console.log(menuId);
+
+        const data : PatchMenuRequestDto ={
+            categoryId,menuId,menuImgUrl:null,menuName,menuPrice,menuState,optionList,storeId:store!.storeId
+        }
+
+        axios
+            .patch(PATCH_MENU_URL,data,authorizationHeader(accessToken))
+            .then((response)=>patchMenuResponseHandler(response))
+            .catch((error)=>patchMenuErrorHandler(error))
     }
 
     const getCategoryList = () =>{
@@ -42,9 +62,12 @@ export default function MenuDetailEditCard({setEditView}: Props) {
             .catch((error)=>getCategoryListErrorHandler(error))
     }
 
-    const onCategorySelectChangeHandler = (event: SelectChangeEvent<string>) =>{
-        setCategory(event.target.value);
-        setCategoryId(Number(event.target.value));
+    const onCategorySelectChangeHandler = (event: SelectChangeEvent<number>) =>{
+        const value = Number(event.target.value);
+        setCategoryId(value);
+        const onChangeCategoryName = categoryList ? categoryList.find((category)=>category.categoryId === value)!.categoryName : '';
+        setCategoryName(onChangeCategoryName);
+
     }
 
     const onDeleteOptionButtonHandler = (index: number) => {
@@ -69,6 +92,23 @@ export default function MenuDetailEditCard({setEditView}: Props) {
         setCategoryList(data);
     }
 
+    const patchMenuResponseHandler = (response: AxiosResponse<any, any>) => {
+        const {data,message,result} = response.data as ResponseDto<PatchMenuResponseDto>
+        if(!result || !data){
+            alert(message);
+            return;
+        }
+        console.log(data);
+        const {...menu} = data;
+        setMenu(menu);
+        setCategory({categoryId,categoryName});
+        setEditView(false);
+    }
+
+    const patchMenuErrorHandler = (error: any) => {
+        console.log(error.message);
+    }
+
     const getCategoryListErrorHandler = (error: any) => {
         console.log(error.message);
     }
@@ -87,25 +127,24 @@ export default function MenuDetailEditCard({setEditView}: Props) {
             </IconButton>
             <FormControl variant='standard' sx={{display:'inline-flex'}}>
                 <InputLabel>메뉴 이름</InputLabel>
-                <Input value={menu?.menuName} type='text'/>
+                <Input value={menuName} onChange={(event)=>setMenuName(event.target.value)} type='text'/>
             </FormControl>
             <FormControl variant='standard' sx={{display:'inline-flex'}}>
                 <InputLabel>가격</InputLabel>
-                <Input value={menu?.menuPrice} type='text'/>
+                <Input value={menuPrice} onChange={(event)=>setMenuPrice(Number(event.target.value))} type='number'/>
             </FormControl>
             <FormControl variant='standard' sx={{mb:'0.5rem'}}>
                 <InputLabel id="demo-simple-select-label">카테고리</InputLabel>
                 <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    value={category}
-                    // value={categoryList?.find((category)=> category.categoryId === menu?.categoryId)!.categoryName}
+                    value={categoryId}
                     label="Category"
                     onChange={(event)=>onCategorySelectChangeHandler(event)}
                 >
                     {
                         categoryList && categoryList.map((category)=>(
-                            <MenuItem value={category.categoryId}>{category.categoryName}</MenuItem>
+                            <CustomMenuItem customValue={category.categoryName} value={category.categoryId}>{category.categoryName}</CustomMenuItem>
                         ))
                     }
                 </Select>

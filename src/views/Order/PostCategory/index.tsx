@@ -7,7 +7,7 @@ import { POST_CATEGORY_URL, authorizationHeader } from '../../../constants/api';
 import { useCookies } from 'react-cookie';
 import ResponseDto from '../../../apis/response';
 import { PostCategoryResponseDto } from '../../../apis/response/category';
-import { Navigation } from '../../../constants/navigationEnum';
+import { Navigation } from '../../../constants/enum';
 import CloseIcon from '@mui/icons-material/Close';
 
 export default function PostCategory() {
@@ -23,6 +23,11 @@ export default function PostCategory() {
   const accessToken = cookies.accessToken;
 
   const onAddCategoryButtonHandler = () =>{
+
+    if(!categoryName) {
+      alert('카테고리 이름을 입력하세요');
+      return;
+    }
     
     const data : PostCategoryReqeustDto = {
       categoryName,categoryPriority,storeId:store!.storeId

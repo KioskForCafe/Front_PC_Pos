@@ -10,7 +10,7 @@ import { POST_STORE_URL, authorizationHeader, FILE_UPLOAD_URL, mutipartHeader, P
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import { useNavigationStore, useStoreStore } from '../../../stores';
-import { Navigation } from '../../../constants/navigationEnum';
+import { Navigation } from '../../../constants/enum';
 
 export default function PatchStoreView() {
 

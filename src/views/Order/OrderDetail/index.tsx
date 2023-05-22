@@ -8,6 +8,7 @@ import ResponseDto from '../../../apis/response';
 import { PostOrderResponseDto } from '../../../apis/response/order';
 import { getTotalPrice } from '../../../utils';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import { OrderState } from '../../../constants/enum';
 
 export default function OrderDetail() {
 
@@ -19,6 +20,10 @@ export default function OrderDetail() {
 
   const onPaymentButtonHandler = () => {
 
+    if(orderDetailList.length === 0) {
+      alert('상품을 담아주세요');
+      return;
+    }
     const patchList : PostOrderDetailRequestDto[] = [];
     orderDetailList.map((orderDetail)=>{
 
@@ -40,7 +45,8 @@ export default function OrderDetail() {
     const data : PostOrderRequestDto ={
       storeId:store!.storeId,
       totalPrice,
-      orderDetailList: patchList
+      orderDetailList: patchList,
+      orderState: OrderState.WAITING
     }
     
     axios

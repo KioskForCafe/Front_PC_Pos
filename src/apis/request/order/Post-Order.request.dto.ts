@@ -3,6 +3,7 @@ import { PostOrderDetailRequestDto } from ".";
 interface RequestDto {
   storeId: number;
   totalPrice: number;
-  orderDetailList: PostOrderDetailRequestDto[]
+  orderDetailList: PostOrderDetailRequestDto[];
+  orderState: string;
 }
 export default RequestDto;

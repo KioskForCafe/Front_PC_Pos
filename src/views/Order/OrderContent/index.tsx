@@ -9,7 +9,7 @@ import ResponseDto from '../../../apis/response';
 import { GetMenuResponseDto } from '../../../apis/response/menu';
 import MenuCard from '../../../components/MenuCard';
 import { useCookies } from 'react-cookie';
-import { Navigation } from '../../../constants/navigationEnum';
+import { Navigation } from '../../../constants/enum';
 
 interface Props {
     setMenuDetailView: Dispatch<React.SetStateAction<boolean>>
@@ -96,7 +96,6 @@ export default function OrderContent({setMenuDetailView}:Props) {
             onOpen={()=>setSpeedDialOpen(true)}
             open={speedDialOpen}
         >
-            <Backdrop  open={speedDialOpen} />
             <SpeedDialAction
                 sx={{width:'100px', height: '50px', borderRadius:1}}
                 icon='카테고리 추가'

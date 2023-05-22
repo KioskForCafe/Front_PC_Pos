@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Navigation } from "../constants/navigationEnum";
+import { Navigation } from "../constants/enum";
 
 interface INavigationStore {
     navigation: Navigation;

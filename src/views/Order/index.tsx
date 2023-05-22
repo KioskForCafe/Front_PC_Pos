@@ -3,8 +3,8 @@ import React, { useState } from 'react'
 import OrderCategoryBar from './OrderCategoryBar/';
 import OrderContent from './OrderContent/';
 import OrderDetail from './OrderDetail/';
-import MenuDetailCard from '../../components/MenuDetailCard';
-import MenuDetailEditCard from '../../components/MenuDetailEditCard';
+import MenuDetailCard from './MenuDetail';
+import PatchMenuDetail from './PatchMenuDetail';
 
 export default function Order() {
 
@@ -23,7 +23,7 @@ export default function Order() {
           menuDetailView && !editView && (<MenuDetailCard setEditView={setEditView} setMenuDetailView={setMenuDetailView}/>)
         }
         {
-          editView && (<MenuDetailEditCard setEditView={setEditView}/>)
+          editView && (<PatchMenuDetail setEditView={setEditView}/>)
         }
     </Box>
   )

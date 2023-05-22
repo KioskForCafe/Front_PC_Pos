@@ -24,13 +24,14 @@ export const POST_ORDER_DETAIL_URL = `${HOST}api/order-detail`;
 export const POST_STORE_URL = `${HOST}api/store`;
 
 export const POST_ORDER_URL =`${HOST}api/order`;
+export const PATCH_MENU_URL =`${HOST}api/menu`;
 
 export const GET_SALE_ANALYSIS_URL = (storeId: string, startedAt: string, endedAt: string) => `${HOST}api/analysis/sales/${storeId}/${startedAt}/${endedAt}`;
 export const GET_ANALYSIS_BUSINESS_URL = (storeId: string, startedAt: string, endedAt: string) =>`${HOST}api/analysis/business/${storeId}/${startedAt}/${endedAt}`;
 export const GET_ANALYSIS_MENU_URL = (storeId: string, startedAt: string, endedAt: string) =>`${HOST}api/analysis/menu/${storeId}/${startedAt}/${endedAt}`;
 export const GET_MENU_LIST_URL = (storeId: string, categoryId: string) => `${HOST}api/menu/list/${storeId}/${categoryId}`;
 export const GET_CATEGORY_LIST_URL = (storeId: string) => `${HOST}api/category/list/${storeId}`;
-export const GET_ORDER_LOG_LIST_URL = (storeId: string) => `${HOST}api/order/list/${storeId}`;
+export const GET_ORDER_LOG_LIST_URL = (storeId: string, orderState: string) => `${HOST}api/order/list/${storeId}/${orderState}`;
 export const GET_ORDER_DETAIL_LIST_URL = (orderId: string) => `${HOST}api/order/${orderId}`;
 export const GET_USER_ANALYSIS_URL = (storeId: string, startedAt: string, endedAt: string) => `${HOST}api/analysis/user/${storeId}/${startedAt}/${endedAt}`
 

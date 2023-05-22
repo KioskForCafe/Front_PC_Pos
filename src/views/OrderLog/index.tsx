@@ -13,6 +13,7 @@ import User from '../../interfaces/User.interface';
 import { GetOrderDetailListResponseDto, GetOrderListResponseDto } from '../../apis/response/order';
 import { useStoreStore } from '../../stores';
 import OrderLogDetail from './OrderLogDetail';
+import { OrderState } from '../../constants/enum';
 
 
 function OrderLog() {
@@ -42,7 +43,7 @@ function OrderLog() {
             return;
         }
 
-        axios.get(GET_ORDER_LOG_LIST_URL(store.storeId+''), authorizationHeader(accessToken))
+        axios.get(GET_ORDER_LOG_LIST_URL(store.storeId+'',OrderState.WAITING), authorizationHeader(accessToken))
             .then((response) => getOrderLogResponseHandler(response))
             .catch((error) => getOrderLogErrorHandler(error));
 
