@@ -16,5 +16,6 @@ export enum OrderState{
     WAITING = 'Waiting',
     CONFIRM = 'Confirm',
     COMPLETE = 'Complete',
-    REFUND = 'Refund'
+    REFUND = 'Refund',
+    REJECT = 'Reject'
 }
