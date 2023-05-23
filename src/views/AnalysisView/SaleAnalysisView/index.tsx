@@ -93,7 +93,11 @@ export default function SaleAnalysisView() {
                 <SelectDatetimeView startedAt={startedAt as Dayjs} endedAt={endedAt as Dayjs} onDatetimeChange={handleDatetimeChange} />
             </Box>
             <Box sx={{p: '10px'}}>
-                <SaleAnalysisDetail saleAmount={saleAmount as number} saleCount={saleCount as number} avgSaleAmount={avgSaleAmount as number} />
+                {
+                  (saleAmount === 0 && saleCount === 0 && avgSaleAmount === 0) ? 
+                  (<Typography sx={{mt: '10px'}}>데이터가 없습니다.</Typography>) :
+                  (<SaleAnalysisDetail saleAmount={saleAmount as number} saleCount={saleCount as number} avgSaleAmount={avgSaleAmount as number} />) 
+                }
             </Box>
         </Box>
 

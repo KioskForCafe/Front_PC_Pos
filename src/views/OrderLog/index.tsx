@@ -20,7 +20,7 @@ function OrderLog() {
 
     const [orderLogResponse, setorderLogResponse] = useState<GetOrderListResponseDto[] | null>(null);
 
-    const [orderState, setOrderState] = useState<OrderState>(OrderState.WAITING);
+    const [orderState, setOrderState] = useState<string>(OrderState.WAITING);
 
     const { store } = useStoreStore();
 
@@ -56,7 +56,6 @@ function OrderLog() {
             alert(message);
             return;
         }
-        console.log(data);
         setorderLogResponse(data);
     }
 
@@ -74,15 +73,14 @@ function OrderLog() {
 
     useEffect(() => {
         getOrderLog(accessToken);
-        console.log();
     }, [orderState]);
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '88vh' }}>
             <Box sx={{ display: 'flex', border: '1px solid #FFFFFF', height: '3.5rem', alignItems: 'center' }}>
-                <Button sx={{ flex: 1, textAlign: 'center', color: 'grey' }} onClick={() => setOrderState(OrderState.WAITING)}>대기</Button>
-                <Button sx={{ flex: 1, textAlign: 'center', color: 'grey' }} onClick={() => setOrderState(OrderState.CONFIRM)}>접수</Button>
-                <Button sx={{ flex: 1, textAlign: 'center', color: 'grey' }} onClick={() => setOrderState(OrderState.COMPLETE)}>완료</Button>
+                <Button sx={{ flex: 1, textAlign: 'center', color: 'grey', bgcolor: orderState===OrderState.WAITING ? '#1976d250' : '' }} onClick={() => setOrderState(OrderState.WAITING)}>대기</Button>
+                <Button sx={{ flex: 1, textAlign: 'center', color: 'grey', bgcolor: orderState===OrderState.CONFIRM ? '#1976d250' : '' }} onClick={() => setOrderState(OrderState.CONFIRM)}>접수</Button>
+                <Button sx={{ flex: 1, textAlign: 'center', color: 'grey', bgcolor: orderState===OrderState.COMPLETE ? '#1976d250' : '' }} onClick={() => setOrderState(OrderState.COMPLETE)}>완료</Button>
             </Box>
 
             <Box sx={{ width: '100%', p: '10px', backgroundColor: '#E6E8EB', flex: 1, display : 'flex', flexDirection: 'row' }}>
@@ -94,7 +92,7 @@ function OrderLog() {
                         </Box>
                         <Divider />
                         <Box sx={{ p: '10px', flex: 3, flexDirection: 'column' }}>
-                            <OrderLogDetail orderId={order.orderId} orderState={order.orderState} />
+                            <OrderLogDetail setorderLogResponse={setorderLogResponse} orderId={order.orderId} orderState={order.orderState} />
                         </Box>
                     </Box>
                 )}

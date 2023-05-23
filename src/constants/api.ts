@@ -17,6 +17,8 @@ export const GET_STORE_URL = `${HOST}api/store`;
 
 export const GET_MENU_DETAIL_URL = (menuId:number) => `${HOST}api/menu/${menuId}`;
 export const POST_MENU_URL = `${HOST}api/menu`;
+export const PATCH_MENU_URL =`${HOST}api/menu`;
+export const DELETE_MENU_URL = (menuId:number) =>`${HOST}api/menu/${menuId}`;
 
 export const POST_CATEGORY_URL = `${HOST}api/category`;
 export const PATCH_CATEGORY_URL = `${HOST}api/category`;
@@ -26,7 +28,6 @@ export const POST_ORDER_DETAIL_URL = `${HOST}api/order-detail`;
 export const POST_STORE_URL = `${HOST}api/store`;
 
 export const POST_ORDER_URL =`${HOST}api/order`;
-export const PATCH_MENU_URL =`${HOST}api/menu`;
 
 export const GET_SALE_ANALYSIS_URL = (storeId: string, startedAt: string, endedAt: string) => `${HOST}api/analysis/sales/${storeId}/${startedAt}/${endedAt}`;
 export const GET_ANALYSIS_BUSINESS_URL = (storeId: string, startedAt: string, endedAt: string) =>`${HOST}api/analysis/business/${storeId}/${startedAt}/${endedAt}`;

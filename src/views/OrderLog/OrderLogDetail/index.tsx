@@ -1,5 +1,5 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, Typography } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { Dispatch, useEffect, useState } from 'react'
 import { GetOrderDetailListResponseDto, GetOrderListResponseDto, PatchOrderResponseDto } from '../../../apis/response/order';
 import axios, { AxiosResponse } from 'axios';
 import ResponseDto from '../../../apis/response';
@@ -14,17 +14,17 @@ import { PatchOrderRequestDto } from '../../../apis/request/order';
 import { OrderState } from '../../../constants/enum';
 
 interface props {
-    orderId: number,
-    orderState: OrderState
+    orderId: number;
+    orderState: string;
+    setorderLogResponse: React.Dispatch<React.SetStateAction<GetOrderListResponseDto[] | null>>
 }
 
-export default function OrderLogDetail({ orderId, orderState }: props) {
+export default function OrderLogDetail({ setorderLogResponse, orderId, orderState }: props) {
 
     const navigator = useNavigate();
 
     const [orderDetailResponse, setOrderDetailResponse] = useState<GetOrderDetailListResponseDto[] | null>(null);
     const [openDialog, setOpenDialog] = useState(false);
-    const [onOrderState, setOnOrderState] = useState<string>(orderState);
 
     const [cookies] = useCookies();
 
@@ -47,25 +47,29 @@ export default function OrderLogDetail({ orderId, orderState }: props) {
         setOpenDialog(false);
     };
 
-    const patchOrderState = (accessToken: string) => {
+    const patchOrderState = (accessToken: string, orderState: string) => {
         const data: PatchOrderRequestDto = {
             orderId,
-            orderState: onOrderState
+            orderState
         }
-        console.log(data);
         axios.patch(PATCH_ORDER_URL, data, authorizationHeader(accessToken))
         .then((response) =>  patchOrderStateResponseHandler(response))
         .catch((error) => patchOrderStateErrorHandler(error));
     }
 
     const onUpdateButtonHandler = () => {
-        setOnOrderState(OrderState.CONFIRM);
-        patchOrderState(accessToken);
-        console.log(onOrderState);
+        const newState = OrderState.CONFIRM;
+        patchOrderState(accessToken, newState);
     }
+    
+    const onCompleteButtonHandler = () => {
+        const newState = OrderState.COMPLETE;
+        patchOrderState(accessToken, newState);
+    }
+
     const onRejectButtonHandler = () => {
-        setOnOrderState(OrderState.REJECT);
-        patchOrderState(accessToken);
+        const newState = OrderState.REJECT;
+        patchOrderState(accessToken, newState);
     }
 
     //          Response Handler        //
@@ -77,17 +81,16 @@ export default function OrderLogDetail({ orderId, orderState }: props) {
             navigator('/');
             return;
         }
-        console.log(data);
         setOrderDetailResponse(data);
     }
 
     const patchOrderStateResponseHandler = (response: AxiosResponse<any,any>) => {
-        const {result, message, data} = response.data as ResponseDto<PatchOrderResponseDto>;
+        const {result, message, data} = response.data as ResponseDto<PatchOrderResponseDto[]>;
         if(!result || !data) {
             alert(message);
             return;
         }
-
+        setorderLogResponse(data);
     }
 
     //          Error Handler           //
@@ -104,7 +107,6 @@ export default function OrderLogDetail({ orderId, orderState }: props) {
 
     useEffect(() => {
         getOrderDetail(orderId, accessToken);
-        console.log(orderState);
     }, []);
 
     return (
@@ -122,7 +124,11 @@ export default function OrderLogDetail({ orderId, orderState }: props) {
             )}
             <Box>
                 <Box sx={{display: 'flex', width: '100%'}}>
-                    <Button sx={{flex: 1}} onClick={() => onUpdateButtonHandler()}>접수</Button>
+                    {
+                        orderState === OrderState.WAITING ? (<Button sx={{flex: 1}} onClick={() => onUpdateButtonHandler()}>접수</Button>) :
+                        orderState === OrderState.CONFIRM && (<Button sx={{flex: 1}} onClick={() => onCompleteButtonHandler()}>완료</Button>)
+                    }
+                    
                     <Button sx={{flex: 1}} onClick={() => onRejectButtonHandler()}>취소</Button>
                 </Box>
                 <IconButton onClick={handleOpenDialog} sx={{ alignContent: 'center', width: '100%' }}><ExpandMoreIcon /></IconButton>
