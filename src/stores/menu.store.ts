@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import Menu from "../interfaces/Menu.interface";
+import Menu from "../interfaces/menu.interface";
 
 interface IMenuStore {
     menu: Menu | null;

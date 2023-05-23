@@ -9,6 +9,12 @@ export enum Navigation {
     PatchStoreView = 'PatchStoreView',
     PostMenu = 'PostMenu',
     PostCategory = 'PostCategory'
-    
+}
 
+export enum OrderState{
+    WAITING = 'Waiting',
+    CONFIRM = 'Confirm',
+    COMPLETE = 'Complete',
+    REFUND = 'Refund',
+    REJECT = 'Reject'
 }

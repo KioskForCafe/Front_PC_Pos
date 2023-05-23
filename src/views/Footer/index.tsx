@@ -3,7 +3,7 @@ import React, { Dispatch } from 'react';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationAddIcon from '@mui/icons-material/NotificationAdd';
 import { useNavigationStore } from '../../stores';
-import { Navigation } from '../../constants/navigationEnum';
+import { Navigation } from '../../constants/enum';
 
 function Footer() {
 

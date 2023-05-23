@@ -5,13 +5,12 @@ interface Menu {
     menuImgUrl: string | null;
     menuState: boolean;
     categoryId: number;
-    optionList: [
+    optionList: 
       {
         optionId: number;
         optionName: string;
         optionPrice: number;
-      }
-    ];
+      }[];
 }
 
 export default Menu;

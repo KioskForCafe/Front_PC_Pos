@@ -1,28 +1,30 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import { GetOrderDetailListResponseDto, GetOrderListResponseDto } from '../../../apis/response/order';
+import { GetOrderDetailListResponseDto, GetOrderListResponseDto, PatchOrderResponseDto } from '../../../apis/response/order';
 import axios, { AxiosResponse } from 'axios';
 import ResponseDto from '../../../apis/response';
-import { GET_ORDER_DETAIL_LIST_URL, authorizationHeader } from '../../../constants/api';
+import { GET_ORDER_DETAIL_LIST_URL, authorizationHeader, PATCH_ORDER_URL } from '../../../constants/api';
 import useStore from '../../../stores/user.store';
 import { useStoreStore } from '../../../stores';
 import User from '../../../interfaces/User.interface';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { PatchOrderRequestDto } from '../../../apis/request/order';
+import { OrderState } from '../../../constants/enum';
 
 interface props {
-    orderId: number
+    orderId: number,
+    orderState: OrderState
 }
 
-export default function OrderLogDetail({ orderId }: props) {
+export default function OrderLogDetail({ orderId, orderState }: props) {
 
     const navigator = useNavigate();
 
     const [orderDetailResponse, setOrderDetailResponse] = useState<GetOrderDetailListResponseDto[] | null>(null);
     const [openDialog, setOpenDialog] = useState(false);
-
-    const { store } = useStoreStore();
+    const [onOrderState, setOnOrderState] = useState<OrderState>(orderState);
 
     const [cookies] = useCookies();
 
@@ -45,6 +47,25 @@ export default function OrderLogDetail({ orderId }: props) {
         setOpenDialog(false);
     };
 
+    const patchOrderState = (accessToken: string) => {
+        const data: PatchOrderRequestDto = {
+            orderId,
+            orderState: onOrderState
+        }
+        axios.patch(PATCH_ORDER_URL, data, authorizationHeader(accessToken))
+        .then((response) =>  patchOrderStateResponseHandler(response))
+        .catch((error) => patchOrderStateErrorHandler(error));
+    }
+
+    const onUpdateButtonHandler = () => {
+        setOnOrderState(OrderState.CONFIRM);
+        patchOrderState(accessToken);
+    }
+    const onRejectButtonHandler = () => {
+        setOnOrderState(OrderState.REJECT);
+        patchOrderState(accessToken);
+    }
+
     //          Response Handler        //
 
     const getOrderDetailResponseHandler = (response: AxiosResponse<any, any>) => {
@@ -58,9 +79,24 @@ export default function OrderLogDetail({ orderId }: props) {
         setOrderDetailResponse(data);
     }
 
+    const patchOrderStateResponseHandler = (response: AxiosResponse<any,any>) => {
+        const {result, message, data} = response.data as ResponseDto<PatchOrderResponseDto>;
+        if(!result || !data) {
+            alert(message);
+            return;
+        }
+        if(orderState) {
+            setOnOrderState(orderState);
+        }
+    }
+
     //          Error Handler           //
 
     const getOrderDetailErrorHandler = (error: any) => {
+        console.log(error.message);
+    }
+
+    const patchOrderStateErrorHandler = (error: any) => {
         console.log(error.message);
     }
 
@@ -68,7 +104,7 @@ export default function OrderLogDetail({ orderId }: props) {
 
     useEffect(() => {
         getOrderDetail(orderId, accessToken);
-        console.log();
+        console.log(orderState);
     }, []);
 
     return (
@@ -85,6 +121,10 @@ export default function OrderLogDetail({ orderId }: props) {
                 </Box>
             )}
             <Box>
+                <Box sx={{display: 'flex', width: '100%'}}>
+                    <Button sx={{flex: 1}} onClick={() => onUpdateButtonHandler()}>접수</Button>
+                    <Button sx={{flex: 1}} onClick={() => onRejectButtonHandler()}>취소</Button>
+                </Box>
                 <IconButton onClick={handleOpenDialog} sx={{ alignContent: 'center', width: '100%' }}><ExpandMoreIcon /></IconButton>
                 <Dialog open={openDialog} onClose={handleCloseDialog}>
                     <DialogTitle sx={{ fontSize: '30px', fontWeight: 600 }}>주문 상세</DialogTitle>
