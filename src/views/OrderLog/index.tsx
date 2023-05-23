@@ -85,9 +85,9 @@ function OrderLog() {
                 <Button sx={{ flex: 1, textAlign: 'center', color: 'grey' }} onClick={() => setOrderState(OrderState.COMPLETE)}>완료</Button>
             </Box>
 
-            <Box sx={{ p: '10px', backgroundColor: '#E6E8EB', flex: 1, display : 'flex', flexDirection: 'row' }}>
+            <Box sx={{ width: '100%', p: '10px', backgroundColor: '#E6E8EB', flex: 1, display : 'flex', flexDirection: 'row' }}>
                 {orderLogResponse && orderLogResponse?.map((order) =>
-                    <Box sx={{ m: '10px', display: 'flex', flexDirection: 'column', backgroundColor: 'white', width: '15rem', height: '17rem', borderRadius: '1rem' }}>
+                    <Box sx={{  m: '10px', display: 'flex', flexDirection: 'column', backgroundColor: 'white', width: '15rem', height: '17rem', borderRadius: '1rem' }}>
                         <Box sx={{ p: '10px', display: 'flex', flex: 0.5, alignItems: 'center' }}>
                             <Typography sx={{ flex: 0.3, fontSize: '25px', fontWeight: 600 }}>{order.orderId}</Typography>
                             <Typography sx={{ flex: 1, textAlign: 'end' }}>{(order.updatedAt + '').slice(0, 10) + ' ' + (order.updatedAt + '').slice(11, 13) + '시' + (order.updatedAt + '').slice(14, 16) + '분'}</Typography>

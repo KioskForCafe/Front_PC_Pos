@@ -24,7 +24,7 @@ export default function OrderLogDetail({ orderId, orderState }: props) {
 
     const [orderDetailResponse, setOrderDetailResponse] = useState<GetOrderDetailListResponseDto[] | null>(null);
     const [openDialog, setOpenDialog] = useState(false);
-    const [onOrderState, setOnOrderState] = useState<OrderState>(orderState);
+    const [onOrderState, setOnOrderState] = useState<string>(orderState);
 
     const [cookies] = useCookies();
 
@@ -52,6 +52,7 @@ export default function OrderLogDetail({ orderId, orderState }: props) {
             orderId,
             orderState: onOrderState
         }
+        console.log(data);
         axios.patch(PATCH_ORDER_URL, data, authorizationHeader(accessToken))
         .then((response) =>  patchOrderStateResponseHandler(response))
         .catch((error) => patchOrderStateErrorHandler(error));
@@ -60,6 +61,7 @@ export default function OrderLogDetail({ orderId, orderState }: props) {
     const onUpdateButtonHandler = () => {
         setOnOrderState(OrderState.CONFIRM);
         patchOrderState(accessToken);
+        console.log(onOrderState);
     }
     const onRejectButtonHandler = () => {
         setOnOrderState(OrderState.REJECT);
@@ -85,9 +87,7 @@ export default function OrderLogDetail({ orderId, orderState }: props) {
             alert(message);
             return;
         }
-        if(orderState) {
-            setOnOrderState(orderState);
-        }
+
     }
 
     //          Error Handler           //
