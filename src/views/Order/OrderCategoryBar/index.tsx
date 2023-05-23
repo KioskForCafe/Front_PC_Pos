@@ -8,27 +8,26 @@ import { GET_CATEGORY_LIST_URL, authorizationHeader } from '../../../constants/a
 import { useCookies } from 'react-cookie';
 import ResponseDto from '../../../apis/response';
 import { GetCategoryResponseDto } from '../../../apis/response/category';
-import { useCategoryStore, useStoreStore } from '../../../stores';
+import { useCategoryStore, useNavigationStore, useStoreStore, useCategoryListStore } from '../../../stores';
 import CategoryButton from '../../../components/CategoryButton';
 import usePagingHook from '../../../hooks/paging.hook';
+import { Navigation } from '../../../constants/enum';
 
 export default function OrderCategoryBar() {
 
     const [cookies] = useCookies();
     const {store} = useStoreStore();
     const {setCategory} = useCategoryStore();
+    const {setNavigation} = useNavigationStore();
+    const {categoryList, setCategoryList} = useCategoryListStore();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-    const {categoryList, viewList, pageNumber, setCategoryList, onPageHandler, COUNT} = usePagingHook(4);
+    const {viewList, pageNumber, onPageHandler, COUNT} = usePagingHook(4);
     const storeMenuOpen = Boolean(anchorEl);
     
     const accessToken = cookies.accessToken;
     const storeId = store?.storeId;
 
-    const [open, setOpen] = useState<boolean>(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
-    
     const onCategoryMenuButtonHandler = (event: MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -98,8 +97,7 @@ export default function OrderCategoryBar() {
             onClose={onCategoryMenuCloseHandler}
             onClick={onCategoryMenuCloseHandler} 
         >
-            <MenuItem onClick={onCategoryMenuCloseHandler}>수정</MenuItem>
-            <MenuItem onClick={onCategoryMenuCloseHandler}>삭제</MenuItem>
+            <MenuItem onClick={()=>setNavigation(Navigation.PatchCategory)}>수정 및 삭제</MenuItem>
         </Menu>
 
         
