@@ -11,7 +11,7 @@ import { authorizationHeader } from '../../constants/api';
 import ResponseDto from '../../apis/response';
 import { GetStoreResponseDto } from '../../apis/response/store';
 import useStore from '../../stores/user.store';
-import { Navigation } from '../../constants/navigationEnum';
+import { Navigation } from '../../constants/enum';
 import useNavigation from '../../stores/navigation.store';
 
 
@@ -50,6 +50,10 @@ export default function NavigationBar() {
     }
 
     const onStoreView = () => {
+        if(!user){
+            alert('로그인이 필요합니다.');
+            return;
+        }
         setNavigation(Navigation.Store);
     }
 

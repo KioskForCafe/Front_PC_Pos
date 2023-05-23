@@ -10,7 +10,7 @@ import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import { useNavigate } from 'react-router-dom';
 import { useNavigationStore } from '../../../stores';
-import { Navigation } from '../../../constants/navigationEnum';
+import { Navigation } from '../../../constants/enum';
 
 export default function PostStoreView() {
 

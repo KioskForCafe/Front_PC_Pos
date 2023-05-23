@@ -8,18 +8,18 @@ import ResponseDto from '../../apis/response'
 import { GetMenuResponseDto } from '../../apis/response/menu'
 
 interface Props{
-    category: GetCategoryResponseDto
+    item: GetCategoryResponseDto
 }
 
-export default function CategoryButton({category}:Props) {
+export default function CategoryButton({item}:Props) {
 
-  const {setCategory} = useCategoryStore();
+  const {category,setCategory} = useCategoryStore();
 
   const onCategoryButtonHandler = () =>{
-    setCategory(category);
+    setCategory(item);
   }
 
   return (
-    <Button onClick={() => onCategoryButtonHandler()} sx={{flex:1}}>{category.categoryName}</Button>
+    <Button onClick={() => onCategoryButtonHandler()} sx={{flex:1, bgcolor: category!.categoryId === item.categoryId ? '#1976d250' : ''}}>{item.categoryName}</Button>
   )
 }

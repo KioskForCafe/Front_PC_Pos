@@ -8,7 +8,7 @@ import { SignInResponseDto } from '../../../apis/response/auth';
 import { getExpires } from '../../../utils';
 import { useCookies } from "react-cookie";
 import { useNavigationStore, useUserStore } from '../../../stores';
-import { Navigation } from '../../../constants/navigationEnum';
+import { Navigation } from '../../../constants/enum';
 
 interface Props {
   setLoginView: Dispatch<SetStateAction<boolean>>;
@@ -22,7 +22,7 @@ export default function SignIn( {setLoginView} : Props) {
   const [password, setPassword] = useState<string>('');
   const {setUser} =useUserStore();
 
-  const [cookies, setCookie] = useCookies();
+  const [, setCookie] = useCookies();
 
   const onUserIdChangeHandler = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
     const value = event.target.value;

@@ -16,10 +16,10 @@ export default function OrderCategoryBar() {
 
     const [cookies] = useCookies();
     const {store} = useStoreStore();
-    const {category, setCategory} = useCategoryStore();
+    const {setCategory} = useCategoryStore();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-    const {categoryList, viewList, pageNumber, setCategoryList, onPageHandler, COUNT} = usePagingHook(3);
+    const {categoryList, viewList, pageNumber, setCategoryList, onPageHandler, COUNT} = usePagingHook(4);
     const storeMenuOpen = Boolean(anchorEl);
     
     const accessToken = cookies.accessToken;
@@ -42,7 +42,7 @@ export default function OrderCategoryBar() {
     }
     
     const onNextPageButtonHandler = () => {
-        if(Math.round(categoryList.length/COUNT) < pageNumber+1) return;
+        if(Math.ceil(categoryList.length/COUNT) < pageNumber+1) return;
         onPageHandler(pageNumber+1);
     }
 
@@ -73,10 +73,10 @@ export default function OrderCategoryBar() {
     },[])
 
   return (
-    <Box sx={{display:'flex',width:'100%', height:'4rem'}}>
+    <Box sx={{display:'flex',width:'100%', height:'3rem'}}>
         { 
-            categoryList.length !== 0 ? viewList.map((category)=>(
-                <CategoryButton category={category}/>
+            categoryList.length !== 0 ? viewList.map((item)=>(
+                <CategoryButton item={item}/>
             ))
             : '카테고리를 등록하세요'
         }

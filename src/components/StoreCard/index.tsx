@@ -8,7 +8,7 @@ import Store from '../../views/Store';
 import axios, { AxiosResponse } from 'axios';
 import { DELETE_STORE_URL, authorizationHeader } from '../../constants/api';
 import ResponseDto from '../../apis/response';
-import { Navigation } from '../../constants/navigationEnum';
+import { Navigation } from '../../constants/enum';
 
 interface Props{
     getStore: (accessToken: string) => void;

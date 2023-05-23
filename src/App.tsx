@@ -12,7 +12,7 @@ import AuthenticationView from './views/AuthenticationView';
 import { useNavigationStore, useStoreStore, useUserStore } from './stores';
 import PostStoreView from './views/Store/PostStoreView';
 import PatchStoreView from './views/Store/PatchStoreView';
-import { Navigation } from './constants/navigationEnum';
+import { Navigation } from './constants/enum';
 import PostMenu from './views/Order/PostMenu';
 import PostCategory from './views/Order/PostCategory';
 

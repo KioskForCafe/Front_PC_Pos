@@ -10,7 +10,7 @@ import { GetStoreResponseDto } from '../../apis/response/store';
 import ResponseDto from '../../apis/response';
 import PostStoreView from './PostStoreView';
 import { useNavigationStore, useStoreStore } from '../../stores';
-import { Navigation } from '../../constants/navigationEnum';
+import { Navigation } from '../../constants/enum';
 
 
 export default function Store() {
@@ -35,7 +35,6 @@ export default function Store() {
   const getStoreResponseHandler = (response: AxiosResponse<any, any>) =>{
     const {data, message, result} = response.data as ResponseDto<GetStoreResponseDto[]>
     if(!result || data === null) return;
-    console.log(storeList);
     setStoreList(data);
   }
 

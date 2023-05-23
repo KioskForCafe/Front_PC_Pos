@@ -3,11 +3,13 @@ import React, { useState } from 'react'
 import OrderCategoryBar from './OrderCategoryBar/';
 import OrderContent from './OrderContent/';
 import OrderDetail from './OrderDetail/';
-import MenuDetailCard from '../../components/MenuDetailCard';
+import MenuDetailCard from './MenuDetail';
+import PatchMenuDetail from './PatchMenuDetail';
 
 export default function Order() {
 
   const [menuDetailView, setMenuDetailView] = useState<boolean>(false);
+  const [editView, setEditView] = useState<boolean>(false);
 
   return (
     <Box sx={{position:'relative', display:'flex', height:'88vh'}}>
@@ -18,7 +20,10 @@ export default function Order() {
         </Box>
         <OrderDetail/>
         {
-          menuDetailView && (<MenuDetailCard setMenuDetailView={setMenuDetailView}/>)
+          menuDetailView && !editView && (<MenuDetailCard setEditView={setEditView} setMenuDetailView={setMenuDetailView}/>)
+        }
+        {
+          editView && (<PatchMenuDetail setEditView={setEditView}/>)
         }
     </Box>
   )
