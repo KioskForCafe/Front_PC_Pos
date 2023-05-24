@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { GetCategoryResponseDto } from "../apis/response/category";
+import { useCategoryListStore } from "../stores";
 
 const usePagingHook = (COUNT: number) => {
 
-  const [categoryList, setCategoryList] = useState<GetCategoryResponseDto[]>([]);
+  const {categoryList} = useCategoryListStore();
   const [viewList, setViewList] = useState<GetCategoryResponseDto[]>([]);
   const [pageNumber, setPageNumber] = useState<number>(1);
 
@@ -27,7 +28,7 @@ const usePagingHook = (COUNT: number) => {
     onPageHandler(pageNumber);
   }, [categoryList]);
 
-  return {categoryList, viewList, pageNumber, setCategoryList, onPageHandler, COUNT};
+  return {viewList, pageNumber, onPageHandler, COUNT};
 }
 
 export default usePagingHook;

@@ -18,9 +18,9 @@ import { Navigation, OrderState } from '../../constants/enum';
 function OrderLog() {
 
 
-    const [orderLogResponse, setorderLogResponse] = useState<GetOrderListResponseDto[] | null>(null);
+    const [orderLogResponse, setOrderLogResponse] = useState<GetOrderListResponseDto[] | null>(null);
 
-    const [orderState, setOrderState] = useState<OrderState>(OrderState.WAITING);
+    const [orderState, setOrderState] = useState<string>(OrderState.WAITING);
 
     const { store } = useStoreStore();
 
@@ -57,7 +57,7 @@ function OrderLog() {
             return;
         }
         console.log(data);
-        setorderLogResponse(data);
+        setOrderLogResponse(data);
     }
 
 
@@ -74,27 +74,25 @@ function OrderLog() {
 
     useEffect(() => {
         getOrderLog(accessToken);
-        console.log();
     }, [orderState]);
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', height: '88vh' }}>
-            <Box sx={{ display: 'flex', border: '1px solid #FFFFFF', height: '3.5rem', alignItems: 'center' }}>
-                <Button sx={{ flex: 1, textAlign: 'center', color: 'grey' }} onClick={() => setOrderState(OrderState.WAITING)}>대기</Button>
-                <Button sx={{ flex: 1, textAlign: 'center', color: 'grey' }} onClick={() => setOrderState(OrderState.CONFIRM)}>접수</Button>
-                <Button sx={{ flex: 1, textAlign: 'center', color: 'grey' }} onClick={() => setOrderState(OrderState.COMPLETE)}>완료</Button>
+        <Box sx={{ display: 'flex', flexDirection: 'column', height: '88vh', width: '100%', overflow: 'hidden'}}>
+            <Box sx={{ display: 'flex', border: '1px solid #FFFFFF', height: '5vh', alignItems: 'center' }}>
+                <Button sx={{ flex: 1, textAlign: 'center', color: 'grey', bgcolor: orderState===OrderState.WAITING ? '#1976d250' : '' }} onClick={() => setOrderState(OrderState.WAITING)}>대기</Button>
+                <Button sx={{ flex: 1, textAlign: 'center', color: 'grey', bgcolor: orderState===OrderState.CONFIRM ? '#1976d250' : '' }} onClick={() => setOrderState(OrderState.CONFIRM)}>접수</Button>
+                <Button sx={{ flex: 1, textAlign: 'center', color: 'grey', bgcolor: orderState===OrderState.COMPLETE ? '#1976d250' : '' }} onClick={() => setOrderState(OrderState.COMPLETE)}>완료</Button>
             </Box>
-
-            <Box sx={{ width: '100%', p: '10px', backgroundColor: '#E6E8EB', flex: 1, display : 'flex', flexDirection: 'row' }}>
-                {orderLogResponse && orderLogResponse?.map((order) =>
-                    <Box sx={{  m: '10px', display: 'flex', flexDirection: 'column', backgroundColor: 'white', width: '15rem', height: '17rem', borderRadius: '1rem' }}>
+            <Box sx={{ width: '100%', p: '10px', backgroundColor: '#E6E8EB', flex: 1, display : 'flex', flexDirection: 'row', flexWrap: 'wrap', overflow: 'auto' }}>
+                {orderLogResponse && orderLogResponse?.map?.((order) =>
+                    <Box sx={{  m: '10px', display: 'flex', flexDirection: 'column', backgroundColor: 'white', width: '15rem', height: '17rem', borderRadius: '1rem', flex: '0 0 auto', marginBottom: '20px' }}>
                         <Box sx={{ p: '10px', display: 'flex', flex: 0.5, alignItems: 'center' }}>
                             <Typography sx={{ flex: 0.3, fontSize: '25px', fontWeight: 600 }}>{order.orderId}</Typography>
                             <Typography sx={{ flex: 1, textAlign: 'end' }}>{(order.updatedAt + '').slice(0, 10) + ' ' + (order.updatedAt + '').slice(11, 13) + '시' + (order.updatedAt + '').slice(14, 16) + '분'}</Typography>
                         </Box>
                         <Divider />
                         <Box sx={{ p: '10px', flex: 3, flexDirection: 'column' }}>
-                            <OrderLogDetail orderId={order.orderId} orderState={order.orderState} />
+                            <OrderLogDetail setOrderLogResponse={setOrderLogResponse} orderId={order.orderId} orderState={order.orderState} />
                         </Box>
                     </Box>
                 )}

@@ -15,6 +15,7 @@ import PatchStoreView from './views/Store/PatchStoreView';
 import { Navigation } from './constants/enum';
 import PostMenu from './views/Order/PostMenu';
 import PostCategory from './views/Order/PostCategory';
+import PatchCategory from './views/Order/PatchCategory';
 
 function App() {
 
@@ -39,7 +40,8 @@ function App() {
           navigation === Navigation.PostStoreView ? <PostStoreView/> :
           navigation === Navigation.PatchStoreView ? <PatchStoreView/> :
           navigation === Navigation.PostMenu ? <PostMenu/> :
-          navigation === Navigation.PostCategory && <PostCategory/> 
+          navigation === Navigation.PostCategory ? <PostCategory/> :
+          navigation === Navigation.PatchCategory && <PatchCategory/>
         }
       </Box>
       {

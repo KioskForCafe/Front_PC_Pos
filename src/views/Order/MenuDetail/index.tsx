@@ -1,6 +1,6 @@
 import { Backdrop, Box, Button, Checkbox, FormControlLabel, IconButton, Typography } from '@mui/material'
 import React, { ChangeEvent, Dispatch, useEffect, useState } from 'react'
-import { useMenuStore, useOrderDetailListStore } from '../../../stores'
+import { useCategoryStore, useMenuStore, useOrderDetailListStore } from '../../../stores'
 import IndeterminateCheckBoxOutlinedIcon from '@mui/icons-material/IndeterminateCheckBoxOutlined';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import CloseIcon from '@mui/icons-material/Close';
@@ -8,13 +8,18 @@ import OrderDetailList from '../../../interfaces/OrderDetailList.interface';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { confirmAlert } from 'react-confirm-alert';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import { DELETE_MENU_URL, authorizationHeader } from '../../../constants/api';
+import { useCookies } from 'react-cookie';
+import ResponseDto from '../../../apis/response';
+import { DeleteMenuResponseDto } from '../../../apis/response/menu';
 
 interface Option{
   optionId: number;
   optionName: string;
   optionPrice: number;
 }
+
 interface Props {
   setMenuDetailView: Dispatch<React.SetStateAction<boolean>>;
   setEditView : Dispatch<React.SetStateAction<boolean>>
@@ -23,11 +28,15 @@ interface Props {
 export default function MenuDetailCard({setEditView ,setMenuDetailView}: Props) {
 
   const {menu} = useMenuStore();
+  const {category, setCategory} = useCategoryStore();
   const {orderDetailList,setOrderDetailList} = useOrderDetailListStore();
   const [optionList,setOptionList] = useState<Option[]>([]);
   const [orderDetailCount, setOrderDetailCount] = useState<number>(1);
   const [checked, setChecked] = useState<{[key:string]:boolean}>({});
   const [backdropOpen, setBackdropOpen] = useState<boolean>(true);
+  const [cookies] = useCookies();
+
+  const accessToken = cookies.accessToken;
 
   const onCheckChangeHandler = (event: ChangeEvent<HTMLInputElement>) =>{
     setChecked({
@@ -53,10 +62,10 @@ export default function MenuDetailCard({setEditView ,setMenuDetailView}: Props) 
           setBackdropOpen(true);
           onClose();
 
-          // axios
-          //   .delete()
-          //   .then()
-          //   .catch()
+          axios
+            .delete(DELETE_MENU_URL(menu!.menuId),authorizationHeader(accessToken))
+            .then((response)=>onDeleteMenuResponseHandler(response))
+            .catch((error)=>onDeleteMenuErrorHandler(error))
 
         }
         const onNoButtonHandler = () =>{
@@ -108,6 +117,22 @@ export default function MenuDetailCard({setEditView ,setMenuDetailView}: Props) 
 
     setMenuDetailView(false);
 
+  }
+
+  const onDeleteMenuResponseHandler = (response: AxiosResponse<any, any>) => {
+    const {data,message,result} = response.data as ResponseDto<DeleteMenuResponseDto>
+    if(!result || !data){
+      alert(message);
+      return;
+    }
+    if(category !==null) setCategory({...category});
+    
+    setMenuDetailView(false);
+
+  }
+
+  const onDeleteMenuErrorHandler = (error: any) => {
+    console.log(error.message);
   }
 
   useEffect(()=>{

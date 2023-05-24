@@ -9,10 +9,12 @@ export const getExpires =(expiredTime : number)=>{
 export const getTotalPrice = (orderDetailList: OrderDetailList[]) => {
     let totalPrice = 0;
     orderDetailList.map((orderDetail)=>{
-        totalPrice += orderDetail.menuPrice;
+        let singlePrice = 0;
+        singlePrice += orderDetail.menuPrice;
         orderDetail.optionList.map((option)=>{
-            totalPrice += option.optionPrice;
+            singlePrice += option.optionPrice;
         })
+        totalPrice += singlePrice * orderDetail.menuCount;
     })
     return totalPrice;
 }
