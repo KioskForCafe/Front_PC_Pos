@@ -41,7 +41,7 @@ export default function OrderCategoryBar() {
     }
     
     const onNextPageButtonHandler = () => {
-        if(Math.ceil(categoryList.length/COUNT) < pageNumber+1) return;
+        if(categoryList.length <= (COUNT * pageNumber)) return;
         onPageHandler(pageNumber+1);
     }
 
@@ -80,12 +80,16 @@ export default function OrderCategoryBar() {
             : '카테고리를 등록하세요'
         }
         <Box sx={{display:'flex', alignItems:'center', borderLeft:'1px solid #E6E8EB'}}>
-            <IconButton onClick={()=>onPrevPageButtonHandler()} sx={{flex:1}}>
-                <KeyboardArrowLeftIcon/>
-            </IconButton>
-            <IconButton onClick={()=>onNextPageButtonHandler()} sx={{flex:1}}>
-                <KeyboardArrowRightIcon/>
-            </IconButton>
+            {   pageNumber > 1 &&
+                <IconButton onClick={()=>onPrevPageButtonHandler()} sx={{flex:1}}>
+                    <KeyboardArrowLeftIcon/>
+                </IconButton>
+            }
+            {   categoryList.length > (COUNT * pageNumber) &&
+                <IconButton onClick={()=>onNextPageButtonHandler()} sx={{flex:1}}>
+                    <KeyboardArrowRightIcon/>
+                </IconButton>
+            }
             <IconButton onClick={onCategoryMenuButtonHandler} sx={{flex:1}}>
                 <MoreHorizIcon />
             </IconButton>
