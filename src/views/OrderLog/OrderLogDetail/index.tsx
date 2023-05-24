@@ -16,10 +16,10 @@ import { OrderState } from '../../../constants/enum';
 interface props {
     orderId: number;
     orderState: string;
-    setorderLogResponse: React.Dispatch<React.SetStateAction<GetOrderListResponseDto[] | null>>
+    setOrderLogResponse: React.Dispatch<React.SetStateAction<GetOrderListResponseDto[] | null>>
 }
 
-export default function OrderLogDetail({ setorderLogResponse, orderId, orderState }: props) {
+export default function OrderLogDetail({ setOrderLogResponse, orderId, orderState }: props) {
 
     const navigator = useNavigate();
 
@@ -53,15 +53,15 @@ export default function OrderLogDetail({ setorderLogResponse, orderId, orderStat
             orderState
         }
         axios.patch(PATCH_ORDER_URL, data, authorizationHeader(accessToken))
-        .then((response) =>  patchOrderStateResponseHandler(response))
-        .catch((error) => patchOrderStateErrorHandler(error));
+            .then((response) => patchOrderStateResponseHandler(response))
+            .catch((error) => patchOrderStateErrorHandler(error));
     }
 
     const onUpdateButtonHandler = () => {
         const newState = OrderState.CONFIRM;
         patchOrderState(accessToken, newState);
     }
-    
+
     const onCompleteButtonHandler = () => {
         const newState = OrderState.COMPLETE;
         patchOrderState(accessToken, newState);
@@ -78,19 +78,19 @@ export default function OrderLogDetail({ setorderLogResponse, orderId, orderStat
         const { result, message, data } = response.data as ResponseDto<GetOrderDetailListResponseDto[]>;
         if (!result || !data) {
             alert(message);
-            navigator('/');
             return;
         }
         setOrderDetailResponse(data);
     }
 
-    const patchOrderStateResponseHandler = (response: AxiosResponse<any,any>) => {
-        const {result, message, data} = response.data as ResponseDto<PatchOrderResponseDto[]>;
-        if(!result || !data) {
+    const patchOrderStateResponseHandler = (response: AxiosResponse<any, any>) => {
+        const { result, message, data } = response.data as ResponseDto<PatchOrderResponseDto[]>;
+        if (!result || !data) {
             alert(message);
             return;
         }
-        setorderLogResponse(data);
+        console.log(data);
+        setOrderLogResponse(data);
     }
 
     //          Error Handler           //
@@ -111,25 +111,27 @@ export default function OrderLogDetail({ setorderLogResponse, orderId, orderStat
 
     return (
         <Box>
-            {orderDetailResponse?.map((menu) =>
-                <Box sx={{ display: 'flex', mb: '7px' }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', flex: 3 }}>
-                        <Typography sx={{ fontSize: '20px', fontWeight: 550 }}>{menu.menuName}</Typography>
-                        {menu.optionList.map((option, index) => (
-                            <Typography key={index}>{option}<br /></Typography>
-                        ))}
+            <Box sx={{height: '8rem',overflow: 'hidden' ,textOverflow: 'ellipsis'}}>
+                {orderDetailResponse?.map((menu) =>
+                    <Box sx={{ display: 'flex', mb: '7px' }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                            <Typography sx={{ fontSize: '20px', fontWeight: 550}}>{menu.menuName}</Typography>
+                            {menu.optionList.map((option, index) => (
+                                <Typography key={index}>{option}<br /></Typography>
+                            ))}
+                        </Box>
+                        <Typography sx={{ flex: 1, fontSize: '20px', fontWeight: 550, textAlign: 'end', mr: '5px' }}>{menu.count}</Typography>
                     </Box>
-                    <Typography sx={{ flex: 1, fontSize: '20px', fontWeight: 550, textAlign: 'end', mr: '5px' }}>{menu.count}</Typography>
-                </Box>
-            )}
+                )}
+            </Box>
             <Box>
-                <Box sx={{display: 'flex', width: '100%'}}>
+                <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
                     {
-                        orderState === OrderState.WAITING ? (<Button sx={{flex: 1}} onClick={() => onUpdateButtonHandler()}>접수</Button>) :
-                        orderState === OrderState.CONFIRM && (<Button sx={{flex: 1}} onClick={() => onCompleteButtonHandler()}>완료</Button>)
+                        orderState === OrderState.WAITING ? (<Button sx={{ flex: 1 }} onClick={() => onUpdateButtonHandler()}>접수</Button>) :
+                            orderState === OrderState.CONFIRM && (<Button sx={{ flex: 1 }} onClick={() => onCompleteButtonHandler()}>완료</Button>)
                     }
-                    
-                    <Button sx={{flex: 1}} onClick={() => onRejectButtonHandler()}>취소</Button>
+
+                    <Button sx={{ flex: 1 }} onClick={() => onRejectButtonHandler()}>취소</Button>
                 </Box>
                 <IconButton onClick={handleOpenDialog} sx={{ alignContent: 'center', width: '100%' }}><ExpandMoreIcon /></IconButton>
                 <Dialog open={openDialog} onClose={handleCloseDialog}>
