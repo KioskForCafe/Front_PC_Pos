@@ -17,7 +17,7 @@ import { useStoreStore } from '../../../stores';
 export default function SaleAnalysisView() {
 
 
-    const {store} = useStoreStore();
+    const { store } = useStoreStore();
 
     const [saleAmount, setSaleAmount] = useState<number>();
     const [saleCount, setSaleCount] = useState<number>();
@@ -29,7 +29,7 @@ export default function SaleAnalysisView() {
     const [cookies] = useCookies();
 
     const accessToken = cookies.accessToken;
-    
+
     let isLoad = false;
 
     //         Event Handler          //
@@ -40,7 +40,7 @@ export default function SaleAnalysisView() {
             return;
         }
 
-        axios.get(GET_SALE_ANALYSIS_URL(store?.storeId+'', startedAt?.format('YYYY-MM-DD') as string, endedAt?.format('YYYY-MM-DD') as string), authorizationHeader(accessToken))
+        axios.get(GET_SALE_ANALYSIS_URL(store?.storeId + '', startedAt?.format('YYYY-MM-DD') as string, endedAt?.format('YYYY-MM-DD') as string), authorizationHeader(accessToken))
             .then((response) => getSaleAnalysisResponseHandler(response))
             .catch((error) => getSaleAnalysisErrorHandler(error));
     }
@@ -48,7 +48,7 @@ export default function SaleAnalysisView() {
     const handleDatetimeChange = (startedAt: Dayjs, endedAt: Dayjs) => {
         setStartedAt(startedAt);
         setEndedAt(endedAt);
-      };
+    };
 
     //              Response Handler                //
 
@@ -58,7 +58,7 @@ export default function SaleAnalysisView() {
             alert(message);
             return;
         }
-        if(data) setSaleAnalysisResponse(data);
+        if (data) setSaleAnalysisResponse(data);
     }
 
     //          Error Handler           //
@@ -89,10 +89,16 @@ export default function SaleAnalysisView() {
     return (
         <Box>
             <Typography align='left' sx={{ fontSize: '3vh', p: '3vh' }}>매출 분석</Typography>
-            <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyItems: 'center', alignItems: 'center' }}>
-                <SelectDatetimeView startedAt={startedAt as Dayjs} endedAt={endedAt as Dayjs} onDatetimeChange={handleDatetimeChange}/>
+            <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyItems: 'center', alignItems: 'center', mb: '10px' }}>
+                <SelectDatetimeView startedAt={startedAt as Dayjs} endedAt={endedAt as Dayjs} onDatetimeChange={handleDatetimeChange} />
             </Box>
-            <SaleAnalysisDetail saleAmount={saleAmount as number} saleCount={saleCount as number} avgSaleAmount={avgSaleAmount as number} />
+            <Box sx={{p: '10px'}}>
+                {
+                  (saleAmount === 0 && saleCount === 0 && avgSaleAmount === 0) ? 
+                  (<Typography sx={{mt: '10px'}}>데이터가 없습니다.</Typography>) :
+                  (<SaleAnalysisDetail saleAmount={saleAmount as number} saleCount={saleCount as number} avgSaleAmount={avgSaleAmount as number} />) 
+                }
+            </Box>
         </Box>
 
     )

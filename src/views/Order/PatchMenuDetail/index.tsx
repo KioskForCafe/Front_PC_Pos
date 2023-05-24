@@ -2,7 +2,7 @@ import { Backdrop, Box, Button, FormControl, FormControlLabel, IconButton, Input
 import React, { Dispatch, useEffect, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import axios, { AxiosResponse } from 'axios';
-import { useCategoryStore, useMenuStore, useStoreStore } from '../../../stores';
+import { useCategoryListStore, useCategoryStore, useMenuStore, useStoreStore } from '../../../stores';
 import { GetCategoryResponseDto } from '../../../apis/response/category';
 import { GET_CATEGORY_LIST_URL, PATCH_MENU_URL, authorizationHeader } from '../../../constants/api';
 import ResponseDto from '../../../apis/response';
@@ -26,12 +26,12 @@ export default function PatchMenuDetail({setEditView}: Props) {
     const {menu,setMenu} = useMenuStore();
     const {store} = useStoreStore();
     const {category,setCategory} = useCategoryStore();
+    const {categoryList} = useCategoryListStore();
     const [menuId] = useState<number>(menu!.menuId);
     const [menuName,setMenuName] = useState<string>(menu!.menuName);
     const [menuPrice, setMenuPrice] = useState<number>(menu!.menuPrice);
     const [menuState, setMenuState] = useState<boolean>(menu!.menuState);
 
-    const [categoryList, setCategoryList] = useState<GetCategoryResponseDto[] | null>(null);
     const [categoryId, setCategoryId] = useState<number>(category!.categoryId);
     const [categoryName, setCategoryName] = useState<string>('');
     const [optionName, setOptionName] = useState<string>('');
@@ -55,13 +55,6 @@ export default function PatchMenuDetail({setEditView}: Props) {
             .catch((error)=>patchMenuErrorHandler(error))
     }
 
-    const getCategoryList = () =>{
-        axios
-            .get(GET_CATEGORY_LIST_URL(store?.storeId+''))
-            .then((response)=>getCategoryListResponseHandler(response))
-            .catch((error)=>getCategoryListErrorHandler(error))
-    }
-
     const onCategorySelectChangeHandler = (event: SelectChangeEvent<number>) =>{
         const value = Number(event.target.value);
         setCategoryId(value);
@@ -83,15 +76,6 @@ export default function PatchMenuDetail({setEditView}: Props) {
         setOptionPrice('');
       }
 
-    const getCategoryListResponseHandler = (response: AxiosResponse<any, any>) =>{
-        const {data,message,result} = response.data as ResponseDto<GetCategoryResponseDto[]>
-        if(!result){
-            alert(message);
-            return;
-        }
-        setCategoryList(data);
-    }
-
     const patchMenuResponseHandler = (response: AxiosResponse<any, any>) => {
         const {data,message,result} = response.data as ResponseDto<PatchMenuResponseDto>
         if(!result || !data){
@@ -101,7 +85,7 @@ export default function PatchMenuDetail({setEditView}: Props) {
         console.log(data);
         const {...menu} = data;
         setMenu(menu);
-        setCategory({categoryId,categoryName});
+        setCategory({categoryId,categoryName,categoryPriority:category!.categoryPriority});
         setEditView(false);
     }
 
@@ -109,12 +93,7 @@ export default function PatchMenuDetail({setEditView}: Props) {
         console.log(error.message);
     }
 
-    const getCategoryListErrorHandler = (error: any) => {
-        console.log(error.message);
-    }
-
     useEffect(()=>{
-        getCategoryList();
     },[optionList])
 
   return (

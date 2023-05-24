@@ -74,7 +74,7 @@ export default function AnalysisProductView() {
                 {analysisProductResponse !== null && analysisProductResponse.byCategory.length > 0 && analysisProductResponse.byMenu.length > 0 ? (
                     <AnalysisProductDetail byCategory={analysisProductResponse.byCategory} byMenu={analysisProductResponse.byMenu} />
                 ) : (
-                    <Typography>데이터가 없습니다.</Typography>
+                    <Typography sx={{mt: '10px'}}>데이터가 없습니다.</Typography>
                 )}
             </Box>
         </Box>

@@ -1,4 +1,6 @@
 interface Dto {
-  result: boolean;
+  categoryId: number;
+  categoryName: string;
+  categoryPriority: number;
 }
 export default Dto;

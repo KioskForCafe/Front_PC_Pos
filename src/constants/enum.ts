@@ -8,12 +8,14 @@ export enum Navigation {
     PostStoreView = 'PostStoreView',
     PatchStoreView = 'PatchStoreView',
     PostMenu = 'PostMenu',
-    PostCategory = 'PostCategory'
+    PostCategory = 'PostCategory',
+    PatchCategory = 'PatchCategory'
 }
 
 export enum OrderState{
     WAITING = 'Waiting',
     CONFIRM = 'Confirm',
     COMPLETE = 'Complete',
-    REFUND = 'Refund'
+    REFUND = 'Refund',
+    REJECT = 'Reject'
 }
