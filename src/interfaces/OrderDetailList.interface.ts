@@ -9,6 +9,7 @@ interface OrderDetailList {
     menuName: string;
     menuPrice: number;
     optionList: Option[];
+    PriceWithOption: number;
 }
 
 export default OrderDetailList;

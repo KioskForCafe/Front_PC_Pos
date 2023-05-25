@@ -105,12 +105,17 @@ export default function MenuDetailCard({setEditView ,setMenuDetailView}: Props) 
       }
     })
     
+    let optionTotalPrice = 0;
+    optionList.forEach((option)=> {
+      optionTotalPrice += option.optionPrice;
+    })
     const newOrderDetail:OrderDetailList = {
       menuCount : orderDetailCount,
       menuId : menu!.menuId,
       menuName : menu!.menuName,
       menuPrice : menu!.menuPrice,
-      optionList : optionList
+      optionList : optionList,
+      PriceWithOption : menu!.menuPrice + optionTotalPrice
     }
     orderDetailList.push(newOrderDetail);
     setOrderDetailList([...orderDetailList]);
