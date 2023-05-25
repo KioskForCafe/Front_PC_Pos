@@ -26,6 +26,7 @@ interface RequestDto {
     orderId: number;
     createdAt: Date;
     orderDetail: OrderDetail[];
+    totalPrice: number;
 }
 
 export default RequestDto;
