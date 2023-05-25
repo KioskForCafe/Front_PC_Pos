@@ -81,7 +81,7 @@ export default function SaleAnalysisView() {
 
     useEffect(() => {
         if (isLoad) return;
-        console.log(startedAt?.format('DD/MM/YYYY'), endedAt?.format('DD/MM/YYYY'));
+        console.log(startedAt?.format('DD/MM/YYYY hh:mm:ss'), endedAt?.format('DD/MM/YYYY hh:mm:ss'));
         isLoad = true;
         getSaleAnalysis();
     }, [startedAt, endedAt]);

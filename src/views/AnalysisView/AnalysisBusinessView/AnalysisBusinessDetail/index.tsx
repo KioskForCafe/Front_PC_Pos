@@ -3,21 +3,26 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { ResponsiveLine } from '@nivo/line'
 
+interface saleListBytime {
+    time: number,
+    saleAmount: number,
+    saleCount: number
+}
+
 interface props {
-    saleListBytime: {
-        time: number,
-        saleAmount: number,
-        saleCount: number
-    }[]
+    byTime: saleListBytime[];
 }
 
 
-export default function AnalysisBusinessDetail({ saleListBytime }: props) {
+export default function AnalysisBusinessDetail({ byTime }: props) {
+
+    let sorted = byTime.sort((a, b) => a.time - b.time);
+    const [sortedTime, setSortedTime] = useState<saleListBytime[]>(sorted);
 
     const saleData = [{
         id: "매출",
         "color": "hsl(295, 70%, 50%)",
-        data: saleListBytime.map((sale) => ({
+        data: sortedTime.map((sale) => ({
             x: sale.time+'시',
             y: sale.saleAmount
         }))
@@ -90,11 +95,15 @@ export default function AnalysisBusinessDetail({ saleListBytime }: props) {
         />
     );
 
-    const sortedBySaleCount = saleListBytime.sort((a, b) => b.saleCount - a.saleCount);
+    const sortedBySaleCount = byTime.sort((a, b) => b.saleCount - a.saleCount);
+
+
 
     useEffect(() => {
+        sorted = byTime.sort((a, b) => b.time - a.time);
+        setSortedTime(sorted);
         console.log(saleData);
-    })
+    } ,[byTime])
 
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
