@@ -92,7 +92,7 @@ function OrderLog() {
                         </Box>
                         <Divider />
                         <Box sx={{ p: '10px', flex: 3, flexDirection: 'column' }}>
-                            <OrderLogDetail setOrderLogResponse={setOrderLogResponse} orderId={order.orderId} orderState={order.orderState} />
+                            <OrderLogDetail setOrderLogResponse={setOrderLogResponse} order={order}/>
                         </Box>
                     </Box>
                 )}
