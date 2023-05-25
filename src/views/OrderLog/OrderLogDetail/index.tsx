@@ -84,8 +84,7 @@ export default function OrderLogDetail({ setOrderLogResponse, order }: props) {
             .then((response)=> postOrderLogResponseHandler(response))
             .catch((error)=>postOrderLogErrorHandler(error))
 
-        const newState = OrderState.COMPLETE;
-        patchOrderState(accessToken, newState);
+
     }
 
     const onRejectButtonHandler = () => {
@@ -101,6 +100,8 @@ export default function OrderLogDetail({ setOrderLogResponse, order }: props) {
             alert(message);
             return;
         }
+        const newState = OrderState.COMPLETE;
+        patchOrderState(accessToken, newState);
     }
 
     const getOrderDetailResponseHandler = (response: AxiosResponse<any, any>) => {

@@ -75,11 +75,9 @@ export default function AnalysisBusinessView() {
             <Typography sx={{ fontSize: '3vh', p: '3vh' }}>영업 분석</Typography>
             <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyItems: 'center', alignItems: 'center' }}>
                 <SelectDatetimeView startedAt={startedAt as Dayjs} endedAt={endedAt as Dayjs} onDatetimeChange={handleDatetimeChange} />
-                {analysisBusinessResponse && analysisBusinessResponse.length > 0 ? (
-                    analysisBusinessResponse.map((item, index) => (
-                        <AnalysisBusinessDetail key={index} saleListBytime={analysisBusinessResponse}/>
-                    ))
-                ) : (
+                {analysisBusinessResponse && analysisBusinessResponse.length > 0 ? 
+                        <AnalysisBusinessDetail byTime={analysisBusinessResponse}/>
+                 : (
                     <Typography sx={{mt: '10px'}}>데이터가 없습니다.</Typography>
                 )}
             </Box>
