@@ -1,24 +1,30 @@
 import { useEffect, useState } from "react";
 import { GetCategoryResponseDto } from "../apis/response/category";
 import { useCategoryListStore } from "../stores";
+import Category from "../interfaces/Category.interface";
+import { GetMenuResponseDto } from "../apis/response/menu";
 
 const usePagingHook = (COUNT: number) => {
 
-  const {categoryList} = useCategoryListStore();
-  const [viewList, setViewList] = useState<GetCategoryResponseDto[]>([]);
+  const [list, setList] = useState<( GetCategoryResponseDto | GetMenuResponseDto )[] | null>(null);
+  const [viewList, setViewList] = useState< ( GetCategoryResponseDto | GetMenuResponseDto )[]>([]);
   const [pageNumber, setPageNumber] = useState<number>(1);
 
   const onPageHandler = (page: number) => {
+    if(list === null) return;
     setPageNumber(page);
   
-    const tmpList: (GetCategoryResponseDto)[] = [];
+    const tmpList: (GetCategoryResponseDto | GetMenuResponseDto )[] = [];
 
     const startIndex = COUNT * (page - 1);
     const endIndex = COUNT * page - 1;
 
     for (let index = startIndex; index <= endIndex; index++) {
-      if (categoryList.length < index + 1) break;
-      tmpList.push(categoryList[index]);
+      if (list.length < index + 1) break;
+      tmpList.push(list[index]);
+    }
+    if(tmpList.length<COUNT){
+      tmpList.length=COUNT;
     }
 
     setViewList(tmpList);
@@ -26,9 +32,9 @@ const usePagingHook = (COUNT: number) => {
 
   useEffect(() => {
     onPageHandler(pageNumber);
-  }, [categoryList]);
+  }, [list]);
 
-  return {viewList, pageNumber, onPageHandler, COUNT};
+  return {setList,viewList, pageNumber, onPageHandler, COUNT};
 }
 
 export default usePagingHook;
