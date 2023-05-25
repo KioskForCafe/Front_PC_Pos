@@ -1,6 +1,16 @@
+interface OptionList {
+    optionId: number;
+    optionName: string;
+    optionPrice: number;
+}
 interface Dto {
-    menuName: string,
-    count: number,
-    optionList: string[]
+    menuId: number;
+    menuName: string;
+    menuPrice: number;
+    categoryId: number;
+    categoryName: string;
+    priceWithOption: number;
+    count: number;
+    optionList: OptionList[]
 }
 export default Dto;
