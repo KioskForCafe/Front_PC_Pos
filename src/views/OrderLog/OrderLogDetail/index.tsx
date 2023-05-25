@@ -74,8 +74,8 @@ export default function OrderLogDetail({ setOrderLogResponse, order }: props) {
             storeName : store!.storeName,
             telNumber : user!.telNumber,
             userId : user!.userId,
-            userName : user!.userName
-
+            userName : user!.userName,
+            totalPrice: order.totalPrice
         }
 
         console.log(data);
