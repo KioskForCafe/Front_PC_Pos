@@ -1,29 +1,29 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, Typography } from '@mui/material'
 import React, { Dispatch, useEffect, useState } from 'react'
-import { GetOrderDetailListResponseDto, GetOrderListResponseDto, PatchOrderResponseDto } from '../../../apis/response/order';
+import { GetOrderDetailListResponseDto, GetOrderListResponseDto, PatchOrderResponseDto, PostOrderLogResponseDto } from '../../../apis/response/order';
 import axios, { AxiosResponse } from 'axios';
 import ResponseDto from '../../../apis/response';
-import { GET_ORDER_DETAIL_LIST_URL, authorizationHeader, PATCH_ORDER_URL } from '../../../constants/api';
+import { GET_ORDER_DETAIL_LIST_URL, authorizationHeader, PATCH_ORDER_URL, POST_ORDER_LOG_URL } from '../../../constants/api';
 import useStore from '../../../stores/user.store';
-import { useStoreStore } from '../../../stores';
+import { useStoreStore, useUserStore } from '../../../stores';
 import User from '../../../interfaces/User.interface';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { PatchOrderRequestDto } from '../../../apis/request/order';
+import { PatchOrderRequestDto, PostOrderLogRequestDto } from '../../../apis/request/order';
 import { OrderState } from '../../../constants/enum';
 
 interface props {
-    orderId: number;
-    orderState: string;
-    setOrderLogResponse: React.Dispatch<React.SetStateAction<GetOrderListResponseDto[] | null>>
+    order : GetOrderListResponseDto;
+    setOrderLogResponse: React.Dispatch<React.SetStateAction<GetOrderListResponseDto[] | null>>;
 }
 
-export default function OrderLogDetail({ setOrderLogResponse, orderId, orderState }: props) {
+export default function OrderLogDetail({ setOrderLogResponse, order }: props) {
 
-    const navigator = useNavigate();
+    const {user} = useUserStore();
+    const {store} = useStoreStore();
 
-    const [orderDetailResponse, setOrderDetailResponse] = useState<GetOrderDetailListResponseDto[] | null>(null);
+    const [orderDetailResponse, setOrderDetailResponse] = useState<GetOrderDetailListResponseDto[]>([]);
     const [openDialog, setOpenDialog] = useState(false);
 
     const [cookies] = useCookies();
@@ -49,7 +49,7 @@ export default function OrderLogDetail({ setOrderLogResponse, orderId, orderStat
 
     const patchOrderState = (accessToken: string, orderState: string) => {
         const data: PatchOrderRequestDto = {
-            orderId,
+            orderId : order.orderId,
             orderState
         }
         axios.patch(PATCH_ORDER_URL, data, authorizationHeader(accessToken))
@@ -62,6 +62,28 @@ export default function OrderLogDetail({ setOrderLogResponse, orderId, orderStat
         patchOrderState(accessToken, newState);
     }
     const onCompleteButtonHandler = () => {
+
+        const data : PostOrderLogRequestDto = {
+            createdAt: order.updatedAt,
+            orderDetail : [...orderDetailResponse].map((orderDetail)=>{
+                const result = {...orderDetail,storeId:store!.storeId, storeName:store!.storeName};
+                return result;
+            }),
+            orderId : order.orderId,
+            storeId : store!.storeId,
+            storeName : store!.storeName,
+            telNumber : user!.telNumber,
+            userId : user!.userId,
+            userName : user!.userName
+
+        }
+
+        console.log(data);
+        axios
+            .post(POST_ORDER_LOG_URL, data, authorizationHeader(accessToken))
+            .then((response)=> postOrderLogResponseHandler(response))
+            .catch((error)=>postOrderLogErrorHandler(error))
+
         const newState = OrderState.COMPLETE;
         patchOrderState(accessToken, newState);
     }
@@ -72,6 +94,14 @@ export default function OrderLogDetail({ setOrderLogResponse, orderId, orderStat
     }
 
     //          Response Handler        //
+
+    const postOrderLogResponseHandler = (response: AxiosResponse<any, any>) => {
+        const {data,message,result} = response.data as ResponseDto<PostOrderLogResponseDto>;
+        if(!result || !data){
+            alert(message);
+            return;
+        }
+    }
 
     const getOrderDetailResponseHandler = (response: AxiosResponse<any, any>) => {
         const { result, message, data } = response.data as ResponseDto<GetOrderDetailListResponseDto[]>;
@@ -95,6 +125,10 @@ export default function OrderLogDetail({ setOrderLogResponse, orderId, orderStat
 
     //          Error Handler           //
 
+    const postOrderLogErrorHandler = (error: any) => {
+        console.log(error.message);
+    }
+
     const getOrderDetailErrorHandler = (error: any) => {
         console.log(error.message);
     }
@@ -106,7 +140,7 @@ export default function OrderLogDetail({ setOrderLogResponse, orderId, orderStat
     //          Use Effect              /
 
     useEffect(() => {
-        getOrderDetail(orderId, accessToken);
+        getOrderDetail(order.orderId, accessToken);
     }, []);
 
     return (
@@ -117,7 +151,7 @@ export default function OrderLogDetail({ setOrderLogResponse, orderId, orderStat
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <Typography sx={{ fontSize: '20px', fontWeight: 550}}>{menu.menuName}</Typography>
                             {menu.optionList.map((option, index) => (
-                                <Typography key={index}>{option}<br /></Typography>
+                                <Typography key={index}>{option.optionName}<br /></Typography>
                             ))}
                         </Box>
                         <Typography sx={{ flex: 1, fontSize: '20px', fontWeight: 550, textAlign: 'end', mr: '5px' }}>{menu.count}</Typography>
@@ -127,8 +161,8 @@ export default function OrderLogDetail({ setOrderLogResponse, orderId, orderStat
             <Box>
                 <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
                     {
-                        orderState === OrderState.WAITING ? (<Button sx={{ flex: 1 }} onClick={() => onUpdateButtonHandler()}>접수</Button>) :
-                            orderState === OrderState.CONFIRM && (<Button sx={{ flex: 1 }} onClick={() => onCompleteButtonHandler()}>완료</Button>)
+                        order.orderState === OrderState.WAITING ? (<Button sx={{ flex: 1 }} onClick={() => onUpdateButtonHandler()}>접수</Button>) :
+                            order.orderState === OrderState.CONFIRM && (<Button sx={{ flex: 1 }} onClick={() => onCompleteButtonHandler()}>완료</Button>)
                     }
 
                     <Button sx={{ flex: 1 }} onClick={() => onRejectButtonHandler()}>취소</Button>
@@ -143,7 +177,7 @@ export default function OrderLogDetail({ setOrderLogResponse, orderId, orderStat
                                 <Box sx={{ display: 'flex', flexDirection: 'column', flex: 3 }}>
                                     <Typography sx={{ fontSize: '20px', fontWeight: 550 }}>{menu.menuName}</Typography>
                                     {menu.optionList.map((option, index) => (
-                                        <Typography key={index}>{option}<br /></Typography>
+                                        <Typography key={index}>{option.optionName}<br /></Typography>
                                     ))}
                                 </Box>
                                 <Typography sx={{ flex: 1, fontSize: '20px', fontWeight: 550, textAlign: 'end', mr: '5px' }}>{menu.count}</Typography>

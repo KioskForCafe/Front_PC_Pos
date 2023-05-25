@@ -10,7 +10,7 @@ import { GetMenuResponseDto } from '../../../apis/response/menu';
 import { useNavigate } from 'react-router-dom';
 import { GET_MENU_LIST_URL, authorizationHeader } from '../../../constants/api';
 import { useStoreStore } from '../../../stores';
-import useCategory from '../../../stores/Category.store';
+import useCategory from '../../../stores/category.store';
 
 const Img = styled('img')({
   margin: 'auto',
