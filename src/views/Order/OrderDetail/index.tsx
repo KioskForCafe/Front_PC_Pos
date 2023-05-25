@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Typography } from '@mui/material'
+import { Box, Button, Divider, IconButton, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import axios, { AxiosResponse } from 'axios';
 import { PostOrderDetailRequestDto, PostOrderRequestDto } from '../../../apis/request/order';
@@ -77,41 +77,45 @@ export default function OrderDetail() {
 
   return (
     <Box sx={{ display:'flex', flexDirection:'column', flex:2}}>
-        <Box sx={{display:'flex',justifyContent:'flex-end',alignItems:'center', height: '4rem'}}>
+        <Box sx={{display:'flex',justifyContent:'flex-end',alignItems:'center', height: '3rem'}}>
           <IconButton onClick={()=>resetOrderDetailList()}>
             <RestartAltIcon fontSize='large'/>
           </IconButton>
         </Box>
-        <Box sx={{display:'flex', flexDirection:'column', p:'20px', flex:1}}>
-            <Box sx={{display:'flex', height:'2rem', alignItems:'center'}}>
+        <Box sx={{display:'flex', flexDirection:'column', p:'20px', flex:1, overflow: 'auto'}}>
+            <Box sx={{display:'flex', height:'2rem', alignItems:'center', m: '10px'}}>
                 <Typography sx={{flex:2}}>상품명</Typography>
+                <Typography sx={{flex:1}}>개당 가격</Typography>
                 <Box sx={{flex:1}}>Count</Box>
-                <Typography sx={{flex:1, textAlign:'end'}}>가격</Typography>
+                <Typography sx={{flex:1, textAlign:'end'}}>총 가격</Typography>
             </Box>
+            <Divider sx={{mb: '10px'}}/>
             {
               orderDetailList.map((orderDetail)=>(
-              <>
-                <Box sx={{display:'flex', height:'2rem', alignItems:'center'}}>
-                    <Typography sx={{flex:2}}>{orderDetail.menuName}</Typography>
-                    <Box sx={{flex:1}}>{orderDetail.menuCount}</Box>
-                    <Typography sx={{flex:1, textAlign:'end'}}>{orderDetail.menuPrice}</Typography>
+              <Box sx={{m: '10px', mb: '15px'}}>
+                <Box sx={{display:'flex', alignItems:'center'}}>
+                    <Typography sx={{flex:2, fontSize: '1.3rem'}}>{orderDetail.menuName}</Typography>
+                    <Typography sx={{flex:1, fontSize: '1.3rem'}}>{orderDetail.menuPrice}</Typography>
+                    <Box sx={{flex:1, fontSize: '1.3rem'}}>{orderDetail.menuCount}</Box>
+                    <Typography sx={{flex:1, fontSize: '1.3rem', textAlign:'end'}}>{orderDetail.menuPrice*orderDetail.menuCount}</Typography>
                 </Box>
                 {
                   orderDetail.optionList.map((option)=>(
                     <Box sx={{display:'flex', height:'2rem', alignItems:'center'}}>
-                      <Typography sx={{flex:2}}>ㄴ {option.optionName}</Typography>
-                      <Box sx={{flex:1}}></Box>
-                      <Typography sx={{flex:1, textAlign:'end'}}>{option.optionPrice}</Typography>
+                      <Typography sx={{flex:2}}>└ {option.optionName}</Typography>
+                      <Typography sx={{flex:1}}>{option.optionPrice}</Typography>
+                      <Box sx={{flex:1}}>{orderDetail.menuCount}</Box>
+                      <Typography sx={{flex:1, textAlign:'end'}}>{option.optionPrice*orderDetail.menuCount}</Typography>
                     </Box>
                   ))
                 }
-              </>
+              </Box>
               ))
             }
 
         </Box>
         <Box sx={{display:'flex', height: '4rem'}}>
-            <Button onClick={()=>onPaymentButtonHandler()} sx={{flex:4}}>{`${totalPrice}원 결제`}</Button>
+            <Button onClick={()=>onPaymentButtonHandler()} sx={{flex:2}}>{`${totalPrice}원 결제`}</Button>
             <Button sx={{flex:1}}>금액입력</Button>
         </Box>
 

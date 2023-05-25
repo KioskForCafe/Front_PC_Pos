@@ -1,5 +1,4 @@
 import React from 'react';
-import CustomMenu from './views/CustomMenu';
 import './App.css';
 import { Box } from '@mui/material';
 import Footer from './views/Footer';
@@ -33,7 +32,6 @@ function App() {
         {
           navigation === Navigation.AuthenticationView ? <AuthenticationView/> :
           navigation === Navigation.Order ? <Order/> :
-          // navigation === Navigation.CustomMenu ? <CustomMenu/> :
           navigation === Navigation.OrderLog ? <OrderLog/> :
           navigation === Navigation.AnalysisView ? <AnalysisView/> :
           navigation === Navigation.Store ? <Store/> :
