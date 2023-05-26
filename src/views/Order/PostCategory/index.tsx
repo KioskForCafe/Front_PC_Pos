@@ -53,7 +53,7 @@ export default function PostCategory() {
 
 
   return (
-    <Box sx={{display:'flex', height:'88vh', justifyContent:'center', alignItems:'center'}}>
+    <Box sx={{display:'flex', height:'88vh', justifyContent:'center', alignItems:'center', overflow:'auto'}}>
       <Box sx={{position:'relative', display:'flex', flexDirection:'column', width:'350px'}}>
       <Typography variant='h4' marginBottom='10px' >메뉴 등록</Typography>
       <IconButton onClick={()=>setNavigation(Navigation.Order)} sx={{position:'absolute', right:0}}>

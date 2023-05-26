@@ -120,6 +120,7 @@ export default function SignUp({setLoginView}:Props) {
 
         const data : SignUpRequestDto ={ userId, userName, password, telNumber, userEmail ,admin:true };
 
+        console.log(data);
         axios.post(SIGN_UP_URL, data)
         .then((response)=> signUpResponseHanlder(response))
         .catch((error)=>signUpErrorHandler(error));
