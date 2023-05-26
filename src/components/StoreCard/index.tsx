@@ -39,6 +39,11 @@ export default function StoreCard({getStore, item} : Props) {
         setNavigation(Navigation.Order);
     }
 
+    const onKioskButtonHandler = () =>{
+        const{...store} = item;
+        setStore(store);
+    }
+
     const onStoreUpdateButtonHandler = () => {
         const {...store} = item;
         setStore(store);
@@ -103,9 +108,13 @@ export default function StoreCard({getStore, item} : Props) {
                 <Button onClick={()=>onPosButtonHandler()} sx={{flex:1}}>
                     매장 PC 포스
                 </Button>
-                <Button sx={{flex:1}}>
-                    매장 Kiosk
-                </Button>
+                <Box onClick={()=>onKioskButtonHandler()} sx={{flex:1, display:'flex', justifyContent:'center', alignItems:'center'}}>
+                    <a href={`http://localhost:8000/${store?.storeId}`} target='_blank' rel="noreferrer">
+                        <Button >
+                            매장 Kiosk
+                        </Button>
+                    </a>
+                </Box>
             </Box>
             <Menu 
                 anchorEl={anchorEl}

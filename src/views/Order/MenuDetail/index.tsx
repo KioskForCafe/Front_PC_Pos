@@ -149,6 +149,9 @@ export default function MenuDetailCard({setEditView ,setMenuDetailView}: Props) 
       <Backdrop open={backdropOpen} />
       <Box bgcolor='#ffffff' sx={{p:'1rem' ,position:'absolute', top:'50%', left:'50%', transform:'translate(-50%, -60%)', width:'350px', display:'flex', flexDirection:'column', justifyContent:'center'}}>
           <Typography variant='h5' marginBottom='10px' >메뉴 선택</Typography>
+          <Box display='flex' justifyContent='center'>
+            <Box sx={{ width: '50%' }} component='img' src={menu!.menuImgUrl} />
+          </Box>
           <IconButton onClick={()=>setEditView(true)} sx={{position:'absolute',top:0, right:60}}>
             <EditIcon fontSize='small'/>
           </IconButton>

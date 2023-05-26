@@ -2,7 +2,7 @@ interface Menu {
     menuId: number;
     menuName: string;
     menuPrice: number;
-    menuImgUrl: string | null;
+    menuImgUrl: string;
     menuState: boolean;
     categoryId: number;
     optionList: 

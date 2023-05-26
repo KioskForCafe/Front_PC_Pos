@@ -2,7 +2,7 @@ interface Dto {
   menuId: number;
   menuName: string;
   menuPrice: number;
-  menuImgUrl: string | null;
+  menuImgUrl: string;
   menuState: boolean;
   storeId: number;
   categoryId: number;
