@@ -6,13 +6,13 @@ interface Dto {
   menuState: boolean;
   storeId: number;
   categoryId: number;
-  optionList: [
+  optionList: 
     {
       optionId: number;
       optionName: string;
       optionPrice: number;
-    }
-  ];
+    }[]
+  ;
 }
 
 export default Dto;

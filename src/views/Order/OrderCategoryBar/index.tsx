@@ -22,7 +22,7 @@ export default function OrderCategoryBar() {
     const {categoryList, setCategoryList} = useCategoryListStore();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-    const {viewList, pageNumber, onPageHandler, COUNT} = usePagingHook(4);
+    const {setList ,viewList, pageNumber, onPageHandler, COUNT} = usePagingHook(4);
     const storeMenuOpen = Boolean(anchorEl);
     
     const accessToken = cookies.accessToken;
@@ -54,12 +54,12 @@ export default function OrderCategoryBar() {
 
     const getCategoryResponseHandler = (response: AxiosResponse<any, any>) =>{
         const {data,message,result} = response.data as ResponseDto<GetCategoryResponseDto[]>
-        // todo : !data의 의미랑 !result의 의미랑 다른게 아닌지 확인
         if(!data || !result){
             console.log(message);
             return;
         }
         setCategoryList(data);
+        setList(data);
         setCategory(data[0]);
     }
 
@@ -69,13 +69,15 @@ export default function OrderCategoryBar() {
 
     useEffect(()=>{
         getCategory(accessToken);
+        console.log(viewList.map(v=>console.log(v)))
     },[])
 
   return (
     <Box sx={{display:'flex',width:'100%', height:'3rem'}}>
         { 
             categoryList.length !== 0 ? viewList.map((item)=>(
-                <CategoryButton item={item}/>
+                // todo : 배열의 빈값을 확인하는 방법을 모르겠음..
+                item === undefined || item === null ? <Button sx={{flex:1}}>왜안돼</Button> : <CategoryButton item={item as GetCategoryResponseDto}/>
             ))
             : '카테고리를 등록하세요'
         }

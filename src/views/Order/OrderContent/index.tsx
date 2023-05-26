@@ -10,6 +10,7 @@ import { GetMenuResponseDto } from '../../../apis/response/menu';
 import MenuCard from '../../../components/MenuCard';
 import { useCookies } from 'react-cookie';
 import { Navigation } from '../../../constants/enum';
+import { usePagingHook } from '../../../hooks';
 
 interface Props {
     setMenuDetailView: Dispatch<React.SetStateAction<boolean>>
@@ -23,9 +24,22 @@ export default function OrderContent({setMenuDetailView}:Props) {
     const {category} = useCategoryStore();
     const [menuList, setMenuList] = useState<GetMenuResponseDto[] | null>(null);
 
+    const {setList, viewList, pageNumber, onPageHandler, COUNT} = usePagingHook(12);
+
     const [cookies] = useCookies();
 
     const [speedDialOpen, setSpeedDialOpen] = useState<boolean>(false);
+
+    const onPrevPageButtonHandler = () => {
+        if(pageNumber <=1) return;
+        onPageHandler(pageNumber-1);
+    }
+    
+    const onNextPageButtonHandler = () => {
+        if(!menuList) return;
+        if(menuList.length <= (COUNT * pageNumber)) return;
+        onPageHandler(pageNumber+1);
+    }
 
     const onAddCategoryButtonHandler = () =>{
         setSpeedDialOpen(false);
@@ -55,6 +69,7 @@ export default function OrderContent({setMenuDetailView}:Props) {
         return;
       }
       setMenuList(data);
+      setList(data);
     }
 
     const getMenuListErrorHandler = (error: any) =>{
@@ -72,20 +87,26 @@ export default function OrderContent({setMenuDetailView}:Props) {
             <Grid container rowSpacing={3} columnSpacing={1}>
                 {
                     menuList !==null && 
-                    menuList.map((menu)=>(
-                        <MenuCard setMenuDetailView={setMenuDetailView} menu={menu}/>
+                    viewList.map((menu)=>(
+                        <MenuCard setMenuDetailView={setMenuDetailView} menu={menu as GetMenuResponseDto}/>
                     ))
                 }
                 
             </Grid>
         </Box>
         <Box sx={{px: '1rem',height:'4rem', display:'flex', alignItems:'center'}}>
-            <IconButton sx={{mx:'5px'}}>
-                <KeyboardArrowLeftIcon/>
-            </IconButton>
-            <IconButton sx={{mx:'5px'}}>
-                <KeyboardArrowRightIcon/>
-            </IconButton>
+            {   pageNumber > 1 &&
+                <IconButton onClick={onPrevPageButtonHandler} sx={{mx:'5px'}}>
+                    <KeyboardArrowLeftIcon/>
+                </IconButton>
+                
+            }
+            {   menuList && menuList.length > (COUNT * pageNumber) &&
+                <IconButton onClick={onNextPageButtonHandler} sx={{mx:'5px'}}>
+                    <KeyboardArrowRightIcon/>
+                </IconButton>
+                
+            }
         </Box>
 
         <SpeedDial
