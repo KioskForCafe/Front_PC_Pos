@@ -1,15 +1,16 @@
-import { Backdrop, Box, Button, FormControl, FormControlLabel, IconButton, Input, InputLabel, Select, SelectChangeEvent, Typography, MenuItem, Checkbox } from '@mui/material';
-import React, { Dispatch, useEffect, useState } from 'react'
+import { Backdrop, Box, Button, FormControl, FormControlLabel, IconButton, Input, InputLabel, Select, SelectChangeEvent, Typography, MenuItem, Checkbox, InputAdornment } from '@mui/material';
+import React, { ChangeEvent, Dispatch, useEffect, useRef, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import axios, { AxiosResponse } from 'axios';
 import { useCategoryListStore, useCategoryStore, useMenuStore, useStoreStore } from '../../../stores';
 import { GetCategoryResponseDto } from '../../../apis/response/category';
-import { GET_CATEGORY_LIST_URL, PATCH_MENU_URL, authorizationHeader } from '../../../constants/api';
+import { FILE_UPLOAD_URL, GET_CATEGORY_LIST_URL, PATCH_MENU_URL, authorizationHeader, mutipartHeader } from '../../../constants/api';
 import ResponseDto from '../../../apis/response';
 import CustomMenuItem from '../../../components/CustomMenuItem/CustomMenuItem';
 import { useCookies } from 'react-cookie';
 import { PatchMenuRequestDto } from '../../../apis/request/menu';
 import { PatchMenuResponseDto } from '../../../apis/response/menu';
+import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 
 interface Option {
     optionId: number | null;
@@ -27,11 +28,14 @@ export default function PatchMenuDetail({setEditView}: Props) {
     const {store} = useStoreStore();
     const {category,setCategory} = useCategoryStore();
     const {categoryList} = useCategoryListStore();
+
+    const menuImageRef = useRef<HTMLInputElement | null>(null);
+
     const [menuId] = useState<number>(menu!.menuId);
     const [menuName,setMenuName] = useState<string>(menu!.menuName);
     const [menuPrice, setMenuPrice] = useState<number>(menu!.menuPrice);
     const [menuState, setMenuState] = useState<boolean>(menu!.menuState);
-
+    const [menuImgUrl, setMenuImgUrl] = useState<string>(menu!.menuImgUrl);
     const [categoryId, setCategoryId] = useState<number>(category!.categoryId);
     const [categoryName, setCategoryName] = useState<string>('');
     const [optionName, setOptionName] = useState<string>('');
@@ -41,12 +45,25 @@ export default function PatchMenuDetail({setEditView}: Props) {
     const [cookies] = useCookies();
     const accessToken = cookies.accessToken;
 
+    const onMenuImageUploadButtonHandler = () => {
+        if (!menuImageRef.current) return;
+        menuImageRef.current.click();
+    }
+
+    const onMenuImageUploadChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+        if (!event.target.files) return;
+        const data = new FormData();
+        data.append('file', event.target.files[0]);
+    
+        axios.post(FILE_UPLOAD_URL, data, mutipartHeader())
+            .then((response) => menuImageUploadResponseHandler(response))
+            .catch((error) => menuImageUploadErrorHandler(error));
+    }
+
     const onUpdateMenuButtonHandler = () =>{
 
-        console.log(menuId);
-
         const data : PatchMenuRequestDto ={
-            categoryId,menuId,menuImgUrl:null,menuName,menuPrice,menuState,optionList,storeId:store!.storeId
+            categoryId,menuId,menuImgUrl,menuName,menuPrice,menuState,optionList,storeId:store!.storeId
         }
 
         axios
@@ -76,6 +93,12 @@ export default function PatchMenuDetail({setEditView}: Props) {
         setOptionPrice('');
       }
 
+    const menuImageUploadResponseHandler = (response: AxiosResponse<any, any>) => {
+        const imageUrl = response.data as string;
+        if (!imageUrl) return;
+        setMenuImgUrl(imageUrl);
+    }
+
     const patchMenuResponseHandler = (response: AxiosResponse<any, any>) => {
         const {data,message,result} = response.data as ResponseDto<PatchMenuResponseDto>
         if(!result || !data){
@@ -87,6 +110,10 @@ export default function PatchMenuDetail({setEditView}: Props) {
         setMenu(menu);
         setCategory({categoryId,categoryName,categoryPriority:category!.categoryPriority});
         setEditView(false);
+    }
+
+    const menuImageUploadErrorHandler = (error: any) => {
+        console.log(error.message);
     }
 
     const patchMenuErrorHandler = (error: any) => {
@@ -112,6 +139,20 @@ export default function PatchMenuDetail({setEditView}: Props) {
                 <InputLabel>가격</InputLabel>
                 <Input value={menuPrice} onChange={(event)=>setMenuPrice(Number(event.target.value))} type='number'/>
             </FormControl>
+            <FormControl variant='standard' sx={{mb:'0.5rem'}}>
+            <Input value='상품 이미지' type='text' readOnly endAdornment={
+              <InputAdornment position='end'>
+                <IconButton onClick={() => onMenuImageUploadButtonHandler()}>
+                  <ImageOutlinedIcon />
+                  <input ref={menuImageRef} hidden type='file' accept='image/*' onChange={(event) => onMenuImageUploadChangeHandler(event)} />
+                </IconButton>
+              </InputAdornment>
+              }
+            />
+        </FormControl>
+        <Box display='flex' justifyContent='center'>
+          <Box sx={{ width: '30%' }} component='img' src={menuImgUrl} />
+        </Box>
             <FormControl variant='standard' sx={{mb:'0.5rem'}}>
                 <InputLabel id="demo-simple-select-label">카테고리</InputLabel>
                 <Select
