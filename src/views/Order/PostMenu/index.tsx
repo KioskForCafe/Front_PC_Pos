@@ -1,7 +1,7 @@
-import { Box, Button, FormControl, IconButton, Input, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material'
+import { Box, Button, FormControl, IconButton, Input, InputAdornment, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material'
 import axios, { AxiosResponse } from 'axios';
-import React, { useEffect, useState } from 'react'
-import { GET_CATEGORY_LIST_URL, POST_MENU_URL, authorizationHeader } from '../../../constants/api';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
+import { FILE_UPLOAD_URL, GET_CATEGORY_LIST_URL, POST_MENU_URL, authorizationHeader, mutipartHeader } from '../../../constants/api';
 import { useNavigationStore, useStoreStore } from '../../../stores';
 import ResponseDto from '../../../apis/response';
 import { GetCategoryResponseDto } from '../../../apis/response/category';
@@ -10,6 +10,7 @@ import { PostMenuResponseDto } from '../../../apis/response/menu';
 import { PostMenuRequestDto } from '../../../apis/request/menu';
 import { Navigation } from '../../../constants/enum';
 import CloseIcon from '@mui/icons-material/Close';
+import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 
 interface Option{
   optionName : string;
@@ -20,7 +21,9 @@ export default function PostMenu() {
 
   const {store} = useStoreStore();
   const {setNavigation} = useNavigationStore();
+  const menuImageRef = useRef<HTMLInputElement | null>(null);
 
+  const [menuImgUrl, setMenuImgUrl] = useState<string>('');
   const [patchOptionView , setPatchOptionView] = useState<boolean>(false);
   const [category, setCategory] = useState<string>('');
   const [categoryList, setCategoryList] = useState<GetCategoryResponseDto[] | null>(null);
@@ -28,7 +31,6 @@ export default function PostMenu() {
   const [menuName, setMenuName] = useState<string>('');
   const [menuPrice, setMenuPrice] = useState<number>(0);
   const [menuState] = useState<boolean>(false);
-  const [menuImgUrl, setMenuImgUrl] = useState<string | null>(null);
   const [optionList, setOptionList] = useState<Option[]>([]);
   const [optionName,setOptionName] = useState<string>('');
   const [optionPrice,setOptionPrice] = useState<number | string>('');
@@ -37,7 +39,20 @@ export default function PostMenu() {
 
   const accessToken = cookies.accessToken;
 
+  const onMenuImageUploadButtonHandler = () => {
+    if (!menuImageRef.current) return;
+    menuImageRef.current.click();
+  }
 
+  const onMenuImageUploadChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return;
+    const data = new FormData();
+    data.append('file', event.target.files[0]);
+
+    axios.post(FILE_UPLOAD_URL, data, mutipartHeader())
+        .then((response) => menuImageUploadResponseHandler(response))
+        .catch((error) => menuImageUploadErrorHandler(error));
+}
 
   const getCategoryList = () =>{
     axios
@@ -68,6 +83,25 @@ export default function PostMenu() {
 
   }
 
+  const onAddOptionButtonHandler = () => {
+    if(!optionName) return alert('옵션이름을 입력해주세요.');
+    optionList.push({optionName,optionPrice: optionPrice as number});
+    setOptionList([...optionList]);
+    setOptionName('');
+    setOptionPrice('');
+  }
+
+  const onDeleteOptionButtonHandler = (index: number) => {
+    optionList.splice(index,1);
+    setOptionList([...optionList]);
+  }
+
+  const menuImageUploadResponseHandler = (response: AxiosResponse<any, any>) => {
+    const imageUrl = response.data as string;
+    if (!imageUrl) return;
+    setMenuImgUrl(imageUrl);
+}
+
   const getCategoryListResponseHandler = (response: AxiosResponse<any, any>) =>{
     const {data,message,result} = response.data as ResponseDto<GetCategoryResponseDto[]>
     if(!result){
@@ -87,18 +121,9 @@ export default function PostMenu() {
     setNavigation(Navigation.Order);
   }
 
-  const onAddOptionButtonHandler = () => {
-    if(!optionName) return alert('옵션이름을 입력해주세요.');
-    optionList.push({optionName,optionPrice: optionPrice as number});
-    setOptionList([...optionList]);
-    setOptionName('');
-    setOptionPrice('');
-  }
-
-  const onDeleteOptionButtonHandler = (index: number) => {
-    optionList.splice(index,1);
-    setOptionList([...optionList]);
-  }
+  const menuImageUploadErrorHandler = (error: any) => {
+    console.log(error.message);
+}
 
   const getCategoryListErrorHandler = (error: any) => {
     console.log(error.message);
@@ -127,6 +152,20 @@ export default function PostMenu() {
             <InputLabel>상품 가격</InputLabel>
             <Input onChange={(event)=>setMenuPrice(Number(event.target.value))} type='number'/>
         </FormControl>
+        <FormControl variant='standard' sx={{mb:'0.5rem'}}>
+            <Input value='상품 이미지' type='text' readOnly endAdornment={
+              <InputAdornment position='end'>
+                <IconButton onClick={() => onMenuImageUploadButtonHandler()}>
+                  <ImageOutlinedIcon />
+                  <input ref={menuImageRef} hidden type='file' accept='image/*' onChange={(event) => onMenuImageUploadChangeHandler(event)} />
+                </IconButton>
+              </InputAdornment>
+              }
+            />
+        </FormControl>
+        <Box display='flex' justifyContent='center'>
+          <Box sx={{ width: '30%' }} component='img' src={menuImgUrl} />
+        </Box>
         <FormControl variant='standard' sx={{mb:'0.5rem'}}>
           <InputLabel id="demo-simple-select-label">카테고리</InputLabel>
           <Select

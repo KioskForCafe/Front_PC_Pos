@@ -9,6 +9,8 @@ import { PostOrderResponseDto } from '../../../apis/response/order';
 import { getTotalPrice } from '../../../utils';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import { OrderState } from '../../../constants/enum';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 export default function OrderDetail() {
 
@@ -16,7 +18,28 @@ export default function OrderDetail() {
 
   const [totalPrice, setTotalPrice] = useState<number>(0);
 
-  const {orderDetailList, resetOrderDetailList} = useOrderDetailListStore();
+  const {orderDetailList, setOrderDetailList , resetOrderDetailList} = useOrderDetailListStore();
+
+  const onMinusButtonHandler = (menuCount:number, index:number) =>{
+    if(menuCount <= 1) return;
+    const newOrderDetail = [...orderDetailList].map((orderDetail,idx)=>{
+      if(index === idx){
+        orderDetail.menuCount--;
+      }
+      return orderDetail;
+    });
+    setOrderDetailList(newOrderDetail);
+  }
+
+  const onPlusButtonHandler = (menuCount:number, index:number) =>{
+    const newOrderDetail = [...orderDetailList].map((orderDetail,idx)=>{
+      if(index === idx){
+        orderDetail.menuCount++;
+      }
+      return orderDetail;
+    });
+    setOrderDetailList(newOrderDetail);
+  }
 
   const onPaymentButtonHandler = () => {
 
@@ -83,12 +106,12 @@ export default function OrderDetail() {
         <Box sx={{display:'flex', flexDirection:'column', px:'20px', flex:1, overflow: 'auto'}}>
             <Box sx={{display:'flex', height:'2rem', alignItems:'center', m: '10px'}}>
                 <Typography sx={{flex:3}}>상품명(가격)</Typography>
-                <Box sx={{flex:1}}>Count</Box>
+                <Box sx={{flex:1, textAlign:'center'}}>Count</Box>
                 <Typography sx={{flex:1, textAlign:'end'}}>총 가격</Typography>
             </Box>
             <Divider sx={{mb: '10px'}}/>
             {
-              orderDetailList.map((orderDetail)=>(
+              orderDetailList.map((orderDetail,index)=>(
               <Box sx={{display:'flex', alignItems:'start'}}>
                 <Box sx={{flex:3, m: '10px', mb: '15px'}}>
                   <Box sx={{display:'flex', alignItems:'center'}}>
@@ -102,7 +125,15 @@ export default function OrderDetail() {
                     ))
                   }
                 </Box>
-                <Box sx={{flex:1, py:'0.5rem', fontSize: '1.3rem'}}>{orderDetail.menuCount}</Box>
+                <Box sx={{flex:1, py:'0.5rem', fontSize: '1.3rem', display:'flex' , justifyContent:'center', alignItems:'center'}}>
+                  <IconButton onClick={()=>onMinusButtonHandler(orderDetail.menuCount, index)}  size='small'>
+                    <RemoveIcon/>
+                  </IconButton>
+                  {orderDetail.menuCount}
+                  <IconButton onClick={()=>onPlusButtonHandler(orderDetail.menuCount, index)} size='small'>
+                    <AddIcon/>
+                  </IconButton>
+                  </Box>
                 <Box sx={{flex:1, py:'0.5rem', textAlign:'end' ,fontSize: '1.3rem'}}>{orderDetail.PriceWithOption * orderDetail.menuCount}</Box>
               </Box>
               ))
