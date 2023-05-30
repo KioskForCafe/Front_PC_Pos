@@ -20,8 +20,8 @@ import { useStoreStore } from '../../../stores';
 export default function AnalysisBusinessView() {
 
 
-    const [startedAt, setStartedAt] = useState<Dayjs | null>(dayjs('2023-05-10'));
-    const [endedAt, setEndedAt] = useState<Dayjs | null>(dayjs('2023-05-10'));
+    const [startedAt, setStartedAt] = useState<Dayjs | null>(dayjs());
+    const [endedAt, setEndedAt] = useState<Dayjs | null>(dayjs());
     const {store} = useStoreStore();
     const [analysisBusinessResponse, setAnalysisBusinessResponse] = useState<AnalysisBusinessResponseDto[] | null>(null);
 
