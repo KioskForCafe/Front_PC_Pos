@@ -71,7 +71,6 @@ export default function AnalysisCustomerDetail({ startedAt, endedAt }: props) {
         setNewVisitedUserCount(newVisitedUserCount);
         setTotalVisitedUserCount(totalVisitedUserCount);
         setUserTop10List(userTop10List);
-        console.log(newVisitedUserCount, totalVisitedUserCount, userTop10List);
     }
 
 

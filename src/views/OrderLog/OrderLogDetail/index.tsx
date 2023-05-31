@@ -78,7 +78,6 @@ export default function OrderLogDetail({ setOrderLogResponse, order }: props) {
             totalPrice: order.totalPrice
         }
 
-        console.log(data);
         axios
             .post(POST_ORDER_LOG_URL, data, authorizationHeader(accessToken))
             .then((response)=> postOrderLogResponseHandler(response))
@@ -119,7 +118,6 @@ export default function OrderLogDetail({ setOrderLogResponse, order }: props) {
             alert(message);
             return;
         }
-        console.log(data);
         setOrderLogResponse(data);
     }
 

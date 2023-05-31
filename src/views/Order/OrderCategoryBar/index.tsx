@@ -69,7 +69,6 @@ export default function OrderCategoryBar() {
 
     useEffect(()=>{
         getCategory(accessToken);
-        console.log(viewList.map(v=>console.log(v)))
     },[])
 
   return (

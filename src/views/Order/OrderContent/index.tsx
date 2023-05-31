@@ -82,7 +82,7 @@ export default function OrderContent({setMenuDetailView}:Props) {
 
   return (
     <Box sx={{flex:1, position:'relative' ,display:'flex', overflow:'auto', flexDirection:'column', backgroundColor:'#E6E8EB'}}>
-        <Typography sx={{p:'1rem'}}>총 {menuList?.length}개</Typography>
+        <Typography sx={{p:'1rem'}}>총 {viewList.length} / {menuList?.length}개</Typography>
         <Box sx={{flex:1, px:'1rem'}}>
             <Grid container rowSpacing={3} columnSpacing={1}>
                 {
@@ -114,7 +114,7 @@ export default function OrderContent({setMenuDetailView}:Props) {
             sx={{ position: 'absolute', bottom: 16, right: 16 }}
             icon={<SpeedDialIcon />}
             onClose={()=>setSpeedDialOpen(false)}
-            onOpen={()=>setSpeedDialOpen(true)}
+            onClick={()=>setSpeedDialOpen(!speedDialOpen)}
             open={speedDialOpen}
         >
             <SpeedDialAction

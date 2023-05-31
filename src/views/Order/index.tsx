@@ -4,7 +4,7 @@ import OrderCategoryBar from './OrderCategoryBar/';
 import OrderContent from './OrderContent/';
 import OrderDetail from './OrderDetail/';
 import MenuDetailCard from './MenuDetail';
-import PatchMenuDetail from './PatchMenuDetail';
+import PatchMenuDetail from './MenuDetail/PatchMenuDetail';
 
 export default function Order() {
 

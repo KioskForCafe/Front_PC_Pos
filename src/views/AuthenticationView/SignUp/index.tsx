@@ -71,7 +71,6 @@ export default function SignUp({setLoginView}:Props) {
     const onUserNameChangeHandler = (event:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
         const value = event.target.value;
         const isValidate = userNameValidator.test(value);
-        console.log(isValidate);
         setUserNamePatternCheck(isValidate);
         setUserName(value);
         
@@ -120,7 +119,6 @@ export default function SignUp({setLoginView}:Props) {
 
         const data : SignUpRequestDto ={ userId, userName, password, telNumber, userEmail ,admin:true };
 
-        console.log(data);
         axios.post(SIGN_UP_URL, data)
         .then((response)=> signUpResponseHanlder(response))
         .catch((error)=>signUpErrorHandler(error));
@@ -132,7 +130,6 @@ export default function SignUp({setLoginView}:Props) {
             alert(message);
             return;
         }
-        console.log(data)
         setDuplicateUserId(data.result);
     }
 

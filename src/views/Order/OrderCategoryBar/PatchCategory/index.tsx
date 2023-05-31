@@ -1,15 +1,15 @@
 import { Box, Button, Divider, FormControl, FormHelperText, IconButton, Input, InputLabel, Typography } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close';
 import React, { useState } from 'react'
-import { useCategoryListStore, useNavigationStore } from '../../../stores';
-import { Navigation } from '../../../constants/enum';
-import Category from '../../../interfaces/Category.interface';
+import { useCategoryListStore, useNavigationStore } from '../../../../stores';
+import { Navigation } from '../../../../constants/enum';
+import Category from '../../../../interfaces/Category.interface';
 import axios, { AxiosResponse } from 'axios';
-import { PatchCategoryRequestDto } from '../../../apis/request/category';
-import { DELETE_CATEGORY_URL, PATCH_CATEGORY_URL, authorizationHeader } from '../../../constants/api';
+import { PatchCategoryRequestDto } from '../../../../apis/request/category';
+import { DELETE_CATEGORY_URL, PATCH_CATEGORY_URL, authorizationHeader } from '../../../../constants/api';
 import { useCookies } from 'react-cookie';
-import ResponseDto from '../../../apis/response';
-import { DeleteCategoryResponseDto, PatchCategoryResponseDto } from '../../../apis/response/category';
+import ResponseDto from '../../../../apis/response';
+import { DeleteCategoryResponseDto, PatchCategoryResponseDto } from '../../../../apis/response/category';
 
 export default function PatchCategory() {
 

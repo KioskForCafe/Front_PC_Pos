@@ -67,7 +67,6 @@ export default function AnalysisBusinessView() {
 
     useEffect(() => {
         if (startedAt && endedAt) getAnalysisBusiness();
-        console.log();
     }, [store?.storeId, startedAt, endedAt]);
 
     return (

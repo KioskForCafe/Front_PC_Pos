@@ -23,9 +23,6 @@ const usePagingHook = (COUNT: number) => {
       if (list.length < index + 1) break;
       tmpList.push(list[index]);
     }
-    if(tmpList.length<COUNT){
-      tmpList.length=COUNT;
-    }
 
     setViewList(tmpList);
   }

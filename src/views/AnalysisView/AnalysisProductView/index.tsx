@@ -63,7 +63,6 @@ export default function AnalysisProductView() {
 
     useEffect(() => {
         if (startedAt && endedAt) getAnalysisProduct();
-        console.log();
     }, [store?.storeId, startedAt, endedAt]);
 
     return (

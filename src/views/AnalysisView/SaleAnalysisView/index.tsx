@@ -30,8 +30,6 @@ export default function SaleAnalysisView() {
 
     const accessToken = cookies.accessToken;
 
-    let isLoad = false;
-
     //         Event Handler          //
     const getSaleAnalysis = () => {
 
@@ -80,9 +78,6 @@ export default function SaleAnalysisView() {
     //          Use Effect          //
 
     useEffect(() => {
-        if (isLoad) return;
-        console.log(startedAt?.format('DD/MM/YYYY hh:mm:ss'), endedAt?.format('DD/MM/YYYY hh:mm:ss'));
-        isLoad = true;
         getSaleAnalysis();
     }, [startedAt, endedAt]);
 

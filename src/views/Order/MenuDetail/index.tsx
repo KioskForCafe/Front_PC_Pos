@@ -92,7 +92,7 @@ export default function MenuDetailCard({setEditView ,setMenuDetailView}: Props) 
 
   const onAddMenuButtonHandler = () =>{
 
-    menu!.optionList.map((option)=>{
+    menu!.optionList.forEach((option)=>{
       const optionId = (option.optionId)+'';
       if(checked[optionId] === true){
         const newOption : Option = {

@@ -11,12 +11,14 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import { OrderState } from '../../../constants/enum';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import UsePointView from './UsePointView';
 
 export default function OrderDetail() {
 
   const {store} = useStoreStore();
 
   const [totalPrice, setTotalPrice] = useState<number>(0);
+  const [usePointView, setUsePointView] = useState<boolean>(false);
 
   const {orderDetailList, setOrderDetailList , resetOrderDetailList} = useOrderDetailListStore();
 
@@ -47,11 +49,12 @@ export default function OrderDetail() {
       alert('상품을 담아주세요');
       return;
     }
+
     const patchList : PostOrderDetailRequestDto[] = [];
-    orderDetailList.map((orderDetail)=>{
+    orderDetailList.forEach((orderDetail)=>{
 
       const patchOptionList : number[] = [];
-      orderDetail.optionList.map((option)=>{
+      orderDetail.optionList.forEach((option)=>{
         patchOptionList.push(option.optionId);
       })
 
@@ -76,6 +79,16 @@ export default function OrderDetail() {
       .post(POST_ORDER_URL,data)
       .then((response)=>postOrderResponseHandler(response))
       .catch((error)=>postOrderErrorHandler(error))
+  }
+
+  const onUsePointButtonHandler = () => {
+    if(orderDetailList.length === 0) {
+      alert('상품을 담아주세요');
+      return;
+    }
+
+    setUsePointView(true);
+
   }
 
   const postOrderResponseHandler = (response: AxiosResponse<any, any>) => {
@@ -142,8 +155,10 @@ export default function OrderDetail() {
         </Box>
         <Box sx={{display:'flex', height: '4rem'}}>
             <Button onClick={()=>onPaymentButtonHandler()} sx={{flex:2}}>{`${totalPrice}원 결제`}</Button>
-            <Button sx={{flex:1}}>금액입력</Button>
+            <Button onClick={()=>onUsePointButtonHandler()} sx={{flex:1}}>포인트 사용</Button>
         </Box>
+
+        {usePointView && <UsePointView totalPrice={totalPrice} setUsePointView={setUsePointView}/>}
 
     </Box>
   )

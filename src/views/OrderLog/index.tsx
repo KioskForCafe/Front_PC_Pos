@@ -56,7 +56,6 @@ function OrderLog() {
             alert(message);
             return;
         }
-        console.log(data);
         setOrderLogResponse(data);
     }
 

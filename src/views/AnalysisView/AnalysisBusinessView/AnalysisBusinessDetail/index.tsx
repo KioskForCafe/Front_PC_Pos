@@ -196,7 +196,6 @@ export default function AnalysisBusinessDetail({ byTime }: props) {
     useEffect(() => {
         sorted = byTime.sort((a, b) => b.time - a.time);
         setSortedTime(sorted);
-        console.log(saleData);
     }, [byTime])
 
     return (

@@ -105,10 +105,6 @@ export default function PatchStoreView() {
             alert(message);
             return;
         }
-        console.log('storeImgUrl');
-        console.log(storeImgUrl);
-        console.log('storeLogoUrl');
-        console.log(storeLogoUrl);
         setStoreList(data);
         if (storeImgUrl) setStoreImgUrl(storeImgUrl);
         if (storeLogoUrl) setStoreLogoUrl(storeLogoUrl);

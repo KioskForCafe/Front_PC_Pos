@@ -1,13 +1,13 @@
 import { Box, Button, FormControl, FormHelperText, IconButton, Input, InputLabel, Typography } from '@mui/material'
 import React, { useState } from 'react'
-import { useNavigationStore, useStoreStore } from '../../../stores'
+import { useNavigationStore, useStoreStore } from '../../../../stores'
 import axios, { AxiosResponse } from 'axios';
-import { PostCategoryReqeustDto } from '../../../apis/request/category';
-import { POST_CATEGORY_URL, authorizationHeader } from '../../../constants/api';
+import { PostCategoryReqeustDto } from '../../../../apis/request/category';
+import { POST_CATEGORY_URL, authorizationHeader } from '../../../../constants/api';
 import { useCookies } from 'react-cookie';
-import ResponseDto from '../../../apis/response';
-import { PostCategoryResponseDto } from '../../../apis/response/category';
-import { Navigation } from '../../../constants/enum';
+import ResponseDto from '../../../../apis/response';
+import { PostCategoryResponseDto } from '../../../../apis/response/category';
+import { Navigation } from '../../../../constants/enum';
 import CloseIcon from '@mui/icons-material/Close';
 
 export default function PostCategory() {
