@@ -38,6 +38,7 @@ export const GET_CATEGORY_LIST_URL = (storeId: string) => `${HOST}api/category/l
 export const GET_ORDER_DETAIL_LIST_URL = (orderId: string) =>  `${HOST}api/order/${orderId}`;
 export const GET_ORDER_LOG_LIST_URL = (storeId: string, orderState: string) => `${HOST}api/order/list/${storeId}/${orderState}`;
 export const GET_ORDER_LIST_URL = (orderId: string) => `${HOST}api/order/${orderId}`;
+export const GET_ORDER_STATE_COUNT = (storeId: string) => `${HOST}api/order/count/${storeId}`;
 export const GET_USER_ANALYSIS_URL = (storeId: string, startedAt: string, endedAt: string) => `${HOST}api/analysis/user/${storeId}/${startedAt}/${endedAt}`
 
 export const PATCH_STORE_URL = `${HOST}api/store`;
