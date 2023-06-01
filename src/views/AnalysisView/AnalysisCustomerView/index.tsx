@@ -6,8 +6,8 @@ import AnalysisCustomerDetail from './AnalysisCustomerDetail'
 
 export default function AnalysisCustomerView() {
 
-    const [startedAt, setStartedAt] = useState<Dayjs | null>(dayjs('2023-05-10'));
-    const [endedAt, setEndedAt] = useState<Dayjs | null>(dayjs('2023-05-10'));
+    const [startedAt, setStartedAt] = useState<Dayjs | null>(dayjs());
+    const [endedAt, setEndedAt] = useState<Dayjs | null>(dayjs());
 
     const handleDatetimeChange = (startedAt: Dayjs, endedAt: Dayjs) => {
         setStartedAt(startedAt);
