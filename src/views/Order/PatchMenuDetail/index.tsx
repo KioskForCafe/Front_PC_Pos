@@ -2,15 +2,18 @@ import { Backdrop, Box, Button, FormControl, FormControlLabel, IconButton, Input
 import React, { ChangeEvent, Dispatch, useEffect, useRef, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import axios, { AxiosResponse } from 'axios';
-import { useCategoryListStore, useCategoryStore, useMenuStore, useStoreStore } from '../../../stores';
+import { useCategoryListStore, useCategoryStore, useMenuStore, useNavigationStore, useStoreStore } from '../../../stores';
 import { GetCategoryResponseDto } from '../../../apis/response/category';
-import { FILE_UPLOAD_URL, GET_CATEGORY_LIST_URL, PATCH_MENU_URL, authorizationHeader, mutipartHeader } from '../../../constants/api';
+import { FILE_UPLOAD_URL, GET_CATEGORY_LIST_URL, PATCH_MENU_URL, POST_ALARM_URL, authorizationHeader, mutipartHeader } from '../../../constants/api';
 import ResponseDto from '../../../apis/response';
 import CustomMenuItem from '../../../components/CustomMenuItem/CustomMenuItem';
 import { useCookies } from 'react-cookie';
 import { PatchMenuRequestDto } from '../../../apis/request/menu';
 import { PatchMenuResponseDto } from '../../../apis/response/menu';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
+import { PostAlarmRequestDto } from '../../../apis/request/alarm';
+import { Navigation, AlarmMessage } from '../../../constants/enum';
+import { PostAlarmResponseDto } from '../../../apis/response/alarm';
 
 interface Option {
     optionId: number | null;
@@ -24,6 +27,7 @@ interface Props {
 
 export default function PatchMenuDetail({setEditView}: Props) {
 
+    const {setNavigation} = useNavigationStore();
     const {menu,setMenu} = useMenuStore();
     const {store} = useStoreStore();
     const {category,setCategory} = useCategoryStore();
@@ -44,6 +48,8 @@ export default function PatchMenuDetail({setEditView}: Props) {
 
     const [cookies] = useCookies();
     const accessToken = cookies.accessToken;
+
+    //         Event Handler          //
 
     const onMenuImageUploadButtonHandler = () => {
         if (!menuImageRef.current) return;
@@ -69,7 +75,10 @@ export default function PatchMenuDetail({setEditView}: Props) {
         axios
             .patch(PATCH_MENU_URL,data,authorizationHeader(accessToken))
             .then((response)=>patchMenuResponseHandler(response))
-            .catch((error)=>patchMenuErrorHandler(error))
+            .catch((error)=>patchMenuErrorHandler(error));
+
+            postAlarm(accessToken);
+
     }
 
     const onCategorySelectChangeHandler = (event: SelectChangeEvent<number>) =>{
@@ -93,6 +102,30 @@ export default function PatchMenuDetail({setEditView}: Props) {
         setOptionPrice('');
       }
 
+      const postAlarm = (accessToken: string) => {
+        if (!accessToken) {
+            alert('로그인이 필요합니다.')
+            return;
+        }
+    
+        if (store?.storeId == null) {
+            alert('점포가 존재하지 않습니다.')
+            return;
+        }
+        const data : PostAlarmRequestDto = {
+            message: AlarmMessage.MENU_MODIFIED,
+            isRead: false,
+            createdAt: new Date(),    
+            storeId: store.storeId
+        }
+    
+        axios.post(POST_ALARM_URL, data, authorizationHeader(accessToken))
+        .then((response) => postAlarmResponseHandler(response))
+        .catch((error) => postAlarmErrorHandler(error));
+    }
+
+      //              Response Handler                //
+
     const menuImageUploadResponseHandler = (response: AxiosResponse<any, any>) => {
         const imageUrl = response.data as string;
         if (!imageUrl) return;
@@ -112,6 +145,17 @@ export default function PatchMenuDetail({setEditView}: Props) {
         setEditView(false);
     }
 
+    const postAlarmResponseHandler = (response: AxiosResponse<any, any>) => {
+        const {data,message,result} = response.data as ResponseDto<PostAlarmResponseDto>
+        if(!result || !data){
+          alert(message);
+          return;
+        }
+        setNavigation(Navigation.AlarmView);
+      }
+
+      //          Error Handler           //
+
     const menuImageUploadErrorHandler = (error: any) => {
         console.log(error.message);
     }
@@ -119,6 +163,13 @@ export default function PatchMenuDetail({setEditView}: Props) {
     const patchMenuErrorHandler = (error: any) => {
         console.log(error.message);
     }
+
+    const postAlarmErrorHandler = (error: any) => {
+        console.log(error.message);
+    }
+
+    
+    //          Use Effect          //
 
     useEffect(()=>{
     },[optionList])

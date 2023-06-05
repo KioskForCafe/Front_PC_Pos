@@ -1,6 +1,6 @@
 import { Backdrop, Box, Button, Checkbox, FormControlLabel, IconButton, Typography } from '@mui/material'
 import React, { ChangeEvent, Dispatch, useEffect, useState } from 'react'
-import { useCategoryStore, useMenuStore, useOrderDetailListStore } from '../../../stores'
+import { useCategoryStore, useMenuStore, useOrderDetailListStore, useStoreStore } from '../../../stores'
 import IndeterminateCheckBoxOutlinedIcon from '@mui/icons-material/IndeterminateCheckBoxOutlined';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import CloseIcon from '@mui/icons-material/Close';
@@ -9,10 +9,13 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { confirmAlert } from 'react-confirm-alert';
 import axios, { AxiosResponse } from 'axios';
-import { DELETE_MENU_URL, authorizationHeader } from '../../../constants/api';
+import { DELETE_MENU_URL, POST_ALARM_URL, authorizationHeader } from '../../../constants/api';
 import { useCookies } from 'react-cookie';
 import ResponseDto from '../../../apis/response';
 import { DeleteMenuResponseDto } from '../../../apis/response/menu';
+import { PostAlarmRequestDto } from '../../../apis/request/alarm';
+import { PostAlarmResponseDto } from '../../../apis/response/alarm';
+import { AlarmMessage } from '../../../constants/enum';
 
 interface Option{
   optionId: number;
@@ -35,6 +38,7 @@ export default function MenuDetailCard({setEditView ,setMenuDetailView}: Props) 
   const [checked, setChecked] = useState<{[key:string]:boolean}>({});
   const [backdropOpen, setBackdropOpen] = useState<boolean>(true);
   const [cookies] = useCookies();
+  const {store} = useStoreStore();
 
   const accessToken = cookies.accessToken;
 
@@ -67,11 +71,14 @@ export default function MenuDetailCard({setEditView ,setMenuDetailView}: Props) 
             .then((response)=>onDeleteMenuResponseHandler(response))
             .catch((error)=>onDeleteMenuErrorHandler(error))
 
+        postRemoveAlarm(accessToken);
+
         }
         const onNoButtonHandler = () =>{
           setBackdropOpen(true);
           onClose()
         }
+
 
         return (
           <>
@@ -139,6 +146,41 @@ export default function MenuDetailCard({setEditView ,setMenuDetailView}: Props) 
   const onDeleteMenuErrorHandler = (error: any) => {
     console.log(error.message);
   }
+
+  
+  const postRemoveAlarm = (accessToken: string) => {
+    if (!accessToken) {
+        alert('로그인이 필요합니다.')
+        return;
+    }
+
+    if (store?.storeId == null) {
+        alert('점포가 존재하지 않습니다.')
+        return;
+    }
+    const data : PostAlarmRequestDto = {
+        message: AlarmMessage.MENU_REMOVED,
+        isRead: false,
+        createdAt: new Date(),    
+        storeId: store.storeId
+    }
+
+    axios.post(POST_ALARM_URL, data, authorizationHeader(accessToken))
+    .then((response) => postAlarmResponseHandler(response))
+    .catch((error) => postAlarmErrorHandler(error));
+}
+
+const postAlarmResponseHandler = (response: AxiosResponse<any, any>) => {
+  const {data,message,result} = response.data as ResponseDto<PostAlarmResponseDto>
+  if(!result || !data){
+    alert(message);
+    return;
+  }
+}
+
+const postAlarmErrorHandler = (error: any) => {
+  console.log(error.message);
+}
 
   useEffect(()=>{
     
