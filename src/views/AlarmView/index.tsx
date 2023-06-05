@@ -18,6 +18,7 @@ export default function AlarmView() {
 
     const accessToken = cookies.accessToken;
 
+
     //         Event Handler          //
 
     const getAlarm = (accessToken: string) => {
@@ -60,6 +61,8 @@ export default function AlarmView() {
         console.log(error.message);
     }
 
+    //             Use Effect              //
+
     useEffect(() => {
         getAlarm(accessToken);
     }, [])
@@ -67,19 +70,20 @@ export default function AlarmView() {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '88vh', width: '100%', overflow: 'hidden'}}>
-        <Box sx={{pl: '20px', display: 'flex', backgroundColor: '#E6E8EB'}}>
-            <Box sx={{ width: '100%', p: '10px', flex: 1, display : 'flex', flexDirection: 'column', flexWrap: 'wrap', overflow: 'auto' }}>
+        <Box sx={{pl: '20px', display: 'flex', flex: 1, backgroundColor: '#E6E8EB'}}>
+            <Box sx={{ p: '10px', flex: 1, display : 'flex', flexWrap: 'wrap', overflow: 'auto' }}>
                 { alarmResponse && alarmResponse.map((alarm) => (
-                    <>
-                    <Box sx={{ p: '10px', display: 'flex', justifyContent: 'center', alignContent: 'center'}}>
-                        <Typography sx={{ flex: 0.3, fontSize: '25px', fontWeight: 600 }}>{alarm.alarmId}</Typography>
-                        <Typography sx={{ flex: 0.3}}>{(alarm.createdAt + '').slice(0, 10) + ' ' + (alarm.createdAt + '').slice(11, 13) + '시' + (alarm.createdAt + '').slice(14, 16) + '분'}</Typography>
-                        <Typography sx={{ flex: 1, fontsize: '30px' }}>{alarm.alarmMessage}</Typography>
+                    <Box sx={{  m: '10px', display: 'flex', flexDirection: 'column', backgroundColor: 'white', height: '8rem', borderRadius: '1rem', flex: '0 0 auto', marginBottom: '20px'}}>
+                        <Box sx={{ p: '10px', display: 'flex', flex: 0.5, alignItems: 'center' }}>
+                            <Typography sx={{ mr: '20px',fontSize: '25px', fontWeight: 600 }}>{alarm.alarmId}</Typography>
+                            <Typography sx={{ mr: '20px'}}>{(alarm.createdAt + '').slice(0, 10) + ' ' + (alarm.createdAt + '').slice(11, 13) + '시' + (alarm.createdAt + '').slice(14, 16) + '분'}</Typography>
+                        </Box>
+                        <Divider />
+                        <Box sx={{p: '10px', flex: 3, flexDirection: 'column'}}>
+                            <Typography sx={{ flex: 1, fontsize: '30px' }}>{alarm.alarmMessage}</Typography>
+                        </Box>
                     </Box>
-                    <Divider/>
-                    </>
-                ))
-                }
+                ))}
             </Box>
         </Box>
     </Box>

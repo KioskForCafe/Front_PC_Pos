@@ -101,7 +101,7 @@ function OrderLog() {
 
     useEffect(() => {
       getOrderStateCount(accessToken);
-      }, []);
+      }, [orderStateCounts]);
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '88vh', width: '100%', overflow: 'hidden'}}>
