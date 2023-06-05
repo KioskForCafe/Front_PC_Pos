@@ -102,6 +102,7 @@ const postRemoveAlarm = (accessToken: string) => {
   axios.post(POST_ALARM_URL, data, authorizationHeader(accessToken))
   .then((response) => postAlarmResponseHandler(response))
   .catch((error) => postAlarmErrorHandler(error));
+
 }
 
   //              Response Handler                //
