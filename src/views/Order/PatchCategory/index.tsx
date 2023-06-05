@@ -38,7 +38,9 @@ export default function PatchCategory() {
     axios
       .delete(DELETE_CATEGORY_URL(category.categoryId), authorizationHeader(accessToken))
       .then((response)=> onDeleteCategoryResponseHandler(response))
-      .catch((error)=>onDeleteCategoryErrorHandler(error))
+      .catch((error)=>onDeleteCategoryErrorHandler(error));
+
+      postRemoveAlarm(accessToken);
   }
 
   const onUpdateCategoryButtonHandler = () => {
@@ -54,11 +56,11 @@ export default function PatchCategory() {
       .then((response)=> onUpdateCategoryResponseHandler(response))
       .catch((error)=>onUpdateCategoryErrorHandler(error));
 
-      postAlarm(accessToken);
+      postModifyAlarm(accessToken);
 
   }
 
-  const postAlarm = (accessToken: string) => {
+  const postModifyAlarm = (accessToken: string) => {
     if (!accessToken) {
         alert('로그인이 필요합니다.')
         return;
@@ -78,6 +80,29 @@ export default function PatchCategory() {
     axios.post(POST_ALARM_URL, data, authorizationHeader(accessToken))
     .then((response) => postAlarmResponseHandler(response))
     .catch((error) => postAlarmErrorHandler(error));
+}
+
+const postRemoveAlarm = (accessToken: string) => {
+  if (!accessToken) {
+      alert('로그인이 필요합니다.')
+      return;
+  }
+
+  if (store?.storeId == null) {
+      alert('점포가 존재하지 않습니다.')
+      return;
+  }
+  const data : PostAlarmRequestDto = {
+      message: AlarmMessage.CATEGORY_REMOVED,
+      isRead: false,
+      createdAt: new Date(),    
+      storeId: store.storeId
+  }
+
+  axios.post(POST_ALARM_URL, data, authorizationHeader(accessToken))
+  .then((response) => postAlarmResponseHandler(response))
+  .catch((error) => postAlarmErrorHandler(error));
+
 }
 
   //              Response Handler                //
