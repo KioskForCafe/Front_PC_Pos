@@ -9,7 +9,8 @@ export enum Navigation {
     PatchStoreView = 'PatchStoreView',
     PostMenu = 'PostMenu',
     PostCategory = 'PostCategory',
-    PatchCategory = 'PatchCategory'
+    PatchCategory = 'PatchCategory',
+    AlarmView = 'AlarmView'
 }
 
 export enum OrderState{
@@ -18,4 +19,13 @@ export enum OrderState{
     COMPLETE = 'Complete',
     REFUND = 'Refund',
     REJECT = 'Reject'
+}
+
+export enum AlarmMessage {
+    MENU_REGISTER = "메뉴가 등록되었습니다.",
+    MENU_MODIFIED = "메뉴가 수정되었습니다.",
+    MENU_REMOVED = "메뉴가 삭제되었습니다.",
+    CATEGORY_REGISTER = "카테고리가 등록되었습니다.",
+    CATEGORY_MODIFIED = "카테고리가 수정되었습니다.",
+    CATEGORY_REMOVED = "카테고리가 삭제되었습니다."
 }

@@ -15,7 +15,7 @@ function Footer() {
                 <Button onClick={()=>setNavigation(Navigation.OrderLog)} sx={{flex:1, textAlign:'center', fontWeight: 'bold', color:'grey'}}>주문내역</Button>
                 <Button onClick={()=>setNavigation(Navigation.AnalysisView)} sx={{flex:1, textAlign:'center', fontWeight: 'bold', color:'grey'}}>매장분석</Button>
                 <Box sx={{flex:1, textAlign:'center', fontWeight: 'bold', color:'grey'}}>
-                    <Button>
+                    <Button onClick={() => setNavigation(Navigation.AlarmView)}>
                         <Badge badgeContent="" color='primary' variant='dot'>
                             <NotificationsIcon/>
                         </Badge>
