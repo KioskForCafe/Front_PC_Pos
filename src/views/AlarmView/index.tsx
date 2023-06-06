@@ -7,6 +7,7 @@ import axios, { AxiosResponse } from 'axios';
 import { useStoreStore } from '../../stores';
 import ResponseDto from '../../apis/response';
 import { PostAlarmRequestDto } from '../../apis/request/alarm';
+import dayjs, { Dayjs } from 'dayjs';
 
 export default function AlarmView() {
 
@@ -46,6 +47,12 @@ export default function AlarmView() {
             alert(message);
             return;
         }
+        data.map((alarm) => {
+            const createdAt: Dayjs = dayjs(alarm.createdAt);
+            createdAt.add(9, 'hours');
+            alarm.createdAt = createdAt.toDate();
+        });
+
         setAlarmResponse(data);
      }
 
@@ -76,7 +83,7 @@ export default function AlarmView() {
                     <Box sx={{  m: '10px', display: 'flex', flexDirection: 'column', backgroundColor: 'white', height: '8rem', borderRadius: '1rem', flex: '0 0 auto', marginBottom: '20px'}}>
                         <Box sx={{ p: '10px', display: 'flex', flex: 0.5, alignItems: 'center' }}>
                             <Typography sx={{ mr: '20px',fontSize: '25px', fontWeight: 600 }}>{alarm.alarmId}</Typography>
-                            <Typography sx={{ mr: '20px'}}>{(alarm.createdAt + '').slice(0, 10) + ' ' + (alarm.createdAt + '').slice(11, 13) + '시' + (alarm.createdAt + '').slice(14, 16) + '분'}</Typography>
+                            <Typography sx={{ mr: '20px'}}>{alarm.createdAt.getFullYear()+ '년 ' + alarm.createdAt.getMonth() + '월 ' + alarm.createdAt.getDate() + '일 ' + alarm.createdAt.getHours() + '시 ' + alarm.createdAt.getMinutes() + '분' }</Typography>
                         </Box>
                         <Divider />
                         <Box sx={{p: '10px', flex: 3, flexDirection: 'column'}}>
