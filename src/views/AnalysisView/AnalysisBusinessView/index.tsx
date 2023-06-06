@@ -54,6 +54,12 @@ export default function AnalysisBusinessView() {
             alert(message);
             return;
         }
+
+        data.map((time) => {
+            const createdAt= time.time + 9;
+            time.time = createdAt;
+        });
+        
         setAnalysisBusinessResponse(data);
     }
 
