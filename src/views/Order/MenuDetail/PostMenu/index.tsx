@@ -1,16 +1,18 @@
 import { Box, Button, FormControl, IconButton, Input, InputAdornment, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material'
 import axios, { AxiosResponse } from 'axios';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
-import { FILE_UPLOAD_URL, GET_CATEGORY_LIST_URL, POST_MENU_URL, authorizationHeader, mutipartHeader } from '../../../../constants/api';
+import { FILE_UPLOAD_URL, GET_CATEGORY_LIST_URL, POST_ALARM_URL, POST_MENU_URL, authorizationHeader, mutipartHeader } from '../../../../constants/api';
 import { useNavigationStore, useStoreStore } from '../../../../stores';
 import ResponseDto from '../../../../apis/response';
 import { GetCategoryResponseDto } from '../../../../apis/response/category';
 import { useCookies } from 'react-cookie';
 import { PostMenuResponseDto } from '../../../../apis/response/menu';
 import { PostMenuRequestDto } from '../../../../apis/request/menu';
-import { Navigation } from '../../../../constants/enum';
+import { AlarmMessage, Navigation } from '../../../../constants/enum';
 import CloseIcon from '@mui/icons-material/Close';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
+import { PostAlarmRequestDto } from '../../../../apis/request/alarm';
+import { PostAlarmResponseDto } from '../../../../apis/response/alarm';
 
 interface Option{
   optionName : string;
@@ -38,6 +40,8 @@ export default function PostMenu() {
   const [cookies] = useCookies();
 
   const accessToken = cookies.accessToken;
+
+  //         Event Handler          //
 
   const onMenuImageUploadButtonHandler = () => {
     if (!menuImageRef.current) return;
@@ -79,7 +83,9 @@ export default function PostMenu() {
 
     axios.post(POST_MENU_URL, data , authorizationHeader(accessToken))
     .then((response)=>onAddMenuResponseHandler(response))
-    .catch((error)=> onAddMenuErrorHandler(error))
+    .catch((error)=> onAddMenuErrorHandler(error));
+
+    postAlarm(accessToken);
 
   }
 
@@ -95,6 +101,33 @@ export default function PostMenu() {
     optionList.splice(index,1);
     setOptionList([...optionList]);
   }
+
+  const postAlarm = (accessToken: string) => {
+    if (!accessToken) {
+        alert('로그인이 필요합니다.')
+        return;
+    }
+
+    if (store?.storeId == null) {
+        alert('점포가 존재하지 않습니다.')
+        return;
+    }
+    const data : PostAlarmRequestDto = {
+        message: AlarmMessage.MENU_REGISTER,
+        isRead: false,
+        createdAt: new Date(),    
+        storeId: store.storeId
+    }
+
+    axios.post(POST_ALARM_URL, data, authorizationHeader(accessToken))
+    .then((response) => postAlarmResponseHandler(response))
+    .catch((error) => postAlarmErrorHandler(error));
+
+    console.log(data);
+
+}
+
+  //              Response Handler                //
 
   const menuImageUploadResponseHandler = (response: AxiosResponse<any, any>) => {
     const imageUrl = response.data as string;
@@ -121,6 +154,16 @@ export default function PostMenu() {
     setNavigation(Navigation.Order);
   }
 
+  const postAlarmResponseHandler = (response: AxiosResponse<any, any>) => {
+    const {data,message,result} = response.data as ResponseDto<PostAlarmResponseDto[]>
+    if(!result || !data){
+      alert(message);
+      return;
+    }
+  }
+
+  //          Error Handler           //
+
   const menuImageUploadErrorHandler = (error: any) => {
     console.log(error.message);
 }
@@ -132,6 +175,12 @@ export default function PostMenu() {
   const onAddMenuErrorHandler = (error: any) =>{
     console.log(error.message);
   }
+
+  const postAlarmErrorHandler = (error: any) =>{
+    console.log(error.message);
+  }
+
+  //      Use Effect      //
   
   useEffect(()=>{
     getCategoryList();

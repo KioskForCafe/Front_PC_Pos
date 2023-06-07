@@ -1,18 +1,19 @@
-import { Box, Button, Divider, IconButton, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Box, Button, Divider, Icon, IconButton, Typography } from '@mui/material';
+import React, { useCallback, useEffect, useState } from 'react';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useNavigate } from 'react-router-dom';
-import { GET_ORDER_LOG_LIST_URL, authorizationHeader } from '../../constants/api';
+import { GET_ORDER_LOG_LIST_URL, GET_ORDER_STATE_COUNT, authorizationHeader } from '../../constants/api';
 import useStore from '../../stores/user.store';
 import axios, { AxiosResponse } from 'axios';
 import { useCookies } from 'react-cookie';
 import ResponseDto from '../../apis/response';
 import User from '../../interfaces/User.interface';
-import { GetOrderDetailListResponseDto, GetOrderListResponseDto } from '../../apis/response/order';
+import { GetOrderDetailListResponseDto, GetOrderListResponseDto, GetOrderStateResponseDto } from '../../apis/response/order';
 import { useStoreStore } from '../../stores';
 import OrderLogDetail from './OrderLogDetail';
 import { Navigation, OrderState } from '../../constants/enum';
+import CircleIcon from '@mui/icons-material/Circle';
 
 
 function OrderLog() {
@@ -21,6 +22,7 @@ function OrderLog() {
     const [orderLogResponse, setOrderLogResponse] = useState<GetOrderListResponseDto[] | null>(null);
 
     const [orderState, setOrderState] = useState<string>(OrderState.WAITING);
+    const [orderStateCounts, setOrderStateCounts] = useState<GetOrderStateResponseDto[]>([]);
 
     const { store } = useStoreStore();
 
@@ -46,7 +48,17 @@ function OrderLog() {
 
     }
 
+    const getOrderStateCount = (accessToken: string) => {
+        axios.get(GET_ORDER_STATE_COUNT(store?.storeId+''), authorizationHeader(accessToken))
+        .then((response) => getOrderStateCountResponseHandler(response))
+        .catch((error) => getOrderStateCountErrorHandler(error));
+    }
 
+    const stateNameMapping: Record<string, string> = {
+        Waiting: '대기',
+        Confirm: '접수',
+        Complete: '완료'
+      };
 
     //              Response Handler                //
 
@@ -59,6 +71,14 @@ function OrderLog() {
         setOrderLogResponse(data);
     }
 
+    const getOrderStateCountResponseHandler = (response: AxiosResponse<any,any>) => {
+        const {result, message, data} = response.data as ResponseDto<GetOrderStateResponseDto[]>;
+        if(!result || !data) {
+            alert(message);
+            return;
+        }
+        setOrderStateCounts(data);
+    }
 
 
     //          Error Handler           //
@@ -67,6 +87,9 @@ function OrderLog() {
         console.log(error.message);
     }
 
+    const getOrderStateCountErrorHandler = (error: any) => {
+        console.log(error.message);
+    }
 
 
     //          Use Effect              /
@@ -75,12 +98,22 @@ function OrderLog() {
         getOrderLog(accessToken);
     }, [orderState]);
 
+    useEffect(() => {
+      getOrderStateCount(accessToken);
+      }, [orderStateCounts]);
+
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '88vh', width: '100%', overflow: 'hidden'}}>
             <Box sx={{ display: 'flex', border: '1px solid #FFFFFF', height: '5vh', alignItems: 'center' }}>
                 <Button sx={{ flex: 1, textAlign: 'center', color: 'grey', bgcolor: orderState===OrderState.WAITING ? '#1976d250' : '' }} onClick={() => setOrderState(OrderState.WAITING)}>대기</Button>
                 <Button sx={{ flex: 1, textAlign: 'center', color: 'grey', bgcolor: orderState===OrderState.CONFIRM ? '#1976d250' : '' }} onClick={() => setOrderState(OrderState.CONFIRM)}>접수</Button>
                 <Button sx={{ flex: 1, textAlign: 'center', color: 'grey', bgcolor: orderState===OrderState.COMPLETE ? '#1976d250' : '' }} onClick={() => setOrderState(OrderState.COMPLETE)}>완료</Button>
+            </Box>
+            <Box sx={{pt: '10px', pl: '20px', display: 'flex', backgroundColor: '#E6E8EB'}}> {
+                orderStateCounts.map((stateCount) => (
+                <Typography key={stateCount.orderState} sx={{ mr: '10px', fontSize: '1.2rem',fontWeight: 600}}>{stateNameMapping[stateCount.orderState]}: {stateCount.orderStateCount}건</Typography>
+                ))
+            }
             </Box>
             <Box sx={{ width: '100%', p: '10px', backgroundColor: '#E6E8EB', flex: 1, display : 'flex', flexDirection: 'row', flexWrap: 'wrap', overflow: 'auto' }}>
                 {orderLogResponse && orderLogResponse?.map?.((order) =>

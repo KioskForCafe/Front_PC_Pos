@@ -1,19 +1,22 @@
 import { Box, Button, Divider, FormControl, FormHelperText, IconButton, Input, InputLabel, Typography } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close';
 import React, { useState } from 'react'
-import { useCategoryListStore, useNavigationStore } from '../../../../stores';
-import { Navigation } from '../../../../constants/enum';
+import { useCategoryListStore, useNavigationStore, useStoreStore } from '../../../../stores';
+import { AlarmMessage, Navigation } from '../../../../constants/enum';
 import Category from '../../../../interfaces/Category.interface';
 import axios, { AxiosResponse } from 'axios';
 import { PatchCategoryRequestDto } from '../../../../apis/request/category';
-import { DELETE_CATEGORY_URL, PATCH_CATEGORY_URL, authorizationHeader } from '../../../../constants/api';
+import { DELETE_CATEGORY_URL, PATCH_CATEGORY_URL, POST_ALARM_URL, authorizationHeader } from '../../../../constants/api';
 import { useCookies } from 'react-cookie';
 import ResponseDto from '../../../../apis/response';
 import { DeleteCategoryResponseDto, PatchCategoryResponseDto } from '../../../../apis/response/category';
+import { PostAlarmRequestDto } from '../../../../apis/request/alarm';
+import { PostAlarmResponseDto } from '../../../../apis/response/alarm';
 
 export default function PatchCategory() {
 
   const {setNavigation} = useNavigationStore();
+  const { store } = useStoreStore();
   const {categoryList, setCategoryList} = useCategoryListStore();
   const [category, setCategory] = useState<Category>(categoryList[0]);
   const [categoryName, setCategoryName] = useState<string>(category.categoryName);
@@ -22,6 +25,8 @@ export default function PatchCategory() {
   const [cookies] = useCookies();
 
   const accessToken = cookies.accessToken;
+
+  //         Event Handler          //
 
   const onCategorySelectButtonHandler = (category : Category) => {
     setCategory(category);
@@ -33,7 +38,9 @@ export default function PatchCategory() {
     axios
       .delete(DELETE_CATEGORY_URL(category.categoryId), authorizationHeader(accessToken))
       .then((response)=> onDeleteCategoryResponseHandler(response))
-      .catch((error)=>onDeleteCategoryErrorHandler(error))
+      .catch((error)=>onDeleteCategoryErrorHandler(error));
+
+      postRemoveAlarm(accessToken);
   }
 
   const onUpdateCategoryButtonHandler = () => {
@@ -47,8 +54,58 @@ export default function PatchCategory() {
     axios
       .patch(PATCH_CATEGORY_URL, data, authorizationHeader(accessToken))
       .then((response)=> onUpdateCategoryResponseHandler(response))
-      .catch((error)=>onUpdateCategoryErrorHandler(error))
+      .catch((error)=>onUpdateCategoryErrorHandler(error));
+
+      postModifyAlarm(accessToken);
+
   }
+
+  const postModifyAlarm = (accessToken: string) => {
+    if (!accessToken) {
+        alert('로그인이 필요합니다.')
+        return;
+    }
+
+    if (store?.storeId == null) {
+        alert('점포가 존재하지 않습니다.')
+        return;
+    }
+    const data : PostAlarmRequestDto = {
+        message: AlarmMessage.CATEGORY_MODIFIED,
+        isRead: false,
+        createdAt: new Date(),    
+        storeId: store.storeId
+    }
+
+    axios.post(POST_ALARM_URL, data, authorizationHeader(accessToken))
+    .then((response) => postAlarmResponseHandler(response))
+    .catch((error) => postAlarmErrorHandler(error));
+}
+
+const postRemoveAlarm = (accessToken: string) => {
+  if (!accessToken) {
+      alert('로그인이 필요합니다.')
+      return;
+  }
+
+  if (store?.storeId == null) {
+      alert('점포가 존재하지 않습니다.')
+      return;
+  }
+  const data : PostAlarmRequestDto = {
+      message: AlarmMessage.CATEGORY_REMOVED,
+      isRead: false,
+      createdAt: new Date(),    
+      storeId: store.storeId
+  }
+
+  axios.post(POST_ALARM_URL, data, authorizationHeader(accessToken))
+  .then((response) => postAlarmResponseHandler(response))
+  .catch((error) => postAlarmErrorHandler(error));
+
+}
+
+  //              Response Handler                //
 
   const onDeleteCategoryResponseHandler = (response: AxiosResponse<any, any>) => {
     const {data,message,result} = response.data as ResponseDto<DeleteCategoryResponseDto[]>
@@ -68,11 +125,25 @@ export default function PatchCategory() {
     setCategoryList(data);
   }
 
+  const postAlarmResponseHandler = (response: AxiosResponse<any, any>) => {
+    const {data,message,result} = response.data as ResponseDto<PostAlarmResponseDto>
+    if(!result || !data){
+      alert(message);
+      return;
+    }
+  }
+
+  //          Error Handler           //
+
   const onDeleteCategoryErrorHandler = (error: any) => {
     console.log(error.message);
   }
 
   const onUpdateCategoryErrorHandler = (error: any) => {
+    console.log(error.message);
+  }
+
+  const postAlarmErrorHandler = (error: any) => {
     console.log(error.message);
   }
 

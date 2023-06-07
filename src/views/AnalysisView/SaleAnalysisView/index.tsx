@@ -23,8 +23,8 @@ export default function SaleAnalysisView() {
     const [saleCount, setSaleCount] = useState<number>();
     const [avgSaleAmount, setAvgSaleAmount] = useState<number>();
 
-    const [startedAt, setStartedAt] = useState<Dayjs | null>(dayjs('2023-05-10'));
-    const [endedAt, setEndedAt] = useState<Dayjs | null>(dayjs('2023-05-10'));
+    const [startedAt, setStartedAt] = useState<Dayjs | null>(dayjs());
+    const [endedAt, setEndedAt] = useState<Dayjs | null>(dayjs());
 
     const [cookies] = useCookies();
 

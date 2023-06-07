@@ -17,8 +17,8 @@ export default function AnalysisProductView() {
 
     const { store } = useStoreStore();
 
-    const [startedAt, setStartedAt] = useState<Dayjs | null>(dayjs('2023-05-10'));
-    const [endedAt, setEndedAt] = useState<Dayjs | null>(dayjs('2023-05-10'));
+    const [startedAt, setStartedAt] = useState<Dayjs | null>(dayjs());
+    const [endedAt, setEndedAt] = useState<Dayjs | null>(dayjs());
     const [analysisProductResponse, setAnalysisProductResponse] = useState<AnalysisMenuResponseDto | null>(null);
 
     const [cookies] = useCookies();
