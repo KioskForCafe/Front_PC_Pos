@@ -21,8 +21,6 @@ function OrderLog() {
 
     const [orderLogResponse, setOrderLogResponse] = useState<GetOrderListResponseDto[] | null>(null);
 
-    // const [orderLogCountResponse, setOrderLogCountResponse] = useState<GetOrderListCountResponseDto>(0);
-
     const [orderState, setOrderState] = useState<string>(OrderState.WAITING);
     const [orderStateCounts, setOrderStateCounts] = useState<GetOrderStateResponseDto[]>([]);
 

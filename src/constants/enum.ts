@@ -10,7 +10,8 @@ export enum Navigation {
     PostMenu = 'PostMenu',
     PostCategory = 'PostCategory',
     PatchCategory = 'PatchCategory',
-    AlarmView = 'AlarmView'
+    AlarmView = 'AlarmView',
+    Point = 'Point'
 }
 
 export enum OrderState{
