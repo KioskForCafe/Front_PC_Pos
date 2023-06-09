@@ -15,10 +15,11 @@ import { OrderState } from '../../../constants/enum';
 
 interface props {
     order : GetOrderListResponseDto;
+    orderLogResponse: GetOrderListResponseDto[];
     setOrderLogResponse: React.Dispatch<React.SetStateAction<GetOrderListResponseDto[] | null>>;
 }
 
-export default function OrderLogDetail({ setOrderLogResponse, order }: props) {
+export default function OrderLogDetail({ setOrderLogResponse,orderLogResponse, order }: props) {
 
     const {user} = useUserStore();
     const {store} = useStoreStore();
@@ -140,7 +141,7 @@ export default function OrderLogDetail({ setOrderLogResponse, order }: props) {
 
     useEffect(() => {
         getOrderDetail(order.orderId, accessToken);
-    }, []);
+    }, [orderLogResponse]);
 
     return (
         <Box>

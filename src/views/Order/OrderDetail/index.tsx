@@ -12,6 +12,7 @@ import { OrderState } from '../../../constants/enum';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import UsePointView from './UsePointView';
+import { bootPayHook } from '../../../hooks';
 
 export default function OrderDetail() {
 
@@ -43,7 +44,7 @@ export default function OrderDetail() {
     setOrderDetailList(newOrderDetail);
   }
 
-  const onPaymentButtonHandler = () => {
+  const onPaymentButtonHandler = async () => {
 
     if(orderDetailList.length === 0) {
       alert('상품을 담아주세요');
@@ -53,14 +54,18 @@ export default function OrderDetail() {
     const patchList : PostOrderDetailRequestDto[] = [];
     orderDetailList.forEach((orderDetail)=>{
 
+      let optionPrice = 0;
+
       const patchOptionList : number[] = [];
       orderDetail.optionList.forEach((option)=>{
         patchOptionList.push(option.optionId);
+        optionPrice += option.optionPrice;
       })
 
       const patch : PostOrderDetailRequestDto = {
         menuId: orderDetail.menuId,
         menuCount: orderDetail.menuCount,
+        priceWithOption: orderDetail.menuPrice + optionPrice,
         optionList: patchOptionList
       }
       
@@ -74,11 +79,21 @@ export default function OrderDetail() {
       orderDetailList: patchList,
       orderState: OrderState.WAITING
     }
-    
-    axios
-      .post(POST_ORDER_URL,data)
-      .then((response)=>postOrderResponseHandler(response))
-      .catch((error)=>postOrderErrorHandler(error))
+
+    const response = await bootPayHook();
+
+    switch (response.event) {
+      case 'issued' :
+        break
+      case 'done' :
+        axios
+          .post(POST_ORDER_URL,data)
+          .then((response)=>postOrderResponseHandler(response))
+          .catch((error)=>postOrderErrorHandler(error))
+        break
+      case 'error' :
+        break
+    }
   }
 
   const onUsePointButtonHandler = () => {

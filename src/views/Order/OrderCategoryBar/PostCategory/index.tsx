@@ -2,15 +2,15 @@ import { Box, Button, FormControl, FormHelperText, IconButton, Input, InputLabel
 import React, { useState } from 'react'
 import { useNavigationStore, useStoreStore } from '../../../../stores'
 import axios, { AxiosResponse } from 'axios';
-import { PostCategoryReqeustDto } from '../../../apis/request/category';
-import { POST_ALARM_URL, POST_CATEGORY_URL, authorizationHeader } from '../../../constants/api';
+import { PostCategoryReqeustDto } from '../../../../apis/request/category';
+import { POST_ALARM_URL, POST_CATEGORY_URL, authorizationHeader } from '../../../../constants/api';
 import { useCookies } from 'react-cookie';
-import ResponseDto from '../../../apis/response';
-import { PostCategoryResponseDto } from '../../../apis/response/category';
-import { Navigation, AlarmMessage } from '../../../constants/enum';
+import ResponseDto from '../../../../apis/response';
+import { PostCategoryResponseDto } from '../../../../apis/response/category';
+import { Navigation, AlarmMessage } from '../../../../constants/enum';
 import CloseIcon from '@mui/icons-material/Close';
-import { PostAlarmRequestDto } from '../../../apis/request/alarm';
-import { PostAlarmResponseDto } from '../../../apis/response/alarm';
+import { PostAlarmRequestDto } from '../../../../apis/request/alarm';
+import { PostAlarmResponseDto } from '../../../../apis/response/alarm';
 
 export default function PostCategory() {
 

@@ -21,6 +21,8 @@ function OrderLog() {
 
     const [orderLogResponse, setOrderLogResponse] = useState<GetOrderListResponseDto[] | null>(null);
 
+    // const [orderLogCountResponse, setOrderLogCountResponse] = useState<GetOrderListCountResponseDto>(0);
+
     const [orderState, setOrderState] = useState<string>(OrderState.WAITING);
     const [orderStateCounts, setOrderStateCounts] = useState<GetOrderStateResponseDto[]>([]);
 
@@ -96,6 +98,7 @@ function OrderLog() {
 
     useEffect(() => {
         getOrderLog(accessToken);
+        // getOrderLogCount(accessToken);
     }, [orderState]);
 
     useEffect(() => {
@@ -124,7 +127,7 @@ function OrderLog() {
                         </Box>
                         <Divider />
                         <Box sx={{ p: '10px', flex: 3, flexDirection: 'column' }}>
-                            <OrderLogDetail setOrderLogResponse={setOrderLogResponse} order={order}/>
+                            <OrderLogDetail orderLogResponse={orderLogResponse} setOrderLogResponse={setOrderLogResponse} order={order}/>
                         </Box>
                     </Box>
                 )}
