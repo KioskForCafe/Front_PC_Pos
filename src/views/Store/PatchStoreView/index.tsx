@@ -27,11 +27,11 @@ export default function PatchStoreView() {
     const { store, resetStore } = useStoreStore();
 
     const [storeList, setStoreList] = useState<GetStoreResponseDto[] | null>(null);
-    const [storeCloseTime, setStoreCloseTime] = useState<string>('');
-    const [storeImgUrl, setStoreImgUrl] = useState<string>('');
-    const [storeLogoUrl, setStoreLogoUrl] = useState<string>('');
-    const [storeName, setStoreName] = useState<string>('');
-    const [storeOpenTime, setStoreOpenTime] = useState<string>('');
+    const [storeCloseTime, setStoreCloseTime] = useState<string>(store && store.storeCloseTime ? store.storeCloseTime+'' : '');
+    const [storeImgUrl, setStoreImgUrl] = useState<string>(store && store.storeImgUrl ? store.storeImgUrl : '');
+    const [storeLogoUrl, setStoreLogoUrl] = useState<string>(store && store.storeLogoUrl ? store.storeLogoUrl : '');
+    const [storeName, setStoreName] = useState<string>(store && store.storeName ? store.storeName : '');
+    const [storeOpenTime, setStoreOpenTime] = useState<string>(store && store.storeOpenTime ? store.storeOpenTime+'' : '');
 
 
     //          Event Handler          //
@@ -105,10 +105,6 @@ export default function PatchStoreView() {
             alert(message);
             return;
         }
-        console.log('storeImgUrl');
-        console.log(storeImgUrl);
-        console.log('storeLogoUrl');
-        console.log(storeLogoUrl);
         setStoreList(data);
         if (storeImgUrl) setStoreImgUrl(storeImgUrl);
         if (storeLogoUrl) setStoreLogoUrl(storeLogoUrl);
@@ -167,14 +163,15 @@ export default function PatchStoreView() {
     }, []);
 
     return (
-        <Box sx={{ display: 'flex', height: '88vh' }}>
+        <Box sx={{ display: 'flex', height: '88vh', justifyContent:'center', alignItems:'center', overflow:'auto' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left' }}>
+                <Typography variant='h4' marginBottom='10px' >매장 수정</Typography>
                 <Typography sx={{ mt: '2vh', ml: '2vh', display: 'flex', fontSize: '2vh' }}>점포명</Typography>
-                <Input sx={{ ml: '2vh', display: 'flex' }} placeholder={storeName} onChange={(event) => setStoreName(event.target.value)} />
+                <Input sx={{ ml: '2vh', display: 'flex' }} value={storeName} onChange={(event) => setStoreName(event.target.value)} />
                 <Typography sx={{ ml: '2vh', display: 'flex', fontSize: '2vh' }}>오픈 시간</Typography>
-                <Input sx={{ ml: '2vh', display: 'flex' }} placeholder={storeOpenTime} onChange={(event) => setStoreOpenTime(event.target.value)} />
+                <Input sx={{ ml: '2vh', display: 'flex' }} value={storeOpenTime} onChange={(event) => setStoreOpenTime(event.target.value)} />
                 <Typography sx={{ ml: '2vh', display: 'flex', fontSize: '2vh' }}>마감 시간</Typography>
-                <Input sx={{ ml: '2vh', display: 'flex' }} placeholder={storeCloseTime} onChange={(event) => setStoreCloseTime(event.target.value)} />
+                <Input sx={{ ml: '2vh', display: 'flex' }} value={storeCloseTime} onChange={(event) => setStoreCloseTime(event.target.value)} />
                 <Typography sx={{ ml: '2vh', display: 'flex', fontSize: '2vh' }}>
                     점포 이미지
                     <IconButton onClick={() => onStoreImageUploadButtonHandler()}>
@@ -182,14 +179,14 @@ export default function PatchStoreView() {
                         <input ref={StoreImageRef} hidden type='file' accept='image/*' onChange={(event) => storeImageUploadChangeHandler(event)} />
                     </IconButton>
                 </Typography>
-                <Box sx={{ width: '100%' }} component='img' src={storeImgUrl} />
+                <Box sx={{ width: '30%' }} component='img' src={storeImgUrl} />
                 <Typography sx={{ ml: '2vh', display: 'flex', fontSize: '2vh' }}>점포 로고 이미지
-                    <IconButton sx={{ flex: 1 }} onClick={() => onLogoImageUploadButtonHandler()}>
+                    <IconButton onClick={() => onLogoImageUploadButtonHandler()}>
                         <ImageOutlinedIcon />
                         <input ref={LogoImageRef} hidden type='file' accept='image/*' onChange={(event) => storeLogoUploadChangeHandler(event)} />
                     </IconButton>
                 </Typography>
-                <Box sx={{ width: '100%' }} component='img' src={storeLogoUrl} />
+                <Box sx={{ width: '10%' }} component='img' src={storeLogoUrl} />
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <IconButton sx={{ flex: 1 }} onClick={() => {setNavigation(Navigation.Store); resetStore();}}>
                         <Typography>뒤로가기</Typography>

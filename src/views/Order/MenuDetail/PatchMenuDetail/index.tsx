@@ -2,18 +2,18 @@ import { Backdrop, Box, Button, FormControl, FormControlLabel, IconButton, Input
 import React, { ChangeEvent, Dispatch, useEffect, useRef, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import axios, { AxiosResponse } from 'axios';
-import { useCategoryListStore, useCategoryStore, useMenuStore, useNavigationStore, useStoreStore } from '../../../stores';
-import { GetCategoryResponseDto } from '../../../apis/response/category';
-import { FILE_UPLOAD_URL, GET_CATEGORY_LIST_URL, PATCH_MENU_URL, POST_ALARM_URL, authorizationHeader, mutipartHeader } from '../../../constants/api';
-import ResponseDto from '../../../apis/response';
-import CustomMenuItem from '../../../components/CustomMenuItem/CustomMenuItem';
+import { useCategoryListStore, useCategoryStore, useMenuStore, useNavigationStore, useStoreStore } from '../../../../stores';
+import { GetCategoryResponseDto } from '../../../../apis/response/category';
+import { FILE_UPLOAD_URL, GET_CATEGORY_LIST_URL, PATCH_MENU_URL, POST_ALARM_URL, authorizationHeader, mutipartHeader } from '../../../../constants/api';
+import ResponseDto from '../../../../apis/response';
+import CustomMenuItem from '../../../../components/CustomMenuItem/CustomMenuItem';
 import { useCookies } from 'react-cookie';
-import { PatchMenuRequestDto } from '../../../apis/request/menu';
-import { PatchMenuResponseDto } from '../../../apis/response/menu';
+import { PatchMenuRequestDto } from '../../../../apis/request/menu';
+import { PatchMenuResponseDto } from '../../../../apis/response/menu';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
-import { PostAlarmRequestDto } from '../../../apis/request/alarm';
-import { Navigation, AlarmMessage } from '../../../constants/enum';
-import { PostAlarmResponseDto } from '../../../apis/response/alarm';
+import { PostAlarmRequestDto } from '../../../../apis/request/alarm';
+import { Navigation, AlarmMessage } from '../../../../constants/enum';
+import { PostAlarmResponseDto } from '../../../../apis/response/alarm';
 
 interface Option {
     optionId: number | null;
@@ -138,7 +138,6 @@ export default function PatchMenuDetail({setEditView}: Props) {
             alert(message);
             return;
         }
-        console.log(data);
         const {...menu} = data;
         setMenu(menu);
         setCategory({categoryId,categoryName,categoryPriority:category!.categoryPriority});

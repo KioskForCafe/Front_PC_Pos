@@ -15,10 +15,11 @@ import { OrderState } from '../../../constants/enum';
 
 interface props {
     order : GetOrderListResponseDto;
+    orderLogResponse: GetOrderListResponseDto[];
     setOrderLogResponse: React.Dispatch<React.SetStateAction<GetOrderListResponseDto[] | null>>;
 }
 
-export default function OrderLogDetail({ setOrderLogResponse, order }: props) {
+export default function OrderLogDetail({ setOrderLogResponse,orderLogResponse, order }: props) {
 
     const {user} = useUserStore();
     const {store} = useStoreStore();
@@ -78,7 +79,6 @@ export default function OrderLogDetail({ setOrderLogResponse, order }: props) {
             totalPrice: order.totalPrice
         }
 
-        console.log(data);
         axios
             .post(POST_ORDER_LOG_URL, data, authorizationHeader(accessToken))
             .then((response)=> postOrderLogResponseHandler(response))
@@ -119,7 +119,6 @@ export default function OrderLogDetail({ setOrderLogResponse, order }: props) {
             alert(message);
             return;
         }
-        console.log(data);
         setOrderLogResponse(data);
     }
 
@@ -142,7 +141,7 @@ export default function OrderLogDetail({ setOrderLogResponse, order }: props) {
 
     useEffect(() => {
         getOrderDetail(order.orderId, accessToken);
-    }, []);
+    }, [orderLogResponse]);
 
     return (
         <Box>

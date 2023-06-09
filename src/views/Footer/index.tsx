@@ -11,7 +11,6 @@ function Footer() {
     return (
             <Box sx={{position: 'relative', zIndex: 999, width:'100%' , display: 'flex', backgroundColor : 'black', alignItems: 'center' ,height: '5vh' }}>
                 <Button onClick={()=>setNavigation(Navigation.Order)} sx={{flex:1, textAlign:'center', fontWeight: 'bold', color:'grey'}}>주문</Button>
-                {/* <Button onClick={()=>setNavigation(Navigation.CustomMenu)} sx={{flex:1, textAlign:'center', fontWeight: 'bold', color:'grey'}}>상품</Button> */}
                 <Button onClick={()=>setNavigation(Navigation.OrderLog)} sx={{flex:1, textAlign:'center', fontWeight: 'bold', color:'grey'}}>주문내역</Button>
                 <Button onClick={()=>setNavigation(Navigation.AnalysisView)} sx={{flex:1, textAlign:'center', fontWeight: 'bold', color:'grey'}}>매장분석</Button>
                 <Box sx={{flex:1, textAlign:'center', fontWeight: 'bold', color:'grey'}}>

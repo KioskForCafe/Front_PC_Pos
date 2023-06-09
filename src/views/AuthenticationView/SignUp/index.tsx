@@ -1,15 +1,16 @@
 import { Box, Button, FormControl, FormHelperText, IconButton, Input, InputAdornment, InputLabel, Typography } from '@mui/material'
 import React, { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
 import axios, { AxiosResponse } from "axios";
-import { DuplicateCheckEmailResponseDto, DuplicateCheckIdResponseDto } from '../../../apis/response/user';
-import { DuplicateEmailRequestDto, DuplicateIdRequestDto } from '../../../apis/request/user';
-import { DUPLICATE_USER_EMAIL_URL, DUPLICATE_USER_ID_URL, SIGN_UP_URL } from '../../../constants/api';
+import { DuplicateCheckEmailResponseDto, DuplicateCheckIdResponseDto, DuplicateCheckTelNumberResponseDto } from '../../../apis/response/user';
+import { DuplicateEmailRequestDto, DuplicateIdRequestDto, DuplicateTelNumberRequestDto } from '../../../apis/request/user';
+import { DUPLICATE_USER_EMAIL_URL, DUPLICATE_USER_ID_URL, DUPLICATE_USER_TELNUMBER_URL, POST_SMS_URL, SIGN_UP_URL } from '../../../constants/api';
 import ResponseDto from '../../../apis/response';
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import { SignUpRequestDto } from '../../../apis/request/auth';
 import { SignUpResponseDto } from '../../../apis/response/auth';
 import { passwordValidator, telNumberValidator, userEmailValidator, userIdValidator, userNameValidator } from '../../../constants/validate';
+import { SmsResponseDto } from '../../../apis/response/sms';
 
 interface Props {
     setLoginView: Dispatch<SetStateAction<boolean>>;
@@ -32,9 +33,8 @@ export default function SignUp({setLoginView}:Props) {
     const [telNumberPatternCheck, setTelNumberPatternCheck] = useState<boolean>(false);
     const [duplicateUserId, setDuplicateUserId] = useState<boolean | null>(null);
     const [duplicateEmail, setDuplicateUserEmail] = useState<boolean | null>(null);
-    // todo : 전화번호 중복확인 추가하기 -> 추가전이라 true로 진행
-    const [duplicateTelNumber, setDuplicateTelNumber] = useState<boolean | null>(true);
-    
+    const [identityVerificationTelNumber, setIdentityVerificationTelNumber] = useState<boolean>(false);
+    const [duplicateTelNumber, setDuplicateTelNumber] = useState<boolean | null>(null);
     const [showPasswordCheck, setShowPasswordCheck] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -71,7 +71,6 @@ export default function SignUp({setLoginView}:Props) {
     const onUserNameChangeHandler = (event:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
         const value = event.target.value;
         const isValidate = userNameValidator.test(value);
-        console.log(isValidate);
         setUserNamePatternCheck(isValidate);
         setUserName(value);
         
@@ -94,7 +93,14 @@ export default function SignUp({setLoginView}:Props) {
     }
 
     const onDuplicateTelNumberButtonHandler = () =>{
-        // todo : 전화번호 중복확인도 필요해 보임
+        const data : DuplicateTelNumberRequestDto = {
+            telNumber
+        }
+
+        axios
+            .post(DUPLICATE_USER_TELNUMBER_URL,data)
+            .then((response)=> duplicateTelNumberResponseHandler(response))
+            .catch(error=>duplicateTelNumberErrorHandler(error))
     }
 
     const onTelNumberChangeHandler = (event:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
@@ -131,7 +137,6 @@ export default function SignUp({setLoginView}:Props) {
             alert(message);
             return;
         }
-        console.log(data)
         setDuplicateUserId(data.result);
     }
 
@@ -142,6 +147,26 @@ export default function SignUp({setLoginView}:Props) {
             return;
         }
         setDuplicateUserEmail(data.result);
+    }
+
+    const duplicateTelNumberResponseHandler = (response: AxiosResponse<any, any>) => {
+        const {data,message,result} = response.data as ResponseDto<DuplicateCheckTelNumberResponseDto>;
+        if(!result || !data){
+            alert(message);
+            return;
+        }
+        setDuplicateTelNumber(data.result);
+
+        axios
+            .post(POST_SMS_URL,telNumber)
+            .then(response=>smsResponseHandler(response))
+            .catch(error=>smsErrorHandler(error))
+    }
+
+    const smsResponseHandler = (response: AxiosResponse<any, any>) =>{
+        setIdentityVerificationTelNumber(true);
+        const result = response.data as SmsResponseDto;
+        console.log(result);
     }
 
     const signUpResponseHanlder = (response: AxiosResponse<any, any>) =>{
@@ -160,7 +185,15 @@ export default function SignUp({setLoginView}:Props) {
     const duplicateEmailErrorHandler = (error: any) =>{
         console.log(error.message);
     }
+
+    const duplicateTelNumberErrorHandler = (error: any) =>{
+        console.log(error.message);
+    }
     
+    const smsErrorHandler = (error: any) =>{
+        console.log(error.message);
+    }
+
     const signUpErrorHandler = (error: any) =>{
         console.log(error.message);
     }
@@ -255,7 +288,11 @@ export default function SignUp({setLoginView}:Props) {
                 <InputLabel>전화번호</InputLabel>
                 <Input type='text'endAdornment={
                     <InputAdornment position='end'>
-                        <Button onClick={()=>onDuplicateTelNumberButtonHandler()} sx={{minWidth:'80px', height:'25px'}}>중복 확인</Button>
+                        {
+                            identityVerificationTelNumber ? 
+                            <Button onClick={()=>onDuplicateTelNumberButtonHandler()} sx={{minWidth:'80px', height:'25px'}}>인증 코드 재발송</Button> : 
+                            <Button onClick={()=>onDuplicateTelNumberButtonHandler()} sx={{minWidth:'80px', height:'25px'}}>본인 인증</Button>
+                        }
                     </InputAdornment>
 
                 }

@@ -1,18 +1,18 @@
 import { Box, Button, FormControl, IconButton, Input, InputAdornment, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material'
 import axios, { AxiosResponse } from 'axios';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
-import { FILE_UPLOAD_URL, GET_CATEGORY_LIST_URL, POST_ALARM_URL, POST_MENU_URL, authorizationHeader, mutipartHeader } from '../../../constants/api';
-import { useNavigationStore, useStoreStore } from '../../../stores';
-import ResponseDto from '../../../apis/response';
-import { GetCategoryResponseDto } from '../../../apis/response/category';
+import { FILE_UPLOAD_URL, GET_CATEGORY_LIST_URL, POST_ALARM_URL, POST_MENU_URL, authorizationHeader, mutipartHeader } from '../../../../constants/api';
+import { useNavigationStore, useStoreStore } from '../../../../stores';
+import ResponseDto from '../../../../apis/response';
+import { GetCategoryResponseDto } from '../../../../apis/response/category';
 import { useCookies } from 'react-cookie';
-import { PostMenuResponseDto } from '../../../apis/response/menu';
-import { PostMenuRequestDto } from '../../../apis/request/menu';
-import { AlarmMessage, Navigation } from '../../../constants/enum';
+import { PostMenuResponseDto } from '../../../../apis/response/menu';
+import { PostMenuRequestDto } from '../../../../apis/request/menu';
+import { AlarmMessage, Navigation } from '../../../../constants/enum';
 import CloseIcon from '@mui/icons-material/Close';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
-import { PostAlarmRequestDto } from '../../../apis/request/alarm';
-import { PostAlarmResponseDto } from '../../../apis/response/alarm';
+import { PostAlarmRequestDto } from '../../../../apis/request/alarm';
+import { PostAlarmResponseDto } from '../../../../apis/response/alarm';
 
 interface Option{
   optionName : string;
@@ -187,7 +187,7 @@ export default function PostMenu() {
   },[])
 
   return (
-    <Box sx={{display: 'flex',height:'88vh', justifyContent:'center', alignItems:'center'}}>
+    <Box sx={{display: 'flex',height:'88vh', justifyContent:'center', alignItems:'center', overflow:'auto'}}>
       <Box sx={{position:'relative', display:'flex', flexDirection:'column', width:'350px'}}>
         <Typography variant='h4' marginBottom='10px' >메뉴 등록</Typography>
         <IconButton onClick={()=>setNavigation(Navigation.Order)} sx={{position:'absolute', right:0}}>

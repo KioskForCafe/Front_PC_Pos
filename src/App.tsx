@@ -12,9 +12,9 @@ import { useNavigationStore, useStoreStore, useUserStore } from './stores';
 import PostStoreView from './views/Store/PostStoreView';
 import PatchStoreView from './views/Store/PatchStoreView';
 import { Navigation } from './constants/enum';
-import PostMenu from './views/Order/PostMenu';
-import PostCategory from './views/Order/PostCategory';
-import PatchCategory from './views/Order/PatchCategory';
+import PostMenu from './views/Order/MenuDetail/PostMenu';
+import PostCategory from './views/Order/OrderCategoryBar/PostCategory';
+import PatchCategory from './views/Order/OrderCategoryBar/PatchCategory';
 import AlarmView from './views/AlarmView';
 
 function App() {
@@ -45,7 +45,7 @@ function App() {
         }
       </Box>
       {
-        user && store && <Footer/>
+        user && store && navigation !== Navigation.PatchStoreView && <Footer/>
       }
     </Box>
   );

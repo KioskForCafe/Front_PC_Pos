@@ -10,6 +10,7 @@ export const mutipartHeader = () => {
 
 export const DUPLICATE_USER_ID_URL = `${HOST}api/user/duplicate/checkId`;
 export const DUPLICATE_USER_EMAIL_URL = `${HOST}api/user/duplicate/checkEmail`;
+export const DUPLICATE_USER_TELNUMBER_URL = `${HOST}api/user/duplicate/checkTelNumber`;
 export const SIGN_UP_URL = `${HOST}auth/sign-up`;
 export const SIGN_IN_URL = `${HOST}auth/sign-in`;
 
@@ -31,6 +32,8 @@ export const POST_ORDER_URL =`${HOST}api/order`;
 export const POST_ORDER_LOG_URL =`${HOST}api/order/log`;
 
 export const POST_ALARM_URL = `${HOST}api/alarm`;
+
+export const POST_SMS_URL = `${HOST}sms`;
 
 export const GET_SALE_ANALYSIS_URL = (storeId: string, startedAt: string, endedAt: string) => `${HOST}api/analysis/sales/${storeId}/${startedAt}/${endedAt}`;
 export const GET_ANALYSIS_BUSINESS_URL = (storeId: string, startedAt: string, endedAt: string) =>`${HOST}api/analysis/business/${storeId}/${startedAt}/${endedAt}`;
