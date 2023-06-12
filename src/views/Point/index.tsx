@@ -8,7 +8,7 @@ import { useStoreStore } from '../../stores';
 import { GET_POINT, POST_POINT } from '../../constants/api';
 import ResponseDto from '../../apis/response';
 import { GetPointResponseDto, PostPointResponseDto } from '../../apis/response/point';
-import { GetPointRequestDto, PostPointRequestDto } from '../../apis/request/point';
+import { PostPointRequestDto } from '../../apis/request/point';
 
 export default function Point() {
 
@@ -28,19 +28,19 @@ export default function Point() {
     }
 
     const getPoint = () => {
-      if (store?.storeId == null) {
-        alert('점포가 존재하지 않습니다.')
+      if (telNumber == null) {
+        alert('전화번호를 입력하세요.')
         return;
     }
 
-      axios.get(GET_POINT)
+      axios.get(GET_POINT(telNumber))
       .then((response) => getPointResponseHandler(response))
       .catch((error) => getPointErrorHandler(error));
     }
 
     const postPoint = () => {
-      if (store?.storeId == null) {
-        alert('점포가 존재하지 않습니다.')
+      if (telNumber == null) {
+        alert('전화번호를 입력하세요.')
         return;
     }
 
@@ -51,6 +51,8 @@ export default function Point() {
     axios.post(POST_POINT, data)
     .then((response) => postPointResponseHandler(response))
     .catch((error) => postPointErrorHandler(error));
+
+
     }
 
     //          Response Handler          //
@@ -63,6 +65,7 @@ export default function Point() {
         }
 
         setPointResponse(data);
+        console.log(pointResponse);
     }
 
     const postPointResponseHandler = (response: AxiosResponse<any, any>) => {
@@ -71,6 +74,9 @@ export default function Point() {
         alert(message);
         return;
       }
+
+      alert('결제가 완료되었습니다.');
+      setNavigation(Navigation.Order);
     }
 
 
@@ -84,11 +90,6 @@ export default function Point() {
       console.log(error.message);
     }
 
-      //             Use Effect              //
-
-      useEffect(() => {
-        getPoint();
-    }, [])
 
   return (
         <Box sx={{width:'35rem', height:'80vh'}}>
