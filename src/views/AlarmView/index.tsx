@@ -64,9 +64,6 @@ export default function AlarmView() {
         console.log(error.message);
     }
 
-    const postAlarmErrorHandler = (error: any) => {
-        console.log(error.message);
-    }
 
     //             Use Effect              //
 
