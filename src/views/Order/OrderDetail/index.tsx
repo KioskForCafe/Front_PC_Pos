@@ -2,7 +2,7 @@ import { Box, Button, Divider, IconButton, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import axios, { AxiosResponse } from 'axios';
 import { PostOrderDetailRequestDto, PostOrderRequestDto } from '../../../apis/request/order';
-import { useOrderDetailListStore, useStoreStore } from '../../../stores';
+import { useNavigationStore, useOrderDetailListStore, useStoreStore } from '../../../stores';
 import { POST_ORDER_URL } from '../../../constants/api';
 import ResponseDto from '../../../apis/response';
 import { PostOrderResponseDto } from '../../../apis/response/order';
@@ -13,10 +13,12 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import UsePointView from './UsePointView';
 import { bootPayHook } from '../../../hooks';
+import { Navigation } from '../../../constants/enum';
 
 export default function OrderDetail() {
 
   const {store} = useStoreStore();
+  const {setNavigation} = useNavigationStore();
 
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [usePointView, setUsePointView] = useState<boolean>(false);
@@ -113,6 +115,7 @@ export default function OrderDetail() {
       return;
     }
     resetOrderDetailList();
+    setNavigation(Navigation.Point);
   }
 
   const postOrderErrorHandler = (error: any) => {
