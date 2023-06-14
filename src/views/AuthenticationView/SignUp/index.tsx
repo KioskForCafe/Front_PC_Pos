@@ -3,14 +3,14 @@ import React, { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
 import axios, { AxiosResponse } from "axios";
 import { DuplicateCheckEmailResponseDto, DuplicateCheckIdResponseDto, DuplicateCheckTelNumberResponseDto } from '../../../apis/response/user';
 import { DuplicateEmailRequestDto, DuplicateIdRequestDto, DuplicateTelNumberRequestDto } from '../../../apis/request/user';
-import { DUPLICATE_USER_EMAIL_URL, DUPLICATE_USER_ID_URL, DUPLICATE_USER_TELNUMBER_URL, POST_SMS_URL, SIGN_UP_URL } from '../../../constants/api';
+import { DUPLICATE_USER_EMAIL_URL, DUPLICATE_USER_ID_URL, DUPLICATE_USER_TELNUMBER_URL, POST_SMS_CHECK_URL, POST_SMS_URL, SIGN_UP_URL } from '../../../constants/api';
 import ResponseDto from '../../../apis/response';
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import { SignUpRequestDto } from '../../../apis/request/auth';
 import { SignUpResponseDto } from '../../../apis/response/auth';
 import { passwordValidator, telNumberValidator, userEmailValidator, userIdValidator, userNameValidator } from '../../../constants/validate';
-import { SmsResponseDto } from '../../../apis/response/sms';
+import { PostSmsCheckResponseDto, SmsResponseDto } from '../../../apis/response/sms';
 
 interface Props {
     setLoginView: Dispatch<SetStateAction<boolean>>;
@@ -24,6 +24,7 @@ export default function SignUp({setLoginView}:Props) {
     const [userName, setUserName] = useState<string>("");
     const [userEmail, setUserEmail] = useState<string>("");
     const [telNumber, setTelNumber] = useState<string>("");
+    const [authenticationCode, setAuthenticationCode] = useState<string>('');
     
     const [userIdPatternCheck, setUserIdPatternCheck] = useState<boolean>(false);
     const [passwordPatternCheck, setPasswordPatternCheck] = useState<boolean>(false);
@@ -34,6 +35,7 @@ export default function SignUp({setLoginView}:Props) {
     const [duplicateUserId, setDuplicateUserId] = useState<boolean | null>(null);
     const [duplicateEmail, setDuplicateUserEmail] = useState<boolean | null>(null);
     const [identityVerificationTelNumber, setIdentityVerificationTelNumber] = useState<boolean>(false);
+    const [authenticationCodeCheck, setAuthenticationCodeCheck] = useState<boolean | null>(null);
     const [duplicateTelNumber, setDuplicateTelNumber] = useState<boolean | null>(null);
     const [showPasswordCheck, setShowPasswordCheck] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -92,7 +94,9 @@ export default function SignUp({setLoginView}:Props) {
         
     }
 
-    const onDuplicateTelNumberButtonHandler = () =>{
+    const onIdentityVerificationTelNumberButtonHandler = () =>{
+        if(!telNumberPatternCheck) return;
+
         const data : DuplicateTelNumberRequestDto = {
             telNumber
         }
@@ -107,8 +111,26 @@ export default function SignUp({setLoginView}:Props) {
         const value = event.target.value;
         const isValidate = telNumberValidator.test(value);
         setTelNumberPatternCheck(isValidate);
+        setDuplicateTelNumber(null);
+        setIdentityVerificationTelNumber(false);
         setTelNumber(value);
 
+    }
+
+    const onAuthenticationCodeChangeHandler = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
+        const value = event.target.value;
+        setAuthenticationCode(value);
+        setAuthenticationCodeCheck(null);
+    }
+
+    const onCheckAuthenticationCodeHandler = () => {
+        const data = {
+            telNumber,
+            authenticationCode
+        }
+        axios.post(POST_SMS_CHECK_URL,data)
+            .then(response => onCheckAuthenticationCodeResponseHandler(response))
+            .catch(error => onCheckAuthenticationCodeErrorHandler(error))
     }
 
     const onSignUpButtonHandler = () =>{
@@ -122,7 +144,8 @@ export default function SignUp({setLoginView}:Props) {
         if(duplicateUserId === null) return alert('아이디 중복확인이 필요합니다.');
         if(duplicateEmail === null) return alert('이메일 중복확인이 필요합니다.');
         if(duplicateTelNumber === null) return alert('전화번호 중복확인이 필요합니다.');
-        if(!passwordMatchCheck) return alert('비밀번호가 일치하지 않습니다.')
+        if(!passwordMatchCheck) return alert('비밀번호가 일치하지 않습니다.');
+        if(!authenticationCodeCheck) return alert('전화번호 본인 인증이 되지 않았습니다.');
 
         const data : SignUpRequestDto ={ userId, userName, password, telNumber, userEmail ,admin:true };
 
@@ -156,19 +179,31 @@ export default function SignUp({setLoginView}:Props) {
             return;
         }
         setDuplicateTelNumber(data.result);
+        
+        if(!data.result) return;
+
+        setIdentityVerificationTelNumber(true);
 
         axios
-            .post(POST_SMS_URL,telNumber)
+            .post(POST_SMS_URL,telNumber,{headers:{'Content-Type':'text/plain'}})
             .then(response=>smsResponseHandler(response))
             .catch(error=>smsErrorHandler(error))
     }
 
     const smsResponseHandler = (response: AxiosResponse<any, any>) =>{
-        setIdentityVerificationTelNumber(true);
         const result = response.data as SmsResponseDto;
-        console.log(result);
+        setAuthenticationCodeCheck(null);
     }
 
+    const onCheckAuthenticationCodeResponseHandler = (response: AxiosResponse<any, any>) => {
+        const {data,message,result} = response.data as ResponseDto<PostSmsCheckResponseDto>
+        if(!result || !data){
+            alert(message);
+            return;
+        }
+        setAuthenticationCodeCheck(data.result);
+    }
+    
     const signUpResponseHanlder = (response: AxiosResponse<any, any>) =>{
         const {data,message,result} = response.data as ResponseDto<SignUpResponseDto>
         if(!result || !data){
@@ -191,6 +226,10 @@ export default function SignUp({setLoginView}:Props) {
     }
     
     const smsErrorHandler = (error: any) =>{
+        console.log(error.message);
+    }
+
+    const onCheckAuthenticationCodeErrorHandler = (error: any) => {
         console.log(error.message);
     }
 
@@ -290,8 +329,8 @@ export default function SignUp({setLoginView}:Props) {
                     <InputAdornment position='end'>
                         {
                             identityVerificationTelNumber ? 
-                            <Button onClick={()=>onDuplicateTelNumberButtonHandler()} sx={{minWidth:'80px', height:'25px'}}>인증 코드 재발송</Button> : 
-                            <Button onClick={()=>onDuplicateTelNumberButtonHandler()} sx={{minWidth:'80px', height:'25px'}}>본인 인증</Button>
+                            <Button onClick={()=>onIdentityVerificationTelNumberButtonHandler()} sx={{minWidth:'80px', height:'25px'}}>인증 코드 재발송</Button> : 
+                            <Button onClick={()=>onIdentityVerificationTelNumberButtonHandler()} sx={{minWidth:'80px', height:'25px'}}>본인 인증</Button>
                         }
                     </InputAdornment>
 
@@ -301,11 +340,30 @@ export default function SignUp({setLoginView}:Props) {
                 {
                     telNumber === '' ? (<></>) :
                     !telNumberPatternCheck ? (<FormHelperText sx={{color:'red'}}>{'전화번호 패턴이 일치하지 않습니다. ex) 010-0000-0001'}</FormHelperText>) :
-                    duplicateTelNumber === null ? (<FormHelperText sx={{color:'orange'}}>전화번호 중복 확인이 필요합니다.</FormHelperText>) :
+                    duplicateTelNumber === null ? (<FormHelperText sx={{color:'orange'}}>전화번호 본인 인증이 필요합니다.</FormHelperText>) :
                     duplicateTelNumber ? (<FormHelperText sx={{color:'green'}}>사용 가능한 전화번호입니다.</FormHelperText>) :
                     (<FormHelperText sx={{color:'red'}}>중복된 전화번호입니다.</FormHelperText>)
                 }
             </FormControl>
+            {
+                identityVerificationTelNumber && 
+                <FormControl fullWidth variant='standard' sx={{mb:'0.5rem'}}>
+                    <InputLabel>인증 코드</InputLabel>
+                    <Input type='text'endAdornment={
+                        <InputAdornment position='end'>
+                                <Button onClick={()=>onCheckAuthenticationCodeHandler()} sx={{minWidth:'80px', height:'25px'}}>인증 코드 확인</Button>
+                        </InputAdornment>
+
+                    }
+                    onChange={(event) => onAuthenticationCodeChangeHandler(event)}
+                    />
+                    {
+                        authenticationCodeCheck === null ? (<FormHelperText sx={{color:'orange'}}>60초 이내로 인증이 필요합니다.</FormHelperText>) :
+                        !authenticationCodeCheck ? (<FormHelperText sx={{color:'red'}}>인증 실패</FormHelperText>) :
+                        (<FormHelperText sx={{color:'green'}}>인증이 완료되었습니다.</FormHelperText>) 
+                    }
+                </FormControl>
+            }
         </Box>
         <Box >
             <Button onClick={()=>onSignUpButtonHandler()} fullWidth>회원가입</Button>

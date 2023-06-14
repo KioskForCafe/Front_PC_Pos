@@ -34,6 +34,7 @@ export const POST_ORDER_LOG_URL =`${HOST}api/order/log`;
 export const POST_ALARM_URL = `${HOST}api/alarm`;
 
 export const POST_SMS_URL = `${HOST}sms`;
+export const POST_SMS_CHECK_URL = `${HOST}sms/check`;
 
 export const GET_SALE_ANALYSIS_URL = (storeId: string, startedAt: string, endedAt: string) => `${HOST}api/analysis/sales/${storeId}/${startedAt}/${endedAt}`;
 export const GET_ANALYSIS_BUSINESS_URL = (storeId: string, startedAt: string, endedAt: string) =>`${HOST}api/analysis/business/${storeId}/${startedAt}/${endedAt}`;
