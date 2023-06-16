@@ -1,4 +1,4 @@
-const HOST = 'http://localhost:4040/';
+const HOST = 'http://3.38.182.207:4040/';
 
 export const authorizationHeader = (accessToken: string) => {
     return { headers: { Authorization: `Bearer ${accessToken}` } };
