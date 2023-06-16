@@ -1,2 +1,3 @@
 import SmsResponseDto from './Sms.response.dto';
-export type {SmsResponseDto};
+import PostSmsCheckResponseDto from './Post-Sms-Check.response.dto';
+export type {SmsResponseDto, PostSmsCheckResponseDto};

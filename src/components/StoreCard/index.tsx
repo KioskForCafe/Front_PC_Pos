@@ -94,7 +94,7 @@ export default function StoreCard({getStore, item} : Props) {
                 title={item.storeName}
             />
             <Box
-                sx={{flex:3, backgroundSize:'cover' ,backgroundImage: item.storeImgUrl ? `url(${item.storeImgUrl})` : 'url(https://cdn.digitaltoday.co.kr/news/photo/202209/460929_431098_5441.jpg)'}}
+                sx={{flex:3, backgroundSize:'contain', backgroundRepeat:'no-repeat' ,backgroundPosition:'center' ,backgroundImage: item.storeImgUrl ? `url(${item.storeImgUrl})` : 'url(https://www.gtn-co.com/cms/wp-content/uploads/2020/06/noimage.jpg)'}}
             ></Box>
             <CardContent sx={{flex:1}}>
                 <Typography variant="body2" color="text.secondary">
