@@ -29,7 +29,7 @@ function App() {
 
   return (
     <Box>
-      <NavigationBar />
+      { navigation !== Navigation.Point && <NavigationBar />}
       <Box sx={{flex:1}}>
         {
           navigation === Navigation.AuthenticationView ? <AuthenticationView/> :
@@ -47,10 +47,7 @@ function App() {
         }
       </Box>
       {
-        user && store && navigation !== Navigation.PatchStoreView && <Footer/> 
-      }
-      {
-        user && store && navigation !== Navigation.Point && <Footer/> && <NavigationBar />
+        user && store && navigation !== Navigation.PatchStoreView && navigation !== Navigation.Point && <Footer/> 
       }
     </Box>
   );
