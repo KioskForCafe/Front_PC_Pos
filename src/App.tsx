@@ -28,7 +28,7 @@ function App() {
 
   return (
     <Box>
-      <NavigationBar />
+      { navigation !== Navigation.Point && <NavigationBar />}
       <Box sx={{flex:1}}>
         {
           navigation === Navigation.AuthenticationView ? <AuthenticationView/> :
