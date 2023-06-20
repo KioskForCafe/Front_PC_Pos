@@ -86,14 +86,25 @@ export default function NavigationBar() {
         <Box sx={{ zIndex: 1, position: 'relative', top: '0', height: '7vh' }}>
             <AppBar variant='outlined' position='relative' sx={{ height: '100%', justifyContent: 'center', p: '0px 100px', backgroundColor: '#383947' }}>
                 <Toolbar>
-                    {isStoreExist ? <Typography
-                        variant="h6"
-                        component="div"
-                        sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block', color: '#ffffff' } }}>{store?.storeName}</Typography> :
-                        <Typography
-                            variant="h6"
-                            component="div"
-                            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block', color: '#ffffff' } }}>Kiosk Project</Typography>}
+                    {
+                    isStoreExist ? 
+                        <>
+                            {
+                                store?.storeLogoUrl && 
+                                <Typography sx={{height:'50%', p:'10px'}}>
+                                    <img src={store.storeLogoUrl} alt='Store Logo' style={{ maxWidth: '100%', maxHeight: '100%' }}/>
+                                </Typography>
+                            }
+                            <Typography
+                                variant="h6"
+                                component="div"
+                                sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block', color: '#ffffff' } }}>{store?.storeName}</Typography>
+                        </> :
+                            <Typography
+                                variant="h6"
+                                component="div"
+                                sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block', color: '#ffffff' } }}>Kiosk Project</Typography>
+                    }
                     <Box sx={{ display: 'flex' }}>
                         <Typography sx={{ fontSize: '15px', mt: '10px' }}>{currentTime.format('YYYY-MM-DD hh:mm')}</Typography>
                         {isOpen ? <IconButton sx={{ fontSize: '10px', ml: '10px', color: '#13ba50' }}>
