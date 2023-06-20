@@ -2,22 +2,36 @@ import { Backdrop, Box, Button, FormControl, FormHelperText, IconButton, Input, 
 import React, { ChangeEvent, Dispatch, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import { telNumberValidator } from '../../../../constants/validate';
+import axios, { AxiosResponse } from 'axios';
+import { GET_POINT, POST_ORDER_URL, POST_POINT } from '../../../../constants/api';
+import { GetPointResponseDto, PostPointResponseDto } from '../../../../apis/response/point';
+import ResponseDto from '../../../../apis/response';
+import { PostPointRequestDto } from '../../../../apis/request/point';
+import { useOrderDetailListStore, useStoreStore } from '../../../../stores';
+import { PostOrderDetailRequestDto, PostOrderRequestDto } from '../../../../apis/request/order';
+import { OrderState } from '../../../../constants/enum';
+import { bootPayHook } from '../../../../hooks';
+import { PostOrderResponseDto } from '../../../../apis/response/order';
 
 interface Props{
     setUsePointView: Dispatch<React.SetStateAction<boolean>>;
+    setSavePointView: Dispatch<React.SetStateAction<boolean>>
     totalPrice : number;
 }
 
-export default function UsePointView({setUsePointView, totalPrice}:Props) {
+export default function UsePointView({setUsePointView, setSavePointView, totalPrice}:Props) {
 
     const [backdropOpen, setBackdropOpen] = useState<boolean>(true);
     const [telNumber, setTelNumber] = useState<string>('');
     const [telNumberPatternCheck, setTelNumberPatternCheck] = useState<boolean>(false);
     const [getPointView, setGetPointView] = useState<boolean>(false);
-    const [currentPoint] = useState<number>(1);
+    const [currentPoint, setCurrentPoint] = useState<number>(0);
     const [usePoint, setUsePoint] = useState<number | null>(null);
     const [pointShortageCheck, setPointShortageCheck] = useState<boolean>(false);
     const [totalPriceAfterUsingPoint, setTotalPriceAfterUsingPoint] = useState<number>(totalPrice);
+
+    const {orderDetailList, setOrderDetailList , resetOrderDetailList} = useOrderDetailListStore();
+    const {store} = useStoreStore();
 
 
     const onTelNumberChangeHandler = (event:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
@@ -28,8 +42,10 @@ export default function UsePointView({setUsePointView, totalPrice}:Props) {
     }
 
     const onGetPointButtonHandler = () => {
-        // todo : 포인트 조회하는 API 와 연결
-        setGetPointView(true);
+        axios
+            .get(GET_POINT(telNumber))
+            .then(response => onGetPointResponseHandler(response))
+            .catch(error => onGetPointErrorHandler(error))
     }
 
     const onUsePointChangeHandler = (event:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -40,11 +56,107 @@ export default function UsePointView({setUsePointView, totalPrice}:Props) {
         setTotalPriceAfterUsingPoint(totalPrice - value);
     }
 
-    const onPaymentButtonHandler = () => {
+    const onUsePointPaymentButtonHandler = async () => {
         if(pointShortageCheck){
             alert('포인트가 부족합니다.');
             return;
         }
+      
+          const patchList : PostOrderDetailRequestDto[] = [];
+          orderDetailList.forEach((orderDetail)=>{
+      
+            let optionPrice = 0;
+      
+            const patchOptionList : number[] = [];
+            orderDetail.optionList.forEach((option)=>{
+              patchOptionList.push(option.optionId);
+              optionPrice += option.optionPrice;
+            })
+      
+            const patch : PostOrderDetailRequestDto = {
+              menuId: orderDetail.menuId,
+              menuCount: orderDetail.menuCount,
+              priceWithOption: orderDetail.menuPrice + optionPrice,
+              optionList: patchOptionList
+            }
+            
+            patchList.push(patch);
+      
+          })
+          
+          const data : PostOrderRequestDto ={
+            storeId:store!.storeId,
+            totalPrice,
+            orderDetailList: patchList,
+            orderState: OrderState.WAITING
+          }
+      
+          const response = await bootPayHook();
+      
+          switch (response.event) {
+            case 'issued' :
+              break
+            case 'done' :
+              axios
+                .post(POST_ORDER_URL,data)
+                .then((response)=>postOrderResponseHandler(response))
+                .catch((error)=>postOrderErrorHandler(error))
+              break
+            case 'error' :
+              break
+          }
+        
+    }
+
+    const onGetPointResponseHandler = (response: AxiosResponse<any, any>) => {
+        const {data,message,result} = response.data as ResponseDto<GetPointResponseDto>;
+        if(!data || !result){
+            alert(message);
+            return;
+        }
+        setCurrentPoint(data.currentPoint);
+        setGetPointView(true);
+    }
+
+    const postOrderResponseHandler = (response: AxiosResponse<any, any>) => {
+        const {data,message,result} = response.data as ResponseDto<PostOrderResponseDto>;
+        if(!data || !result){
+          alert(message);
+          return;
+        }
+
+        const usePointData : PostPointRequestDto = {
+            telNumber,
+            type : false,
+            value : usePoint as number
+        }
+
+        axios
+            .post(POST_POINT,usePointData)
+            .then(response => onUsePointPaymentResponseHandler(response))
+            .catch(error => onUsePointPaymentErrorHandler(error))
+      }
+
+    const onUsePointPaymentResponseHandler = (response: AxiosResponse<any, any>) => {
+        const {data,message,result} = response.data as ResponseDto<PostPointResponseDto>;
+        if(!data || !result){
+            alert(message);
+            return;
+        }
+        setSavePointView(true);
+        setUsePointView(false);
+    }
+
+    const onGetPointErrorHandler = (error: any) => {
+        console.log(error.message);
+    }
+
+    const postOrderErrorHandler = (error: any) => {
+        console.log(error.message);
+    }
+
+    const onUsePointPaymentErrorHandler = (error: any) => {
+        console.log(error.message);
     }
 
   return (
@@ -87,7 +199,7 @@ export default function UsePointView({setUsePointView, totalPrice}:Props) {
                             <Typography>{usePoint}</Typography>
                             <Typography>총 결제 가격</Typography>
                             <Typography>{totalPriceAfterUsingPoint}</Typography>
-                            <Button onClick={onPaymentButtonHandler}>결제하기</Button>
+                            <Button onClick={onUsePointPaymentButtonHandler}>결제하기</Button>
                         </>
                         )}
                         

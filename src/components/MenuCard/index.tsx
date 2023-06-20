@@ -39,7 +39,7 @@ export default function MenuCard({menu, setMenuDetailView}:Props) {
 
   return (
     <Grid item xs={4} md={3} lg={2.4}>
-        <Button onClick={()=>onMenuDetailButtonHandler()} sx={{display:'flex', flexDirection:'column', backgroundColor:'white', width:'8rem', height:'8rem', borderRadius:'0.5rem'}}>
+        <Button onClick={()=>onMenuDetailButtonHandler()} sx={{display:'flex', flexDirection:'column', backgroundColor: menu.menuState ? 'lightgrey' : 'white', width:'8rem', height:'8rem', borderRadius:'0.5rem'}}>
             <Box sx={{p:'10px'}}>{menu.menuName}</Box>
             <Box sx={{p:'10px'}}>{menu.menuPrice}</Box>
         </Button>
