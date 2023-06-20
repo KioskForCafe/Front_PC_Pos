@@ -71,8 +71,6 @@ export default function MenuDetailCard({setEditView ,setMenuDetailView}: Props) 
             .then((response)=>onDeleteMenuResponseHandler(response))
             .catch((error)=>onDeleteMenuErrorHandler(error))
 
-        postRemoveAlarm(accessToken);
-
         }
         const onNoButtonHandler = () =>{
           setBackdropOpen(true);
@@ -140,6 +138,7 @@ export default function MenuDetailCard({setEditView ,setMenuDetailView}: Props) 
     if(category !==null) setCategory({...category});
     
     setMenuDetailView(false);
+    postRemoveAlarm(accessToken);
 
   }
 
@@ -159,7 +158,7 @@ export default function MenuDetailCard({setEditView ,setMenuDetailView}: Props) 
         return;
     }
     const data : PostAlarmRequestDto = {
-        message: AlarmMessage.MENU_REMOVED,
+        message: `${menu?.menuName} ${AlarmMessage.MENU_REMOVED}`,
         isRead: false,
         createdAt: new Date(),    
         storeId: store.storeId

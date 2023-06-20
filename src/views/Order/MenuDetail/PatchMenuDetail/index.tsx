@@ -1,4 +1,4 @@
-import { Backdrop, Box, Button, FormControl, FormControlLabel, IconButton, Input, InputLabel, Select, SelectChangeEvent, Typography, MenuItem, Checkbox, InputAdornment } from '@mui/material';
+import { Backdrop, Box, Button, FormControl, FormControlLabel, IconButton, Input, InputLabel, Select, SelectChangeEvent, Typography, MenuItem, Checkbox, InputAdornment, FormLabel, RadioGroup, Radio } from '@mui/material';
 import React, { ChangeEvent, Dispatch, useEffect, useRef, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import axios, { AxiosResponse } from 'axios';
@@ -27,7 +27,6 @@ interface Props {
 
 export default function PatchMenuDetail({setEditView}: Props) {
 
-    const {setNavigation} = useNavigationStore();
     const {menu,setMenu} = useMenuStore();
     const {store} = useStoreStore();
     const {category,setCategory} = useCategoryStore();
@@ -100,9 +99,9 @@ export default function PatchMenuDetail({setEditView}: Props) {
         setOptionList([...optionList]);
         setOptionName('');
         setOptionPrice('');
-      }
+    }
 
-      const postAlarm = (accessToken: string) => {
+    const postAlarm = (accessToken: string) => {
         if (!accessToken) {
             alert('로그인이 필요합니다.')
             return;
@@ -113,7 +112,7 @@ export default function PatchMenuDetail({setEditView}: Props) {
             return;
         }
         const data : PostAlarmRequestDto = {
-            message: AlarmMessage.MENU_MODIFIED,
+            message: `${menuName} ${AlarmMessage.MENU_MODIFIED}`,
             isRead: false,
             createdAt: new Date(),    
             storeId: store.storeId
@@ -124,7 +123,11 @@ export default function PatchMenuDetail({setEditView}: Props) {
         .catch((error) => postAlarmErrorHandler(error));
     }
 
-      //              Response Handler                //
+    const onMenuStateChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setMenuState(JSON.parse((event.target as HTMLInputElement).value));
+    };
+
+    //              Response Handler                //
 
     const menuImageUploadResponseHandler = (response: AxiosResponse<any, any>) => {
         const imageUrl = response.data as string;
@@ -150,7 +153,6 @@ export default function PatchMenuDetail({setEditView}: Props) {
           alert(message);
           return;
         }
-        setNavigation(Navigation.AlarmView);
       }
 
       //          Error Handler           //
@@ -249,6 +251,20 @@ export default function PatchMenuDetail({setEditView}: Props) {
                 </Box>
                 </>
             }
+            <FormControl>
+                <FormLabel id="demo-controlled-radio-buttons-group">판매유무</FormLabel>
+                <RadioGroup
+                    aria-labelledby="demo-controlled-radio-buttons-group"
+                    name="controlled-radio-buttons-group"
+                    value={String(menuState)}
+                    onChange={onMenuStateChangeHandler}
+                >
+                    <Box sx={{display:'flex', justifyContent:'flex-start'}}>
+                        <FormControlLabel value="false" control={<Radio />} label="판매중" />
+                        <FormControlLabel value="true" control={<Radio />} label="품절" />
+                    </Box>
+                </RadioGroup>
+            </FormControl>
             <Button variant='outlined' onClick={()=> onUpdateMenuButtonHandler()}>메뉴 수정</Button>
         </Box>
     </>

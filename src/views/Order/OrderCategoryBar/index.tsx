@@ -75,8 +75,7 @@ export default function OrderCategoryBar() {
     <Box sx={{display:'flex',width:'100%', height:'3rem'}}>
         { 
             categoryList.length !== 0 ? viewList.map((item)=>(
-                // todo : 배열의 빈값을 확인하는 방법을 모르겠음..
-                item === undefined || item === null ? <Button sx={{flex:1}}>왜안돼</Button> : <CategoryButton item={item as GetCategoryResponseDto}/>
+                <CategoryButton item={item as GetCategoryResponseDto}/>
             ))
             : '카테고리를 등록하세요'
         }

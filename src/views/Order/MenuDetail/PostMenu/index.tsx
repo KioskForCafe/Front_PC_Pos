@@ -72,8 +72,8 @@ export default function PostMenu() {
 
   const onAddMenuButtonHandler = () =>{
 
-    if(!menuName || !menuPrice) {
-      alert('상품이름,가격을 입력하세요');
+    if(!menuName || !menuPrice || !category) {
+      alert('상품이름,가격,카테고리를 입력하세요');
       return;
     }
 
@@ -113,9 +113,9 @@ export default function PostMenu() {
         return;
     }
     const data : PostAlarmRequestDto = {
-        message: AlarmMessage.MENU_REGISTER,
+        message: `${menuName} ${AlarmMessage.MENU_REGISTER}`,
         isRead: false,
-        createdAt: new Date(),    
+        createdAt: new Date(),
         storeId: store.storeId
     }
 

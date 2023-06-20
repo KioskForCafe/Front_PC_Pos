@@ -16,7 +16,6 @@ import PostMenu from './views/Order/MenuDetail/PostMenu';
 import PostCategory from './views/Order/OrderCategoryBar/PostCategory';
 import PatchCategory from './views/Order/OrderCategoryBar/PatchCategory';
 import AlarmView from './views/AlarmView';
-import Point from './views/Point';
 
 function App() {
 
@@ -42,12 +41,11 @@ function App() {
           navigation === Navigation.PostMenu ? <PostMenu/> :
           navigation === Navigation.PostCategory ? <PostCategory/> :
           navigation === Navigation.PatchCategory ? <PatchCategory/> :
-          navigation === Navigation.AlarmView ? <AlarmView /> : 
-          navigation === Navigation.Point && <Point />
+          navigation === Navigation.AlarmView && <AlarmView /> 
         }
       </Box>
       {
-        user && store && navigation !== Navigation.PatchStoreView && navigation !== Navigation.Point && <Footer/> 
+        user && store && navigation !== Navigation.PatchStoreView && <Footer/> 
       }
     </Box>
   );

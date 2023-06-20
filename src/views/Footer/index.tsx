@@ -7,16 +7,16 @@ import { Navigation } from '../../constants/enum';
 
 function Footer() {
 
-    const {setNavigation} = useNavigationStore();
+    const {navigation,setNavigation} = useNavigationStore();
     return (
             <Box sx={{position: 'relative', zIndex: 999, width:'100%' , display: 'flex', backgroundColor : 'black', alignItems: 'center' ,height: '5vh' }}>
-                <Button onClick={()=>setNavigation(Navigation.Order)} sx={{flex:1, textAlign:'center', fontWeight: 'bold', color:'grey'}}>주문</Button>
-                <Button onClick={()=>setNavigation(Navigation.OrderLog)} sx={{flex:1, textAlign:'center', fontWeight: 'bold', color:'grey'}}>주문내역</Button>
-                <Button onClick={()=>setNavigation(Navigation.AnalysisView)} sx={{flex:1, textAlign:'center', fontWeight: 'bold', color:'grey'}}>매장분석</Button>
+                <Button onClick={()=>setNavigation(Navigation.Order)} sx={{flex:1, textAlign:'center', fontWeight: 'bold', color: navigation === Navigation.Order ? 'white' :'grey'}}>주문</Button>
+                <Button onClick={()=>setNavigation(Navigation.OrderLog)} sx={{flex:1, textAlign:'center', fontWeight: 'bold', color: navigation === Navigation.OrderLog ? 'white' :'grey'}}>주문내역</Button>
+                <Button onClick={()=>setNavigation(Navigation.AnalysisView)} sx={{flex:1, textAlign:'center', fontWeight: 'bold', color: navigation === Navigation.AnalysisView ? 'white' :'grey'}}>매장분석</Button>
                 <Box sx={{flex:1, textAlign:'center', fontWeight: 'bold', color:'grey'}}>
                     <Button onClick={() => setNavigation(Navigation.AlarmView)}>
-                        <Badge badgeContent="" color='primary' variant='dot'>
-                            <NotificationsIcon/>
+                        <Badge badgeContent="" color='warning' variant='dot'>
+                            <NotificationsIcon sx={{color: navigation === Navigation.AlarmView ? 'orange' :'grey'}}/>
                         </Badge>
                     </Button>
                 </Box>
