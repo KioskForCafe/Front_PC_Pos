@@ -1,22 +1,23 @@
-import { Box, Button, SpeedDial, Tooltip} from '@mui/material'
-import React, { Dispatch, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-import AddIcon from '@mui/icons-material/Add';
-import StoreCard from '../../components/StoreCard';
 import axios, { AxiosResponse } from 'axios';
-import { GET_STORE_URL, authorizationHeader } from '../../constants/api';
 import { useCookies } from 'react-cookie';
+
+import StoreCard from '../../components/StoreCard';
+import { GET_STORE_URL, authorizationHeader } from '../../constants/api';
 import { GetStoreResponseDto } from '../../apis/response/store';
 import ResponseDto from '../../apis/response';
-import PostStoreView from './PostStoreView';
 import { useNavigationStore, useStoreStore } from '../../stores';
 import { Navigation } from '../../constants/enum';
+
+import { Box, SpeedDial, Tooltip} from '@mui/material'
+import AddIcon from '@mui/icons-material/Add';
 
 
 export default function Store() {
 
+  //        Hook        //
   const {setNavigation} = useNavigationStore();
-
   const {resetStore} = useStoreStore();
 
   const [cookies] = useCookies();
@@ -25,6 +26,8 @@ export default function Store() {
     
   const accessToken = cookies.accessToken;
 
+
+  //          Event Handler          //
   const getStore = (accessToken: string) =>{
     axios
       .get(GET_STORE_URL, authorizationHeader(accessToken))
@@ -32,15 +35,19 @@ export default function Store() {
       .catch((error)=> getStoreErrorHandler(error));
   }
 
+  //          Response Handler          //
   const getStoreResponseHandler = (response: AxiosResponse<any, any>) =>{
     const {data, message, result} = response.data as ResponseDto<GetStoreResponseDto[]>
     if(!result || data === null) return;
     setStoreList(data);
   }
 
+  //          Error Handler          //
   const getStoreErrorHandler = (error: any) =>{
     console.log(error.message);
   }
+
+  //          use Effect          //
   useEffect(()=>{
     getStore(accessToken);
     resetStore();

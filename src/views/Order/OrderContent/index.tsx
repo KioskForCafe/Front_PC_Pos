@@ -54,7 +54,7 @@ export default function OrderContent({setMenuDetailView}:Props) {
     const accessToken = cookies.accessToken;
 
     const getMenuList = (accessToken: string) =>{
-        if(category !== null){
+        if(category !== null && category !== undefined){
             axios
                 .get(GET_MENU_LIST_URL(store?.storeId+'', category?.categoryId+''),authorizationHeader(accessToken))
                 .then((response)=>getMenuListResponseHandler(response))
@@ -82,7 +82,7 @@ export default function OrderContent({setMenuDetailView}:Props) {
 
   return (
     <Box sx={{flex:1, position:'relative' ,display:'flex', overflow:'auto', flexDirection:'column', backgroundColor:'#E6E8EB'}}>
-        <Typography sx={{p:'1rem'}}>총 {viewList.length} / {menuList?.length}개</Typography>
+        <Typography sx={{p:'1rem'}}>총 {viewList.length} / {menuList === null ? '0' : menuList?.length}개</Typography>
         <Box sx={{flex:1, px:'1rem'}}>
             <Grid container rowSpacing={3} columnSpacing={1}>
                 {

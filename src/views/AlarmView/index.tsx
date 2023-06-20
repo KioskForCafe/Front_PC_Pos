@@ -53,6 +53,7 @@ export default function AlarmView() {
             alarm.createdAt = createdAt.toDate();
         });
 
+        data.reverse();
         setAlarmResponse(data);
      }
 
@@ -73,7 +74,7 @@ export default function AlarmView() {
     
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '88vh', width: '100%', overflow: 'hidden'}}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '88vh', width: '100%', overflow: 'auto'}}>
         <Box sx={{pl: '20px', display: 'flex', flex: 1, backgroundColor: '#E6E8EB'}}>
             <Box sx={{ p: '10px', flex: 1, display : 'flex', flexWrap: 'wrap', overflow: 'auto' }}>
                 { alarmResponse && alarmResponse.map((alarm) => (

@@ -14,6 +14,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import UsePointView from './UsePointView';
 import { bootPayHook } from '../../../hooks';
 import { Navigation } from '../../../constants/enum';
+import SavePointView from './SavePointView';
 
 export default function OrderDetail() {
 
@@ -22,6 +23,7 @@ export default function OrderDetail() {
 
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [usePointView, setUsePointView] = useState<boolean>(false);
+  const [savePointView, setSavePointView] = useState<boolean>(false);
 
   const {orderDetailList, setOrderDetailList , resetOrderDetailList} = useOrderDetailListStore();
 
@@ -114,8 +116,7 @@ export default function OrderDetail() {
       alert(message);
       return;
     }
-    resetOrderDetailList();
-    setNavigation(Navigation.Point);
+    setSavePointView(true);
   }
 
   const postOrderErrorHandler = (error: any) => {
@@ -176,7 +177,8 @@ export default function OrderDetail() {
             <Button onClick={()=>onUsePointButtonHandler()} sx={{flex:1}}>포인트 사용</Button>
         </Box>
 
-        {usePointView && <UsePointView totalPrice={totalPrice} setUsePointView={setUsePointView}/>}
+        {savePointView && <SavePointView totalPrice={totalPrice} setSavePointView={setSavePointView}/>}
+        {usePointView && <UsePointView totalPrice={totalPrice} setUsePointView={setUsePointView} setSavePointView={setSavePointView}/>}
 
     </Box>
   )

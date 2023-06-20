@@ -56,7 +56,7 @@ export default function PostCategory() {
         return;
     }
     const data : PostAlarmRequestDto = {
-        message: AlarmMessage.CATEGORY_REGISTER,
+        message: `${categoryName} ${AlarmMessage.CATEGORY_REGISTER}`,
         isRead: false,
         createdAt: new Date(),    
         storeId: store.storeId

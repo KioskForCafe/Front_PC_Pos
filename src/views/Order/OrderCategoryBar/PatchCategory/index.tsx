@@ -19,6 +19,7 @@ export default function PatchCategory() {
   const { store } = useStoreStore();
   const {categoryList, setCategoryList} = useCategoryListStore();
   const [category, setCategory] = useState<Category>(categoryList[0]);
+  const [prevCategoryName, setPrevCategoryName] = useState<string>(category.categoryName);
   const [categoryName, setCategoryName] = useState<string>(category.categoryName);
   const [categoryPriority, setCategoryPriority] = useState<number>(category.categoryPriority);
 
@@ -32,6 +33,7 @@ export default function PatchCategory() {
     setCategory(category);
     setCategoryName(category.categoryName);
     setCategoryPriority(category.categoryPriority);
+    setPrevCategoryName(category.categoryName);
   }
 
   const onDeleteCategoryButtonHandler = () => {
@@ -71,7 +73,7 @@ export default function PatchCategory() {
         return;
     }
     const data : PostAlarmRequestDto = {
-        message: AlarmMessage.CATEGORY_MODIFIED,
+        message: `${prevCategoryName}가 ${categoryName}로 ${AlarmMessage.CATEGORY_MODIFIED}`,
         isRead: false,
         createdAt: new Date(),    
         storeId: store.storeId
@@ -93,7 +95,7 @@ const postRemoveAlarm = (accessToken: string) => {
       return;
   }
   const data : PostAlarmRequestDto = {
-      message: AlarmMessage.CATEGORY_REMOVED,
+      message: `${categoryName} ${AlarmMessage.CATEGORY_REMOVED}`,
       isRead: false,
       createdAt: new Date(),    
       storeId: store.storeId
